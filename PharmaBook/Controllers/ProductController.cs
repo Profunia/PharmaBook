@@ -16,9 +16,11 @@ namespace PharmaBook.Controllers
     public class ProductController : Controller
     {
         private IProduct _iProduct;
-        public ProductController(IProduct product)
+        private IPurchasedHistory _iPurchased;
+        public ProductController(IProduct product, IPurchasedHistory ipurchasedHistory)
         {
             _iProduct = product;
+            _iPurchased = ipurchasedHistory;
         }
         // GET: /<controller>/
         public IActionResult Index()
@@ -47,13 +49,22 @@ namespace PharmaBook.Controllers
                     objMap.openingStock = obj.openingStock;
                     objMap.name = obj.name;
                     objMap.MRP = obj.MRP;
-                    objMap.isActive = true;
+                    objMap.isActive = true;                    
                     _iProduct.Add(objMap);
                     _iProduct.Commit();
                     TempData["msg"] = obj.name + " medicine has been successfully added!!";
 
-
-
+                    // update product histry table
+                    PurchasedHistory purchasedHistory = new PurchasedHistory();
+                    var pId= _iProduct.GetAll(User.Identity.Name).OrderByDescending(x=>x.Id).FirstOrDefault();                    
+                    purchasedHistory.ProductID = Convert.ToInt32(pId);
+                    purchasedHistory.vendorID = 1; // Replace with Vendor ID
+                    purchasedHistory.MRP = obj.MRP;
+                    purchasedHistory.qty = Convert.ToString(obj.openingStock);
+                    purchasedHistory.purchasedDated = DateTime.Now;
+                    purchasedHistory.cusUserName = User.Identity.Name;
+                    _iPurchased.Add(purchasedHistory);
+                    _iPurchased.Commit();
 
                     return RedirectToAction("Index");
                 }

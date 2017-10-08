@@ -6,7 +6,7 @@ namespace PharmaBook.Entities
     {
         public int Id { get; set; }
         public int ProductID { get; set; }
-        public int vendorID { get; set; }
+        public int? vendorID { get; set; }
         public string MRP { get; set; }
         public string qty { get; set; }
         public DateTime purchasedDated { get; set; }
