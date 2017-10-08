@@ -56,8 +56,8 @@ namespace PharmaBook.Controllers
 
                     // update product histry table
                     PurchasedHistory purchasedHistory = new PurchasedHistory();
-                    var pId= _iProduct.GetAll(User.Identity.Name).OrderByDescending(x=>x.Id).FirstOrDefault();                    
-                    purchasedHistory.ProductID = Convert.ToInt32(pId);
+                    var pId= _iProduct.GetAll(User.Identity.Name).OrderByDescending(x=>x.Id).FirstOrDefault().Id;                    
+                    purchasedHistory.ProductID = pId;
                     purchasedHistory.vendorID = 1; // Replace with Vendor ID
                     purchasedHistory.MRP = obj.MRP;
                     purchasedHistory.qty = Convert.ToString(obj.openingStock);
