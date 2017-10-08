@@ -1,0 +1,68 @@
+@model ProductViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+<div class="blank">
+    <h2>Create New Medicine</h2> <a asp-action="Index"><< Back to Inbox</a>
+    <div class="blankpage-main">
+        <form method="post" asp-antiforgery="true">
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label>Medicine Name <span style="color:red;"> *</span></label>
+                    <input asp-for="name"  required class="form-control" placeholder="Medicine Name">
+                    <span asp-for="name" style="color:red;"></span>
+                </div>
+                <div class="form-group">
+                    <label>Batch no# <span style="color:red;"> *</span></label>
+                    <input asp-for="batchNo" class="form-control" required placeholder="Batch no#">
+                    <span asp-for="batchNo" style="color:red;"></span>
+                </div>
+               
+                <div class="form-group">
+                    <label>Stock <span style="color:red;"> *</span></label>
+                    <input asp-for="openingStock" class="form-control" required placeholder="Opening Stock">
+                    <small id="emailHelp" class="form-text text-muted">Note : 3 stef x 10 tablets = 30 stocks </small>
+                    <span asp-for="openingStock" style="color:red;"></span>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label>Exp Date <span style="color:red;"> *</span></label>
+                    <input asp-for="expDate" class="form-control" required placeholder="Exp Date">
+                    <span asp-for="expDate" style="color:red;"></span>
+                </div>
+                <div class="form-group">
+                    <label>Company Name</label>
+                    <input asp-for="companyName" class="form-control" placeholder="Company Name">
+                </div>
+                <div class="form-group">
+                    <label>MRP</label>
+                    <input asp-for="MRP" class="form-control" placeholder="MRP">
+                </div>
+                <div class="form-group">
+                    <label for="exampleSelect1">Select Vendor</label>
+                    <select class="form-control" id="exampleSelect1">
+                        <option value="">1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+            </div>
+
+            
+            
+            
+            
+            
+           
+            
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
+

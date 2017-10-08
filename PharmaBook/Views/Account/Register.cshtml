@@ -1,0 +1,70 @@
+@model RegisterViewModel
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>PharmaBook</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <link href="~/css/bootstrap.css" rel="stylesheet" type="text/css" media="all">
+    <!-- Custom Theme files -->
+    <link href="~/css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <!--js-->
+    <script src="~/js/jquery-2.1.1.min.js"></script>
+    <!--icons-css-->
+    <link href="~/css/font-awesome.css" rel="stylesheet">
+    <!--Google Fonts-->
+    <link href='//fonts.googleapis.com/css?family=Carrois+Gothic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Work+Sans:400,500,600' rel='stylesheet' type='text/css'>
+    <!--//charts-->
+</head>
+<body>
+    <!--inner block start here-->
+    <div class="signup-page-main">
+        <div class="signup-main">
+            <div class="signup-head">
+                <h1>Sign Up</h1>
+                <div asp-validation-summary="ModelOnly" style="color:red;">
+
+                </div>
+            </div>
+            <div class="signup-block">
+                <form asp-antiforgery="true"  method="post">
+                    <input  asp-for="UserName"  placeholder="User Name" required>
+                    <span style="color:red;" asp-for="UserName"></span>
+                    <input  asp-for="Password" class="lock" placeholder="Password" required>
+                    <span style="color:red;" asp-for="Password"></span>
+                    <input  asp-for="ConfirmPassword"  class="lock" placeholder="Confirm Password">
+                  <span style="color:red;" asp-for="ConfirmPassword"></span>
+                    <input type="submit" name="Sign In" value="Sign up">
+                </form>
+                <div class="sign-down">
+                    <h4>Already have an account? <a asp-action="Login" asp-controller="Account"> Login here.</a></h4>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--inner block end here-->
+    <!--copy rights start here-->
+    <div class="copyrights">
+        <p>© @DateTime.Now.Year PharmaBook. All Rights Reserved </p>
+    </div>
+    <!--COPY rights end here-->
+    <!--scrolling js-->
+    <script src="~/js/jquery.nicescroll.js"></script>
+    <script src="~/js/scripts.js"></script>
+    <!--//scrolling js-->
+    <script src="~/js/bootstrap.js"> </script>
+    <!-- mother grid end here-->
+</body>
+</html>
+
+

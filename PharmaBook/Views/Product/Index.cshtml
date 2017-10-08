@@ -1,0 +1,70 @@
+
+@{
+    ViewData["Title"] = "Index";
+}
+@model IEnumerable<Product>
+
+    <div class="blank">
+        <h2>Medicine Inbox</h2>
+        <div class="blankpage-main">
+            @if (TempData["msg"] != null)
+            {
+                <div class="alert alert-success">@TempData["msg"].ToString()</div>
+
+            }
+            @if (TempData["err"] != null)
+            {
+                <div class="alert alert-danger">@TempData["err"].ToString()</div>
+
+            }
+            <div class="row">
+                <div class="col-xs-4">
+                    <a class="btn btn-primary" asp-action="Create" asp-controller="Product">
+                        Create New
+                    </a>
+                    <a class="btn btn-primary" asp-action="BulkUpload" asp-controller="Product">Bulk Upload</a>
+                </div>
+                <div class="col-xs-8 right">
+                    <input type="text" placeholder="Search Medicine" class="form-control"/>
+                </div>
+            </div>
+          
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Medicine Name</th>
+                        <th>Batch No</th>
+                        <th>Exp Date</th>
+                        <th>Company Name</th>
+                        <th>M.R.P</th>                       
+                        <th>Stock</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ 
+                        int i = 0;
+                    }
+                    @foreach(var item in Model) {
+                        i++;
+                    <tr>
+                        <td>@(i)</td>
+                        <td>@commonServices.getStringValue(item.name)</td>
+                        <td>@commonServices.getStringValue(item.batchNo)</td>
+                        <td title="dd/MM/yyyy">@commonServices.getDateValue(item.expDate)</td>
+                        <td>@commonServices.getStringValue(item.companyName)</td>
+                        <td >@commonServices.getStringValue(item.MRP)</td>                       
+                        <th>@item.openingStock</th>
+                        <td><a href="/Product/Edit/@(item.Id)">Edit</a> | <a href="/Product/delete/@(item.Id)">Delete</a></td>
+
+
+                    </tr>
+                    }
+                  
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
