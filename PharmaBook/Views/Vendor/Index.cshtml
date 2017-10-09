@@ -103,10 +103,10 @@
                             <tbody>
                                 <tr ng-repeat="item in VendorList|filter: searchbox">
                                     <td>{{$index+1}}</td>
-                                    <td><span ng-hide="cClass==item.id">{{item.vedorName }}</span><input type="text" ng-model="item.vedorName" ng-show="cClass==item.id" /></td>
-                                    <td class="hidden-phone"><span ng-hide="cClass==item.id">{{item.vedorAddress}}</span><input type="text" ng-model="item.vedorAddress" ng-show="cClass==item.id" /></td>
-                                    <td><span ng-hide="cClass==item.id">{{item.vedorMobile}}</span><input type="text" ng-model="item.vedorMobile" ng-show="cClass==item.id" /></td>
-                                    <td><span ng-hide="cClass==item.id">{{item.vedorCompnay}}</span><input type="text" ng-model="item.vedorCompnay" ng-show="cClass==item.id" /></td>
+                                    <td><span ng-hide="cClass==item.id">{{item.vendorName }}</span><input type="text" ng-model="item.vendorName" ng-show="cClass==item.id" /></td>
+                                    <td class="hidden-phone"><span ng-hide="cClass==item.id">{{item.vendorAddress}}</span><input type="text" ng-model="item.vendorAddress" ng-show="cClass==item.id" /></td>
+                                    <td><span ng-hide="cClass==item.id">{{item.vendorMobile}}</span><input type="text" ng-model="item.vendorMobile" ng-show="cClass==item.id" /></td>
+                                    <td><span ng-hide="cClass==item.id">{{item.vendorCompnay}}</span><input type="text" ng-model="item.vendorCompnay" ng-show="cClass==item.id" /></td>
                                     <td><span ng-hide="cClass==item.id">{{item.cusUserName}}</span><input type="text" ng-model="item.cusUserName" ng-show="cClass==item.id" /></td>
                                     <td>
                                         <button class="btn btn-success btn-xs" ng-click="Updtdata(item)"><i class="fa fa-check"></i></button>

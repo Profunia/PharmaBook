@@ -14,7 +14,7 @@ app.controller('MyController', function ($scope, $http, ServiceBaseURL) {
     $scope.AddValues = function () {
         debugger
         //$scope.Item.Date = $filter('date')($scope.Item.Date, "yyyy-MM-dd");
-        var obj = { 'vedorName': $scope.Item.Name, 'vedorAddress': $scope.Item.Address, 'vedorMobile': $scope.Item.Mobile, 'vedorCompnay': $scope.Item.Company, 'cusUserName': $scope.Item.UserName};
+        var obj = { 'vendorName': $scope.Item.Name, 'vendorAddress': $scope.Item.Address, 'vendorMobile': $scope.Item.Mobile, 'vendorCompnay': $scope.Item.Company, 'cusUserName': $scope.Item.UserName};
         $http({
             method: 'post',
             url: "/Vendor/VendorCreate",
@@ -38,7 +38,7 @@ app.controller('MyController', function ($scope, $http, ServiceBaseURL) {
         $scope.cClass = item.id;
     }
     $scope.Updtdata = function (item) {
-        var obj = { 'Id': item.id, 'vedorName': item.vedorName, 'vedorAddress': item.vedorAddress, 'vedorMobile': item.vedorMobile, 'vedorCompnay': item.vedorCompnay, 'cusUserName': item.cusUserName };
+        var obj = { 'Id': item.id, 'vendorName': item.vendorName, 'vendorAddress': item.vendorAddress, 'vendorMobile': item.vendorMobile, 'vendorCompnay': item.vendorCompnay, 'cusUserName': item.cusUserName };
         $http({
             method: 'post',
             url: "/Vendor/UpdtVendor",

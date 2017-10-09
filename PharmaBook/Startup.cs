@@ -8,6 +8,8 @@ using PharmaBook.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using PharmaBook.Services;
+using AutoMapper;
+using PharmaBook.ViewModel;
 
 namespace PharmaBook
 {
@@ -51,6 +53,10 @@ namespace PharmaBook
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            Mapper.Initialize(config =>
+            {
+                config.CreateMap<VendorDtl, Vendor>().ReverseMap();
+            });
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
