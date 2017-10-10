@@ -57,6 +57,10 @@ namespace PharmaBook
             {
                 config.CreateMap<VendorDtl, Vendor>().ReverseMap();
             });
+            Mapper.Initialize(config =>
+            {
+                config.CreateMap<ProductViewModel, Product>().ReverseMap();
+            });
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
