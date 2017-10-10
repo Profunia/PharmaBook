@@ -34,8 +34,9 @@ namespace PharmaBook.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(ProductViewModel obj)
+        public JsonResult Create([FromBody]ProductViewModel obj)
         {
+            String msg = string.Empty;
             try
             {
                 if (ModelState.IsValid)
@@ -52,26 +53,25 @@ namespace PharmaBook.Controllers
                     objMap.isActive = true;                    
                     _iProduct.Add(objMap);
                     _iProduct.Commit();
-                    TempData["msg"] = obj.name + " medicine has been successfully added!!";
+                    msg = obj.name + " medicine has been successfully added!!";
 
                     // update product histry table
                     PurchasedHistory purchasedHistory = new PurchasedHistory();
                     var pId= _iProduct.GetAll(User.Identity.Name).OrderByDescending(x=>x.Id).FirstOrDefault().Id;                    
                     purchasedHistory.ProductID = pId;
-                    purchasedHistory.vendorID = 1; // Replace with Vendor ID
+                    purchasedHistory.vendorID = obj.vendorID; // Replace with Vendor ID
                     purchasedHistory.MRP = obj.MRP;
                     purchasedHistory.qty = Convert.ToString(obj.openingStock);
                     purchasedHistory.purchasedDated = DateTime.Now;
                     purchasedHistory.cusUserName = User.Identity.Name;
                     _iPurchased.Add(purchasedHistory);
                     _iPurchased.Commit();
-
-                    return RedirectToAction("Index");
+                    //return RedirectToAction("Index");
                 }
                 else
                 {
-                    TempData["err"] = "something went wroung. Please try again";
-                    return RedirectToAction("Index");
+                    msg = "something went wroung. Please try again";
+                    //return RedirectToAction("Index");
                 }
             }
             catch (Exception ep)
@@ -79,19 +79,70 @@ namespace PharmaBook.Controllers
 
                
             }
-            return View();
-        }
-        public IActionResult Edit()
-        {
-            return View();
-        }
+            return Json(msg);
+        }        
         public IActionResult BulkUpload()
         {
             return View();
         }
-        public IActionResult Delete()
+        
+        public JsonResult GetAllMedicine()
         {
-            return View();
+            string username = User.Identity.Name;
+            IEnumerable<Product> productlist = new List<Product>();
+            List<ProductViewModel> lst = new List<ProductViewModel>();
+            productlist = _iProduct.GetAll(username);
+            foreach(var i in productlist)
+            {
+                ProductViewModel obj = new ProductViewModel();
+                obj.Id = i.Id;
+                obj.name = i.name;
+                obj.batchNo = i.batchNo;
+                obj.expDate = i.expDate;
+                obj.companyName = i.companyName;
+                obj.MRP = i.MRP;
+                obj.openingStock = i.openingStock;
+                lst.Add(obj);
+            }
+            return Json(lst);
+        }
+        public JsonResult UpdateMedicn([FromBody]ProductViewModel prdvwmdl)
+        {
+            string msg = string.Empty;
+            try
+            {
+                var medicn = _iProduct.GetById(prdvwmdl.Id);
+                medicn.name = prdvwmdl.name;
+                medicn.batchNo = prdvwmdl.batchNo;
+                medicn.expDate = prdvwmdl.expDate;
+                medicn.companyName = prdvwmdl.companyName;
+                medicn.MRP = prdvwmdl.MRP;
+                medicn.openingStock = prdvwmdl.openingStock;
+                _iProduct.Update(medicn);
+                _iProduct.Commit();
+                msg = "Medicne Updated Successfulyy";
+            }
+            catch
+            {
+                msg = "Something went wrong";
+            }
+            return Json(msg);
+        }
+        public JsonResult DeleteMedicine([FromHeader]int id)
+        {
+            string msg = string.Empty;
+            try
+            {
+                var dltmedicn = _iProduct.GetById(id);
+                _iProduct.Delete(dltmedicn);
+                _iProduct.Commit();
+                msg = "Medicine has been deleted Succesfully .!!";
+            }
+            catch
+            {
+                msg = "Something went wrong . !!";
+            }
+            return Json(msg);
         }
     }
 }

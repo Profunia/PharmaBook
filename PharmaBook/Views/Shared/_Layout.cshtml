@@ -24,10 +24,7 @@
     @*@Html.Raw(JavaScriptSnippet.FullScript)*@
 </head>
 <body>
-   
-       
-
-    <div class="page-container">
+    <div class="page-container" >
         <div class="left-content">
             <div class="mother-grid-inner">
             @await Component.InvokeAsync("Header")
@@ -48,7 +45,7 @@
                 </script>
                 <!-- /script-for sticky-nav -->
                 <!--inner block start here-->
-                <div class="inner-block">
+                <div class="inner-block" ng-app="MyModuleA">
                     
                     @RenderBody()
                 </div>
@@ -102,7 +99,8 @@
     <!--//scrolling js-->
     <script src="~/js/bootstrap.js"> </script>
     <!-- mother grid end here-->
-      
+    <script src="~/Scripts/angular.js"></script>
+    <script src="~/Scripts/AngularController/VendorController.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

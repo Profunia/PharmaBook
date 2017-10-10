@@ -1,4 +1,5 @@
-﻿using PharmaBook.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using PharmaBook.Entities;
 using System.Collections.Generic;
 using System.Linq;
 namespace PharmaBook.Services
@@ -7,6 +8,7 @@ namespace PharmaBook.Services
     {
         void Add(Product prd);
         void Delete(Product prd);
+        void Update(Product prd);
         void Commit();
         IEnumerable<Product> GetAll(string userName);
         Product GetById(int Id);
@@ -41,6 +43,11 @@ namespace PharmaBook.Services
         public Product GetById(int Id)
         {
             return _context.products.FirstOrDefault(x => x.Id == Id);
+        }
+
+        public void Update(Product prd)
+        {
+             _context.Entry(prd).State = EntityState.Modified;
         }
     }
 }

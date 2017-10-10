@@ -77,7 +77,7 @@ namespace PharmaBook.Controllers
         }
         public JsonResult GetAllVendor()
         {
-            IEnumerable<Vendor> vendorlist = new List<Vendor>();
+            IEnumerable<Vendor> vendorlist = new List<Vendor>();           
             List<VendorDtl> lst = new List<VendorDtl>();
             vendorlist = _iVendorServices.GetAll();
             foreach(var i in vendorlist)
@@ -90,7 +90,7 @@ namespace PharmaBook.Controllers
                 obj.vedorMobile = i.vendorMobile;
                 obj.cusUserName = i.cusUserName;
                 lst.Add(obj);
-            }
+            }           
             return Json(lst);
         }
         public JsonResult VendorDlt([FromHeader]int id)

@@ -3,65 +3,104 @@
     ViewData["Title"] = "Create";
 }
 
-MANSUR
-<div class="blank">
-    <h2>Create New Medicine</h2> <a asp-action="Index"><< Back to Inbox</a>
-    <div class="blankpage-main">
-        <form method="post" asp-antiforgery="true">
+<div class="blank" ng-controller="ProductController">
+    <h2>Create New Medicine</h2> 
+    <div class="blankpage-main" ng-if="divhide1">  
+        <a href="" ng-click="bcktoinbx('create')"><< Go to Inbox</a>
+        <div class="row mt">
             <div class="col-xs-6">
                 <div class="form-group">
                     <label>Medicine Name <span style="color:red;"> *</span></label>
-                    <input asp-for="name"  required class="form-control" placeholder="Medicine Name">
+                    <input required class="form-control" placeholder="Medicine Name" ng-model="MediProdct.MedicineName">
                     <span asp-for="name" style="color:red;"></span>
                 </div>
                 <div class="form-group">
                     <label>Batch no# <span style="color:red;"> *</span></label>
-                    <input asp-for="batchNo" class="form-control" required placeholder="Batch no#">
+                    <input class="form-control" required placeholder="Batch no#" ng-model="MediProdct.batchNo">
                     <span asp-for="batchNo" style="color:red;"></span>
                 </div>
-               
+
                 <div class="form-group">
                     <label>Stock <span style="color:red;"> *</span></label>
-                    <input asp-for="openingStock" class="form-control" required placeholder="Opening Stock">
+                    <input class="form-control" required placeholder="Opening Stock" ng-model="MediProdct.openingStock">
                     <small id="emailHelp" class="form-text text-muted">Note : 3 stef x 10 tablets = 30 stocks </small>
                     <span asp-for="openingStock" style="color:red;"></span>
+                </div>
+                <div class="form-group">
+                    <label>Exp Date <span style="color:red;"> *</span></label>
+                    <input type="date" class="form-control" required placeholder="Exp Date" ng-model="MediProdct.ExpDt">
+                    <span asp-for="expDate" style="color:red;"></span>
                 </div>
             </div>
             <div class="col-xs-6">
                 <div class="form-group">
-                    <label>Exp Date <span style="color:red;"> *</span></label>
-                    <input asp-for="expDate" class="form-control" required placeholder="Exp Date">
-                    <span asp-for="expDate" style="color:red;"></span>
-                </div>
-                <div class="form-group">
                     <label>Company Name</label>
-                    <input asp-for="companyName" class="form-control" placeholder="Company Name">
+                    <input class="form-control" placeholder="Company Name" ng-model="MediProdct.CompanyName">
                 </div>
                 <div class="form-group">
                     <label>MRP</label>
-                    <input asp-for="MRP" class="form-control" placeholder="MRP">
+                    <input class="form-control" placeholder="MRP" ng-model="MediProdct.MRP">
                 </div>
                 <div class="form-group">
                     <label for="exampleSelect1">Select Vendor</label>
-                    <select class="form-control" id="exampleSelect1">
-                        <option value="">1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                    </select>
+                    <select class="form-control" id="exampleSelect1" ng-options="s.id as s.vedorName for s in VendorList" ng-model="MediProdct.vendorID"></select>
+                </div>
+                <div class="form-group">
+                    <br /><br />
+                    <button type="submit" class="btn btn-primary" ng-click="AddMedcin()">Submit</button>
                 </div>
             </div>
-
-            
-            
-            
-            
-            
-           
-            
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+        </div>
+        </div>
+        <br />
+    <div class="blankpage-main" ng-if="divhide2">
+        <a href="" ng-click="bcktoinbx('inbox')"><< Back to Medicine Entry</a>
+        <div class="row mt">
+            <div class="col-md-12">
+                <div class="content-panel">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <h4>Search Vendor</h4>
+                        </div>
+                        <div class="col-xs-8 right">
+                            <input type="text" placeholder="Search Vendor" class="form-control" ng-model="searchbox" />
+                        </div>
+                    </div>
+                    <div style="overflow: auto;height: 350px;">
+                        <table class="table table-striped table-advance table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Medicine Name</th>
+                                    <th>Batch No</th>
+                                    <th>Exp Date</th>
+                                    <th>Company Name</th>
+                                    <th>M.R.P</th>
+                                    <th>Stock</th>
+                                    <th> Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in ProductList|filter: searchbox">
+                                    <td>{{$index+1}}</td>
+                                    <td><span ng-hide="cClass==item.id">{{item.name }}</span><input type="text" ng-model="item.name" ng-show="cClass==item.id" /></td>
+                                    <td class="hidden-phone"><span ng-hide="cClass==item.id">{{item.batchNo}}</span><input type="text" ng-model="item.batchNo" ng-show="cClass==item.id" /></td>
+                                    <td><span ng-hide="cClass==item.id">{{item.expDate| date:'dd/MM/yyyy'}}</span><input type="date" ng-model="item.expDate" ng-show="cClass==item.id" /></td>
+                                    <td><span ng-hide="cClass==item.id">{{item.companyName}}</span><input type="text" ng-model="item.companyName" ng-show="cClass==item.id" /></td>
+                                    <td><span ng-hide="cClass==item.id">{{item.mrp}}</span><input type="text" ng-model="item.mrp" ng-show="cClass==item.id" /></td>
+                                    <td><span ng-hide="cClass==item.id">{{item.openingStock}}</span><input type="text" ng-model="item.openingStock" ng-show="cClass==item.id" /></td>
+                                    <td>
+                                        <button class="btn btn-success btn-xs" ng-click="Updtdata(item)"><i class="fa fa-check"></i>Save</button>
+                                        <button class="btn btn-primary btn-xs" ng-click="showdata(item,1)"><i class="fa fa-pencil"></i>Edit</button>
+                                        <button class="btn btn-danger btn-xs" ng-click="delitem(item.id)"><i class="fa fa-trash-o"></i> Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div><!-- /content-panel -->
+            </div><!-- /col-md-12 -->
+        </div>
     </div>
 </div>
 
