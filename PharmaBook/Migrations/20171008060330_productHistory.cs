@@ -18,22 +18,22 @@ namespace PharmaBook.Migrations
                 table: "products");
 
             migrationBuilder.RenameColumn(
-                name: "vedorName",
+                name: "vendorName",
                 table: "vendors",
                 newName: "vendorName");
 
             migrationBuilder.RenameColumn(
-                name: "vedorMobile",
+                name: "vendorMobile",
                 table: "vendors",
                 newName: "vendorMobile");
 
             migrationBuilder.RenameColumn(
-                name: "vedorCompnay",
+                name: "vendorCompnay",
                 table: "vendors",
                 newName: "vendorCompnay");
 
             migrationBuilder.RenameColumn(
-                name: "vedorAddress",
+                name: "vendorAddress",
                 table: "vendors",
                 newName: "vendorAddress");
 
@@ -97,22 +97,22 @@ namespace PharmaBook.Migrations
             migrationBuilder.RenameColumn(
                 name: "vendorName",
                 table: "vendors",
-                newName: "vedorName");
+                newName: "vendorName");
 
             migrationBuilder.RenameColumn(
                 name: "vendorMobile",
                 table: "vendors",
-                newName: "vedorMobile");
+                newName: "vendorMobile");
 
             migrationBuilder.RenameColumn(
                 name: "vendorCompnay",
                 table: "vendors",
-                newName: "vedorCompnay");
+                newName: "vendorCompnay");
 
             migrationBuilder.RenameColumn(
                 name: "vendorAddress",
                 table: "vendors",
-                newName: "vedorAddress");
+                newName: "vendorAddress");
 
             migrationBuilder.AlterColumn<double>(
                 name: "openingStock",

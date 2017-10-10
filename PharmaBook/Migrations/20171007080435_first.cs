@@ -69,10 +69,10 @@ namespace PharmaBook.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CusId = table.Column<int>(nullable: false),
-                    vedorAddress = table.Column<string>(nullable: true),
-                    vedorCompnay = table.Column<string>(nullable: true),
-                    vedorMobile = table.Column<string>(nullable: true),
-                    vedorName = table.Column<string>(nullable: true)
+                    vendorAddress = table.Column<string>(nullable: true),
+                    vendorCompnay = table.Column<string>(nullable: true),
+                    vendorMobile = table.Column<string>(nullable: true),
+                    vendorName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

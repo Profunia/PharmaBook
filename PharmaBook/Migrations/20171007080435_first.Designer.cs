@@ -180,13 +180,13 @@ namespace PharmaBook.Migrations
 
                     b.Property<int>("CusId");
 
-                    b.Property<string>("vedorAddress");
+                    b.Property<string>("vendorAddress");
 
-                    b.Property<string>("vedorCompnay");
+                    b.Property<string>("vendorCompnay");
 
-                    b.Property<string>("vedorMobile");
+                    b.Property<string>("vendorMobile");
 
-                    b.Property<string>("vedorName");
+                    b.Property<string>("vendorName");
 
                     b.HasKey("Id");
 

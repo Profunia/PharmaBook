@@ -5,8 +5,12 @@
 
 <div class="blank" ng-controller="ProductController">
     <h2>Create New Medicine</h2> 
-    <div class="blankpage-main" ng-if="divhide1">  
-        <a href="" ng-click="bcktoinbx('create')"><< Go to Inbox</a>
+    <div class="blankpage-main" ng-if="divhide1"> 
+        <div class="row">
+            <div class="col-xs-4">
+                <a href="" class="btn btn-primary" ng-click="bcktoinbx('create')">Back to Inbox</a>
+            </div>            
+        </div>        
         <div class="row mt">
             <div class="col-xs-6">
                 <div class="form-group">
@@ -43,7 +47,7 @@
                 </div>
                 <div class="form-group">
                     <label for="exampleSelect1">Select Vendor</label>
-                    <select class="form-control" id="exampleSelect1" ng-options="s.id as s.vedorName for s in VendorList" ng-model="MediProdct.vendorID"></select>
+                    <select class="form-control" id="exampleSelect1" ng-options="s.id as s.vendorName for s in VendorList" ng-model="MediProdct.vendorID"></select>
                 </div>
                 <div class="form-group">
                     <br /><br />
@@ -53,14 +57,13 @@
         </div>
         </div>
         <br />
-    <div class="blankpage-main" ng-if="divhide2">
-        <a href="" ng-click="bcktoinbx('inbox')"><< Back to Medicine Entry</a>
+    <div class="blankpage-main" ng-if="divhide2">       
         <div class="row mt">
             <div class="col-md-12">
-                <div class="content-panel">
+                <div class="content-panel">                    
                     <div class="row">
                         <div class="col-xs-4">
-                            <h4>Search Vendor</h4>
+                            <a href="" class="btn btn-primary" ng-click="bcktoinbx('inbox')">Go to Medicine Entry</a>                           
                         </div>
                         <div class="col-xs-8 right">
                             <input type="text" placeholder="Search Vendor" class="form-control" ng-model="searchbox" />
@@ -90,8 +93,8 @@
                                     <td><span ng-hide="cClass==item.id">{{item.mrp}}</span><input type="text" ng-model="item.mrp" ng-show="cClass==item.id" /></td>
                                     <td><span ng-hide="cClass==item.id">{{item.openingStock}}</span><input type="text" ng-model="item.openingStock" ng-show="cClass==item.id" /></td>
                                     <td>
-                                        <button class="btn btn-success btn-xs" ng-click="Updtdata(item)"><i class="fa fa-check"></i>Save</button>
-                                        <button class="btn btn-primary btn-xs" ng-click="showdata(item,1)"><i class="fa fa-pencil"></i>Edit</button>
+                                        <button class="btn btn-success btn-xs" ng-click="Updtdata(item)" ng-if="savebtn"><i class="fa fa-check"></i>Save</button>
+                                        <button class="btn btn-primary btn-xs" ng-click="showdata(item,1)" ng-if="editbtn"><i class="fa fa-pencil"></i>Edit</button>
                                         <button class="btn btn-danger btn-xs" ng-click="delitem(item.id)"><i class="fa fa-trash-o"></i> Delete</button>
                                     </td>
                                 </tr>

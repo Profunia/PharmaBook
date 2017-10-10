@@ -21,9 +21,11 @@ app.factory('loadvndor', ['$http', '$rootScope', function ($http, $rootScope) {
     return fac;
 }])
 app.controller('MyController', function ($scope, $http,loadvndor) {
-    loadvndor.getvndr();     
-    $scope.divhide1 = true;
-    $scope.divhide2 = false;
+    loadvndor.getvndr();
+    $scope.divhide1 = false;
+    $scope.divhide2 = true;
+    $scope.savebtn = false;
+    $scope.editbtn = true;
     $scope.Item = {
         Name: '',
         Address: '',
@@ -36,10 +38,10 @@ app.controller('MyController', function ($scope, $http,loadvndor) {
         debugger
         //$scope.Item.Date = $filter('date')($scope.Item.Date, "yyyy-MM-dd");
         var obj = {
-            'vedorName': $scope.Item.Name,
-            'vedorAddress': $scope.Item.Address,
-            'vedorMobile': $scope.Item.Mobile,
-            'vedorCompnay': $scope.Item.Company,
+            'vendorName': $scope.Item.Name,
+            'vendorAddress': $scope.Item.Address,
+            'vendorMobile': $scope.Item.Mobile,
+            'vendorCompnay': $scope.Item.Company,
             'cusUserName': $scope.Item.UserName
         };
         $http({
@@ -55,16 +57,13 @@ app.controller('MyController', function ($scope, $http,loadvndor) {
         })        
     }
     var counter = 0;
-    $scope.showdata = function (item,inc) {
-        $scope.cClass = item.id;
-        counter += inc;
-        var divide = (counter) % 2;
-        if (divide == 0) {
-            $scope.cClass = false;
-        }
+    $scope.showdata = function (item, inc) {
+        $scope.savebtn = true;
+        $scope.editbtn = false;
+        $scope.cClass = item.id;        
     }
     $scope.Updtdata = function (item) {
-        var obj = { 'Id': item.id, 'vedorName': item.vedorName, 'vedorAddress': item.vedorAddress, 'vedorMobile': item.vedorMobile, 'vedorCompnay': item.vedorCompnay, 'cusUserName': item.cusUserName };
+        var obj = { 'Id': item.id, 'vendorName': item.vendorName, 'vendorAddress': item.vendorAddress, 'vendorMobile': item.vendorMobile, 'vendorCompnay': item.vendorCompnay, 'cusUserName': item.cusUserName };
         $http({
             method: 'post',
             url: "/Vendor/UpdtVendor",
@@ -75,16 +74,21 @@ app.controller('MyController', function ($scope, $http,loadvndor) {
             loadvndor.getvndr();
         }, function (error) {
 
-        })
+            })
+        $scope.cClass = false;
+        $scope.savebtn = false;
+        $scope.editbtn = true;
     }
     $scope.delitem = function (id) {
-        $http.post('/Vendor/VendorDlt/?id=' + id).then(
-            function (res) {
-                loadvndor.getvndr();
-            },
-            function (err) {
+        if (confirm("Do you want to continue?")) {
+            $http.post('/Vendor/VendorDlt/?id=' + id).then(
+                function (res) {
+                    loadvndor.getvndr();
+                },
+                function (err) {
 
-            });
+                });
+        }
     }
     $scope.bcktoinbx = function (type) {
         if (type == "create") {
@@ -101,8 +105,10 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
     debugger 
     loadvndor.getvndr();
     loadvndor.getprdct();   
-    $scope.divhide1 = true;
-    $scope.divhide2 = false;
+    $scope.divhide1 = false;
+    $scope.divhide2 = true;
+    $scope.savebtn = false;
+    $scope.editbtn = true;
     $scope.MediProdct = {
         MedicineName: '',
         batchNo: '',
@@ -137,19 +143,12 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
         })
     }
     var counter = 0;
-    $scope.showdata = function (item,inc) {
+    $scope.showdata = function (item, inc) {
+        $scope.savebtn = true;
         $scope.cClass = item.id;
-        counter += inc;
-        var divide = (counter) % 2;
-        if (divide == 0)
-        {
-            $scope.cClass = false;
-        }        
+        $scope.editbtn = false;      
     }
-    $scope.Updtdata = function (item) {
-        var d = item.expDate;
-        var curr_date = d.getDate();
-        var curr_month = d.getMonth();
+    $scope.Updtdata = function (item) {       
         var obj = {
             'Id': item.id,
             'name': item.name,
@@ -169,16 +168,21 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
             loadvndor.getprdct();
         }, function (error) {
 
-        })
+            })       
+        $scope.cClass = false;
+        $scope.savebtn = false;
+        $scope.editbtn = true;
     }
     $scope.delitem = function (id) {
-        $http.post('/Product/DeleteMedicine/?id=' + id).then(
-            function (res) {
-                loadvndor.getprdct();
-            },
-            function (err) {
+        if (confirm("Do you want to continue?")) {
+            $http.post('/Product/DeleteMedicine/?id=' + id).then(
+                function (res) {
+                    loadvndor.getprdct();
+                },
+                function (err) {
 
-            });
+                });
+        }
     }
     $scope.bcktoinbx = function (type)
     {

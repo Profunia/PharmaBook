@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using PharmaBook.Services;
 using PharmaBook.ViewModel;
 using PharmaBook.Entities;
+using AutoMapper;
 
 namespace PharmaBook.Controllers
 {
@@ -30,12 +31,14 @@ namespace PharmaBook.Controllers
             {
                 if(ModelState.IsValid)
                 {
-                    var create = new Vendor();
-                    create.vendorName = obj.vedorName;
-                    create.vendorAddress = obj.vedorAddress;
-                    create.vendorMobile = obj.vedorMobile;
-                    create.vendorCompnay = obj.vedorCompnay;
-                    create.cusUserName = obj.cusUserName;
+                    obj.cusUserName = User.Identity.Name;
+                    var create = Mapper.Map<Vendor>(obj);
+                    //    new Vendor();
+                    //create.vendorName = obj.vendorName;
+                    //create.vendorAddress = obj.vendorAddress;
+                    //create.vendorMobile = obj.vendorMobile;
+                    //create.vendorCompnay = obj.vendorCompnay;
+                    //create.cusUserName = obj.cusUserName;
 
                     _iVendorServices.Add(create);
                     _iVendorServices.Commit();
@@ -57,12 +60,12 @@ namespace PharmaBook.Controllers
                 if (ModelState.IsValid)
                 {
                     var create =_iVendorServices.GetById(obj.Id);
-                    
-                    create.vendorName = obj.vedorName;
-                    create.vendorAddress = obj.vedorAddress;
-                    create.vendorMobile = obj.vedorMobile;
-                    create.vendorCompnay = obj.vedorCompnay;
-                    create.cusUserName = obj.cusUserName;
+                    Mapper.Map(obj, create);
+                    //create.vendorName = obj.vendorName;
+                    //create.vendorAddress = obj.vendorAddress;
+                    //create.vendorMobile = obj.vendorMobile;
+                    //create.vendorCompnay = obj.vendorCompnay;
+                    //create.cusUserName = obj.cusUserName;
 
                     _iVendorServices.Update(create);
                     _iVendorServices.Commit();                   
@@ -77,20 +80,8 @@ namespace PharmaBook.Controllers
         }
         public JsonResult GetAllVendor()
         {
-            IEnumerable<Vendor> vendorlist = new List<Vendor>();           
-            List<VendorDtl> lst = new List<VendorDtl>();
-            vendorlist = _iVendorServices.GetAll();
-            foreach(var i in vendorlist)
-            {
-                VendorDtl obj = new VendorDtl();
-                obj.Id = i.Id;
-                obj.vedorName = i.vendorName;
-                obj.vedorAddress = i.vendorAddress;
-                obj.vedorCompnay = i.vendorCompnay;
-                obj.vedorMobile = i.vendorMobile;
-                obj.cusUserName = i.cusUserName;
-                lst.Add(obj);
-            }           
+            var vendorlist = _iVendorServices.GetAll();
+            var lst=  Mapper.Map<IEnumerable<VendorDtl>>(vendorlist);
             return Json(lst);
         }
         public JsonResult VendorDlt([FromHeader]int id)

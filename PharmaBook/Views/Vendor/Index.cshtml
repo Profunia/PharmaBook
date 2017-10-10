@@ -1,41 +1,17 @@
 ﻿@{
     ViewData["Title"] = "Index";  
 }
-<style>
-    .container {
-        width: 100%;
-        border: 1px solid #d3d3d3;
-    }      
-    .container .header {
-        background-color: #d3d3d3;
-        padding: 3px;
-        cursor: pointer;
-        font-weight: bold;
-    }
-    p.content-one {
-        display: none;
-    }
-</style>
-<script type="text/javascript">
-    $(document).ready(function () { 
-        $('.expand-one').click(function () {
-            $('.content-one').slideToggle('slow');
-            var value = $(this).text();
-            if (value == "Collapse")
-            {
-                $(this).text("Expand")
-            }
-            else
-            {
-                $(this).text("Collapse")
-            }
-        });
-    })
-</script>
+
 <div class="blank" ng-controller="MyController">
     <h2>Vendor Inbox</h2>
     <div class="blankpage-main" ng-if="divhide1">
-        <a href="" ng-click="bcktoinbx('create')"><< Go to Inbox</a>
+        <div class="row">
+            <div class="col-xs-4">
+                <a href="" class="btn btn-primary" ng-click="bcktoinbx('create')">Back to Inbox</a>
+             
+            </div>           
+        </div>
+        
         <div class="row mt">
             <div class="col-xs-6 content-one">
                 <div class="form-group">
@@ -73,14 +49,13 @@
         </div>
         </div>
         <br />
-    <div class="blankpage-main" ng-if="divhide2">
-        <a href="" ng-click="bcktoinbx('inbox')"><< Back Vendor Entry</a>
+    <div class="blankpage-main" ng-if="divhide2">      
         <div class="row mt">
             <div class="col-md-12">
                 <div class="content-panel">
                     <div class="row">
                         <div class="col-xs-4">
-                            <h4>Search Vendor</h4>
+                            <a href="" class="btn btn-primary" ng-click="bcktoinbx('inbox')">Go to Vendor Entry</a>
                         </div>
                         <div class="col-xs-8 right">
                             <input type="text" placeholder="Search Vendor" class="form-control" ng-model="searchbox" />
@@ -100,13 +75,13 @@
                         <tbody>
                             <tr ng-repeat="item in VendorList|filter: searchbox">
                                 <td>{{$index+1}}</td>
-                                <td><span ng-hide="cClass==item.id">{{item.vedorName }}</span><input type="text" ng-model="item.vedorName" ng-show="cClass==item.id" /></td>
-                                <td class="hidden-phone"><span ng-hide="cClass==item.id">{{item.vedorAddress}}</span><input type="text" ng-model="item.vedorAddress" ng-show="cClass==item.id" /></td>
-                                <td><span ng-hide="cClass==item.id">{{item.vedorMobile}}</span><input type="text" ng-model="item.vedorMobile" ng-show="cClass==item.id" /></td>
-                                <td><span ng-hide="cClass==item.id">{{item.vedorCompnay}}</span><input type="text" ng-model="item.vedorCompnay" ng-show="cClass==item.id" /></td>
+                                <td><span ng-hide="cClass==item.id">{{item.vendorName }}</span><input type="text" ng-model="item.vendorName" ng-show="cClass==item.id" /></td>
+                                <td class="hidden-phone"><span ng-hide="cClass==item.id">{{item.vendorAddress}}</span><input type="text" ng-model="item.vendorAddress" ng-show="cClass==item.id" /></td>
+                                <td><span ng-hide="cClass==item.id">{{item.vendorMobile}}</span><input type="text" ng-model="item.vendorMobile" ng-show="cClass==item.id" /></td>
+                                <td><span ng-hide="cClass==item.id">{{item.vendorCompnay}}</span><input type="text" ng-model="item.vendorCompnay" ng-show="cClass==item.id" /></td>
                                 <td>
-                                    <button class="btn btn-success btn-xs" ng-click="Updtdata(item)"><i class="fa fa-check"></i>Save</button>
-                                    <button class="btn btn-primary btn-xs" ng-click="showdata(item,1)"><i class="fa fa-pencil"></i>Edit</button>
+                                    <button class="btn btn-success btn-xs" ng-click="Updtdata(item)" ng-if="savebtn"><i class="fa fa-check"></i>Save</button>
+                                    <button class="btn btn-primary btn-xs" ng-click="showdata(item,1)" ng-if="editbtn"><i class="fa fa-pencil" ></i>Edit</button>
                                     <button class="btn btn-danger btn-xs" ng-click="delitem(item.id)"><i class="fa fa-trash-o"></i> Delete</button>
                                 </td>
                             </tr>
