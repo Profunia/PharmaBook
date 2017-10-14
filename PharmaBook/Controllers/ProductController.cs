@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using PharmaBook.Services;
 using PharmaBook.ViewModel;
 using PharmaBook.Entities;
+using AutoMapper;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -41,16 +42,19 @@ namespace PharmaBook.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    Product objMap = new Product();
-                    objMap.batchNo = obj.batchNo;
-                    objMap.companyName = obj.companyName;
+                   
+                    Product objMap = Mapper.Map<Product>(obj);
+                    objMap.lastUpdated = DateTime.Now.ToString();
+                    objMap.isActive = true;
                     objMap.cusUserName = User.Identity.Name;
-                    objMap.expDate = obj.expDate;
-                    objMap.lastUpdated = DateTime.Now.ToString();                   
-                    objMap.openingStock = obj.openingStock;
-                    objMap.name = obj.name;
-                    objMap.MRP = obj.MRP;
-                    objMap.isActive = true;                    
+
+                    //objMap.batchNo = obj.batchNo;
+                    //objMap.companyName = obj.companyName;                    
+                    //objMap.expDate = obj.expDate;                                     
+                    //objMap.openingStock = obj.openingStock;
+                    //objMap.name = obj.name;
+                    //objMap.MRP = obj.MRP;
+                                        
                     _iProduct.Add(objMap);
                     _iProduct.Commit();
                     msg = obj.name + " medicine has been successfully added!!";
@@ -89,21 +93,11 @@ namespace PharmaBook.Controllers
         public JsonResult GetAllMedicine()
         {
             string username = User.Identity.Name;
-            IEnumerable<Product> productlist = new List<Product>();
-            List<ProductViewModel> lst = new List<ProductViewModel>();
-            productlist = _iProduct.GetAll(username);
-            foreach(var i in productlist)
-            {
-                ProductViewModel obj = new ProductViewModel();
-                obj.Id = i.Id;
-                obj.name = i.name;
-                obj.batchNo = i.batchNo;
-                obj.expDate = i.expDate;
-                obj.companyName = i.companyName;
-                obj.MRP = i.MRP;
-                obj.openingStock = i.openingStock;
-                lst.Add(obj);
-            }
+            var lst = (object)null;
+            var productlist = _iProduct.GetAll(username);
+            lst = Mapper.Map<IEnumerable<ProductViewModel>>(productlist);
+            //List<ProductViewModel> lst = new List<ProductViewModel>();
+                     
             return Json(lst);
         }
         public JsonResult UpdateMedicn([FromBody]ProductViewModel prdvwmdl)
@@ -112,12 +106,9 @@ namespace PharmaBook.Controllers
             try
             {
                 var medicn = _iProduct.GetById(prdvwmdl.Id);
-                medicn.name = prdvwmdl.name;
-                medicn.batchNo = prdvwmdl.batchNo;
-                medicn.expDate = prdvwmdl.expDate;
-                medicn.companyName = prdvwmdl.companyName;
-                medicn.MRP = prdvwmdl.MRP;
-                medicn.openingStock = prdvwmdl.openingStock;
+                Mapper.Map(prdvwmdl, medicn);
+                medicn.lastUpdated = DateTime.Now.ToString();
+                medicn.isActive = true;                        
                 _iProduct.Update(medicn);
                 _iProduct.Commit();
                 msg = "Medicne Updated Successfulyy";
