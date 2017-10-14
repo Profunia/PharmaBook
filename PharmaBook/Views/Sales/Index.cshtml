@@ -1,0 +1,58 @@
+
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="blank" >
+    <div class="blankpage-main">
+        hasan
+        <div class="row">
+            <div class="col-xs-4">
+                <a href="" class="btn btn-primary" ng-click="bcktoinbx('create')">Back to Inbox</a>
+            </div>
+        </div>
+        <div class="row mt">
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label>Medicine Name <span style="color:red;"> *</span></label>
+                    <input required class="form-control" placeholder="Medicine Name" ng-model="MediProdct.MedicineName">
+                    <span asp-for="name" style="color:red;"></span>
+                </div>
+                <div class="form-group">
+                    <label>Batch no# <span style="color:red;"> *</span></label>
+                    <input class="form-control" required placeholder="Batch no#" ng-model="MediProdct.batchNo">
+                    <span asp-for="batchNo" style="color:red;"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Stock <span style="color:red;"> *</span></label>
+                    <input class="form-control" required placeholder="Opening Stock" ng-model="MediProdct.openingStock">
+                    <small id="emailHelp" class="form-text text-muted">Note : 3 stef x 10 tablets = 30 stocks </small>
+                    <span asp-for="openingStock" style="color:red;"></span>
+                </div>
+                <div class="form-group">
+                    <label>Exp Date <span style="color:red;"> *</span></label>
+                    <input type="date" class="form-control" required placeholder="Exp Date" ng-model="MediProdct.ExpDt">
+                    <span asp-for="expDate" style="color:red;"></span>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label>Company Name</label>
+                    <input class="form-control" placeholder="Company Name" ng-model="MediProdct.CompanyName">
+                </div>
+                <div class="form-group">
+                    <label>MRP</label>
+                    <input class="form-control" placeholder="MRP" ng-model="MediProdct.MRP">
+                </div>
+                <div class="form-group">
+                    <label for="exampleSelect1">Select Vendor</label>
+                    <select class="form-control" id="exampleSelect1" ng-options="s.id as s.vendorName for s in VendorList" ng-model="MediProdct.vendorID"></select>
+                </div>
+                <div class="form-group">
+                    <br /><br />
+                    <button type="submit" class="btn btn-primary" ng-click="AddMedcin()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
