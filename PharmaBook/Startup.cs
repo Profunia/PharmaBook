@@ -48,6 +48,8 @@ namespace PharmaBook
             services.AddScoped<IProduct, ProductServices>();
             services.AddScoped<IPurchasedHistory, PurchasedHistoryService>();
             services.AddScoped<IVendorServices, VendorServices>();
+            services.AddScoped<Imaster,MasterInvcSrvice>();
+            services.AddScoped<IChild, ChildInvcSrvice>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +59,8 @@ namespace PharmaBook
             {
                 config.CreateMap<VendorDtl, Vendor>().ReverseMap();
                 config.CreateMap<ProductViewModel, Product>().ReverseMap();
+                config.CreateMap<InvcMstrVmdl, MasterInvoice>().ReverseMap();
+                config.CreateMap<InvcChildVmdl, ChildInvoice>().ReverseMap();
             });
            
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));

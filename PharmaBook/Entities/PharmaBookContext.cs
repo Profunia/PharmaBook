@@ -14,6 +14,7 @@ namespace PharmaBook.Entities
         public DbSet<Product> products { get; set; }
         public DbSet<PurchasedHistory> purchasedHistory { get; set; }
 
-
+        public DbSet<MasterInvoice> InvMaster { get; set; }
+        public DbSet<ChildInvoice> InvChild { get; set; }
     }
 }

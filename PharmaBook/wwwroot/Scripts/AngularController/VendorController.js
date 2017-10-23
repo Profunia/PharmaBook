@@ -157,7 +157,8 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
             'companyName': item.companyName,
             'MRP': item.mrp,
             'openingStock': item.openingStock,
-            'vendorID': item.vendorID
+            'vendorID': item.vendorID,
+            'cusUserName': item.cusUserName      
         };
         $http({
             method: 'post',
@@ -195,4 +196,108 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
             $scope.divhide2 = false;
         }
     }
+})
+
+app.controller('SalesController', function ($scope, $http, loadvndor) {
+    debugger
+    $scope.cartlists = [];
+    loadvndor.getprdct()
+    $scope.PrdId = '',
+    $scope.Qty = '';
+    $scope.master = {
+        Id: '',
+        InvId: '',
+        PatientName: '',
+        PatientAdres: '',
+        DrName: '',
+        RegNo: ''
+    }
+    $scope.child = {
+        Id: '',        
+        Name: '',       
+        Description: '',
+        Mrg: '',
+        BatchNo: '',
+        ExpDt: '',
+        Amount: ''
+    }
+    $scope.AddMstrInvc = function () {
+        var obj = {
+            'PatientName': $scope.master.PatientName,
+            'PatientAdres': $scope.master.PatientAdres,
+            'DrName': $scope.master.DrName,
+            'RegNo': $scope.master.RegNo
+        };
+        $http({
+            method: 'post',
+            url: "/Sales/AddMasterInvc",
+            data: JSON.stringify(obj),
+            dataType: "json"
+            // headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        }).then(function (response) {
+
+        }, function (error) {
+
+        })
+    }
+    var final = 0;
+    var total = 0;
+    $scope.AddChildInvc = function () {       
+        var qty = $scope.Qty
+        var price = $scope.child.Amount
+        total = (qty * price);
+        final += total;
+        $scope.unitprice = price;
+        $scope.totalprice = final;
+        $scope.cartlists.push({
+            'PrdId': $scope.PrdId,
+            'Qty': $scope.Qty,
+            'ExpDt': $scope.child.ExpDt,
+            'Amount': total,
+            'Description': $scope.child.Description,
+            'BatchNo': $scope.child.BatchNo
+        });
+    }
+    $scope.DelCrtIitem = function (index) {
+        total = $scope.child.Amount;
+        final -= total;       
+        $scope.totalprice = final;
+        $scope.cartlists.splice(index, 1);
+    }
+    $scope.medicineselect = function () {
+        var id = $scope.PrdId;
+        $http.get('/Product/GetMedicnById/?id=' + id).then(function (res) {
+            $scope.child = {  Description: res.data.companyName, BatchNo: res.data.batchNo, ExpDt: res.data.expDate, Amount: res.data.mrp };
+        }, function (error) {
+        })
+    }
+    
+    $scope.SaveInvc = function () {
+        if ($scope.master.PatientName == '' || $scope.master.PatientAdres == '' || $scope.master.DrName == '' || $scope.master.RegNo == '')
+        {
+            $scope.master.PatientName = 'Guest',
+            $scope.master.PatientAdres = 'Guest',
+            $scope.master.DrName = 'Guest',
+            $scope.master.RegNo = 'Guest'
+        }
+        var obj1 = {
+            'PatientName': $scope.master.PatientName,
+            'PatientAdres': $scope.master.PatientAdres,
+            'DrName': $scope.master.DrName,
+            'RegNo': $scope.master.RegNo
+        };
+        var obj2 = $scope.cartlists;
+        var obj = { childinvc: obj2, masterinvc: obj1 }
+        things = JSON.stringify({ 'things': obj1 });
+        $http({
+            method: 'post',
+            url: "/Sales/AddMasterInvc",
+            data: JSON.stringify(obj),
+            dataType: "json"
+        }).then(function (response) {
+
+        }, function (error) {
+
+        })
+    }    
 })

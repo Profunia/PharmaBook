@@ -96,9 +96,13 @@ namespace PharmaBook.Controllers
             var lst = (object)null;
             var productlist = _iProduct.GetAll(username);
             lst = Mapper.Map<IEnumerable<ProductViewModel>>(productlist);
-            //List<ProductViewModel> lst = new List<ProductViewModel>();
-                     
+            //List<ProductViewModel> lst = new List<ProductViewModel>();                     
             return Json(lst);
+        }
+        public JsonResult GetMedicnById([FromHeader] int id)
+        {
+            var productlist = _iProduct.GetById(id);           
+            return Json(productlist);
         }
         public JsonResult UpdateMedicn([FromBody]ProductViewModel prdvwmdl)
         {

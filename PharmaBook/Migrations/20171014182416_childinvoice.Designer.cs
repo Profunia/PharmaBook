@@ -8,9 +8,10 @@ using PharmaBook.Entities;
 namespace PharmaBook.Migrations
 {
     [DbContext(typeof(PharmaBookContext))]
-    partial class PharmaBookContextModelSnapshot : ModelSnapshot
+    [Migration("20171014182416_childinvoice")]
+    partial class childinvoice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -122,32 +123,6 @@ namespace PharmaBook.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("PharmaBook.Entities.ChildInvoice", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<double>("Amount");
-
-                    b.Property<string>("BatchNo");
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("ExpDt");
-
-                    b.Property<int>("MasterInvID");
-
-                    b.Property<string>("Mrg");
-
-                    b.Property<int>("PrdId");
-
-                    b.Property<int>("Qty");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("InvChild");
-                });
-
             modelBuilder.Entity("PharmaBook.Entities.MasterInvoice", b =>
                 {
                     b.Property<int>("Id")
@@ -167,7 +142,7 @@ namespace PharmaBook.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("InvMaster");
+                    b.ToTable("MstrInvc");
                 });
 
             modelBuilder.Entity("PharmaBook.Entities.Product", b =>

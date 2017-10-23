@@ -8,9 +8,10 @@ using PharmaBook.Entities;
 namespace PharmaBook.Migrations
 {
     [DbContext(typeof(PharmaBookContext))]
-    partial class PharmaBookContextModelSnapshot : ModelSnapshot
+    [Migration("20171023145539_dbCheckStatus")]
+    partial class dbCheckStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -135,8 +136,6 @@ namespace PharmaBook.Migrations
 
                     b.Property<string>("ExpDt");
 
-                    b.Property<int>("MasterInvID");
-
                     b.Property<string>("Mrg");
 
                     b.Property<int>("PrdId");
@@ -153,6 +152,8 @@ namespace PharmaBook.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("ChildInvoiceId");
+
                     b.Property<string>("DrName");
 
                     b.Property<DateTime>("InvCrtdate");
@@ -166,6 +167,8 @@ namespace PharmaBook.Migrations
                     b.Property<string>("RegNo");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ChildInvoiceId");
 
                     b.ToTable("InvMaster");
                 });
@@ -327,6 +330,13 @@ namespace PharmaBook.Migrations
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("PharmaBook.Entities.MasterInvoice", b =>
+                {
+                    b.HasOne("PharmaBook.Entities.ChildInvoice")
+                        .WithMany("MasterInvID")
+                        .HasForeignKey("ChildInvoiceId");
                 });
         }
     }

@@ -80,8 +80,17 @@ namespace PharmaBook.Controllers
         }
         public JsonResult GetAllVendor()
         {
-            var vendorlist = _iVendorServices.GetAll();
-            var lst=  Mapper.Map<IEnumerable<VendorDtl>>(vendorlist);
+            var lst = (object)null;
+            try
+            {
+                var vendorlist = _iVendorServices.GetAll();
+                //lst = vendorlist;
+                lst = Mapper.Map<IEnumerable<VendorDtl>>(vendorlist);
+            }
+            catch(Exception e)
+            {
+                string msg=e.Message;
+            }
             return Json(lst);
         }
         public JsonResult VendorDlt([FromHeader]int id)

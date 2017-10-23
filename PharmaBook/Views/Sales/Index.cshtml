@@ -2,57 +2,137 @@
 @{
     ViewData["Title"] = "Index";
 }
-<div class="blank" >
-    <div class="blankpage-main">
-        hasan
-        <div class="row">
+<div class="blank"  ng-controller="SalesController">
+    <div class="blankpage-main">       
+        @*<div class="row">
             <div class="col-xs-4">
                 <a href="" class="btn btn-primary" ng-click="bcktoinbx('create')">Back to Inbox</a>
             </div>
-        </div>
+        </div>*@
         <div class="row mt">
             <div class="col-xs-6">
                 <div class="form-group">
-                    <label>Medicine Name <span style="color:red;"> *</span></label>
-                    <input required class="form-control" placeholder="Medicine Name" ng-model="MediProdct.MedicineName">
+                    <label>Patient Name <span style="color:red;"> </span></label>
+                    <input required class="form-control" placeholder="Patient Name" ng-model="master.PatientName">
                     <span asp-for="name" style="color:red;"></span>
                 </div>
                 <div class="form-group">
-                    <label>Batch no# <span style="color:red;"> *</span></label>
-                    <input class="form-control" required placeholder="Batch no#" ng-model="MediProdct.batchNo">
+                    <label>Address <span style="color:red;"> </span></label>
+                    <input class="form-control" required placeholder="Address" ng-model="master.PatientAdres">
                     <span asp-for="batchNo" style="color:red;"></span>
-                </div>
-
-                <div class="form-group">
-                    <label>Stock <span style="color:red;"> *</span></label>
-                    <input class="form-control" required placeholder="Opening Stock" ng-model="MediProdct.openingStock">
-                    <small id="emailHelp" class="form-text text-muted">Note : 3 stef x 10 tablets = 30 stocks </small>
-                    <span asp-for="openingStock" style="color:red;"></span>
-                </div>
-                <div class="form-group">
-                    <label>Exp Date <span style="color:red;"> *</span></label>
-                    <input type="date" class="form-control" required placeholder="Exp Date" ng-model="MediProdct.ExpDt">
-                    <span asp-for="expDate" style="color:red;"></span>
-                </div>
+                </div>                
             </div>
             <div class="col-xs-6">
                 <div class="form-group">
-                    <label>Company Name</label>
-                    <input class="form-control" placeholder="Company Name" ng-model="MediProdct.CompanyName">
+                    <label>Dr. Name</label>
+                    <input class="form-control" placeholder="Dr. Name" ng-model="master.DrName">
                 </div>
                 <div class="form-group">
-                    <label>MRP</label>
-                    <input class="form-control" placeholder="MRP" ng-model="MediProdct.MRP">
+                    <label>Regd. No</label>
+                    <input class="form-control" placeholder="Regd. No" ng-model="master.RegNo">
+                </div> 
+            </div>
+        </div>
+    </div><br />
+    <div class="blankpage-main">
+        @*<div class="row">
+                <div class="col-xs-4">
+                    <a href="" class="btn btn-primary" ng-click="bcktoinbx('create')">Back to Inbox</a>
+                </div>
+            </div>*@
+        <div class="row mt">
+            <div class="col-xs-3">
+                <div class="form-group">
+                    <label>Qty <span style="color:red;"> </span></label>
+                    <input required class="form-control" placeholder="Qty" ng-model="Qty">
+                    <span asp-for="name" style="color:red;"></span>
                 </div>
                 <div class="form-group">
-                    <label for="exampleSelect1">Select Vendor</label>
-                    <select class="form-control" id="exampleSelect1" ng-options="s.id as s.vendorName for s in VendorList" ng-model="MediProdct.vendorID"></select>
-                </div>
+                    <label>Exp. Date <span style="color:red;"> </span></label>
+                    <input class="form-control" required placeholder="Medicine" ng-model="child.ExpDt| date :  'dd-MM-y' ">
+                    <span asp-for="batchNo" style="color:red;"></span>
+                </div>                
+            </div>
+            <div class="col-xs-3">
                 <div class="form-group">
-                    <br /><br />
-                    <button type="submit" class="btn btn-primary" ng-click="AddMedcin()">Submit</button>
+                    <label>Medicine <span style="color:red;"> </span></label>
+                    <select class="form-control" required placeholder="Medicine" ng-model="PrdId" ng-options="s.id as s.name for s in ProductList" ng-change="medicineselect()"></select>
+                    <span asp-for="batchNo" style="color:red;"></span>
+                </div>  
+                <div class="form-group">
+                    <label>Rs.</label>
+                    <input class="form-control" placeholder="Dr. Name" ng-model="child.Amount">
+                </div>                
+            </div>
+            <div class="col-xs-3">
+                <div class="form-group">
+                    <label>Description <span style="color:red;"> </span></label>
+                    <input class="form-control" required placeholder="Medicine" ng-model="child.Description">
+                    <span asp-for="batchNo" style="color:red;"></span>
+                </div>                
+                <div class="form-group">
+                    <br />
+                    <button type="submit" class="btn btn-primary" ng-click="AddChildInvc()">Add to Cart</button>
                 </div>
             </div>
+            <div class="col-xs-3">
+                <div class="form-group">
+                    <label>Batch No.# <span style="color:red;"> *</span></label>
+                    <input class="form-control" required placeholder="Medicine" ng-model="child.BatchNo">
+                    <span asp-for="batchNo" style="color:red;"></span>
+                </div>
+            </div>
+        </div>
+    </div><br />
+    <div class="blankpage-main" >
+        <div class="row mt">
+            <div class="col-md-12">
+                <div class="content-panel">
+                    @*<div class="row">
+                        <div class="col-xs-4">
+                            <a href="" class="btn btn-primary" ng-click="bcktoinbx('inbox')">Go to Medicine Entry</a>
+                        </div>
+                        <div class="col-xs-8 right">
+                            <input type="text" placeholder="Search Vendor" class="form-control" ng-model="searchbox" />
+                        </div>
+                    </div>*@
+                    <div style="overflow: auto;height: 350px;">
+                        <table class="table table-striped table-advance table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Qty</th>                                   
+                                    <th>Description</th>                                   
+                                    <th>Batch No.#</th>
+                                    <th>Exp Date</th>
+                                    <th>Rate</th>
+                                    <th>Rs.</th>
+                                    <th> Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in cartlists|filter: searchbox">
+                                    <td>{{$index+1}}</td>
+                                    <td>{{item.Qty}}</td>                                   
+                                    <td>{{item.Description}}</td>                                   
+                                    <td>{{item.BatchNo}}</td>
+                                    <td>{{item.ExpDt | date :  "dd-MM-y" }}</td>
+                                    <td>{{item.Qty}} * {{unitprice}}</td>
+                                    <td>{{item.Amount}}</td>
+                                    <td>                                       
+                                        <button class="btn btn-danger btn-xs" ng-click="DelCrtIitem($index)"><i class="fa fa-trash-o"></i> Delete</button>
+                                    </td>
+                                </tr>
+                                <tr><td></td><td></td><td></td><td></td><td></td><td>Total</td><td>{{totalprice}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div><!-- /content-panel -->
+            </div><!-- /col-md-12 -->
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" ng-click="SaveInvc()">Save Invoice</button>
         </div>
     </div>
     </div>

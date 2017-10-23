@@ -8,9 +8,10 @@ using PharmaBook.Entities;
 namespace PharmaBook.Migrations
 {
     [DbContext(typeof(PharmaBookContext))]
-    partial class PharmaBookContextModelSnapshot : ModelSnapshot
+    [Migration("20171015052554_newsales")]
+    partial class newsales
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -127,15 +128,15 @@ namespace PharmaBook.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<double>("Amount");
-
                     b.Property<string>("BatchNo");
 
                     b.Property<string>("Description");
 
                     b.Property<string>("ExpDt");
 
-                    b.Property<int>("MasterInvID");
+                    b.Property<int>("MasterId_idnty");
+
+                    b.Property<int?>("MasterInvoiceId");
 
                     b.Property<string>("Mrg");
 
@@ -143,9 +144,13 @@ namespace PharmaBook.Migrations
 
                     b.Property<int>("Qty");
 
+                    b.Property<double>("Rs");
+
                     b.HasKey("Id");
 
-                    b.ToTable("InvChild");
+                    b.HasIndex("MasterInvoiceId");
+
+                    b.ToTable("ChildInvoice");
                 });
 
             modelBuilder.Entity("PharmaBook.Entities.MasterInvoice", b =>
@@ -167,7 +172,7 @@ namespace PharmaBook.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("InvMaster");
+                    b.ToTable("MstrInvc");
                 });
 
             modelBuilder.Entity("PharmaBook.Entities.Product", b =>
@@ -327,6 +332,13 @@ namespace PharmaBook.Migrations
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("PharmaBook.Entities.ChildInvoice", b =>
+                {
+                    b.HasOne("PharmaBook.Entities.MasterInvoice")
+                        .WithMany("ChildInvoices")
+                        .HasForeignKey("MasterInvoiceId");
                 });
         }
     }
