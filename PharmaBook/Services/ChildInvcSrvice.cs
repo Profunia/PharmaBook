@@ -13,8 +13,7 @@ namespace PharmaBook.Services
         void Update(ChildInvoice chldinvc);
         ChildInvoice getlastproduct();
         void Commit();
-        IEnumerable<ChildInvoice> GetAll(string userName);
-        ChildInvoice GetById(int Id);
+        IEnumerable<ChildInvoice> GetAll(int id);        
     }
     public class ChildInvcSrvice : IChild
     {
@@ -43,9 +42,9 @@ namespace PharmaBook.Services
             return _context.InvChild.OrderByDescending(x => x.Id).ToList();
         }
 
-        public ChildInvoice GetById(int Id)
+        public IEnumerable<ChildInvoice> GetAll(int id)
         {
-            throw new NotImplementedException();
+            return _context.InvChild.Where(x => x.MasterInvID==id).ToList();
         }
 
         public ChildInvoice getlastproduct()
@@ -56,6 +55,6 @@ namespace PharmaBook.Services
         public void Update(ChildInvoice chldinvc)
         {
             throw new NotImplementedException();
-        }
+        }         
     }
 }

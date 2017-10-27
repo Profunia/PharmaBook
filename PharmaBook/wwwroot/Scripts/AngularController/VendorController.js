@@ -1,6 +1,6 @@
 ﻿var appA = angular.module("ProductModule", []);
 var app = angular.module("MyModuleA", []);
-
+var idn = 0;
 app.factory('loadvndor', ['$http', '$rootScope', function ($http, $rootScope) {
     $rootScope.UserName = '';
     var fac = {};
@@ -137,7 +137,7 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
             dataType: "json"
             // headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         }).then(function (response) {
-            $window.location.href = "http://localhost:49440/Product/Index";
+            
         }, function (error) {
 
         })
@@ -198,12 +198,13 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
     }
 })
 
-app.controller('SalesController', function ($scope, $http, loadvndor) {
+app.controller('SalesController', function ($scope, $http, loadvndor, $window, $rootScope) {
     debugger
+    loadinvoice();
     $scope.cartlists = [];
     loadvndor.getprdct()
     $scope.PrdId = '',
-    $scope.Qty = '';
+    $scope.Qty = '';    
     $scope.master = {
         Id: '',
         InvId: '',
@@ -294,10 +295,23 @@ app.controller('SalesController', function ($scope, $http, loadvndor) {
             url: "/Sales/AddMasterInvc",
             data: JSON.stringify(obj),
             dataType: "json"
-        }).then(function (response) {
-
+        }).then(function (response) {            
+            if (confirm("Do you want to Print Invoice?")) {
+                idn = response.data.masterinvc.id;  
+                //$scope.finalchldinvclst = response.data.invcchld;
+                $window.location.href = "http://localhost:49440/Sales/Invoice/?id=" + idn;
+                //loadinvoice(mstrid)
+            }
         }, function (error) {
 
+            })
+        
+    }
+    function loadinvoice(id) {
+        $http.get('/Sales/GetInvoice/?id=' + idn).then(function (res) {
+            $scope.finalmstrinvc = response.data.masterinvc;
+            $scope.finalchldinvclst = response.data.invcchld;
+        }, function (error) {
         })
-    }    
+        }
 })
