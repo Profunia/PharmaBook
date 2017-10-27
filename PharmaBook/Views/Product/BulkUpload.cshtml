@@ -3,5 +3,32 @@
     ViewData["Title"] = "BulkUpload";
 }
 
-<h2>BulkUpload</h2>
+<div class="blank">
+    <h2>Create Bulk Medicine</h2>
+<div class="blankpage-main">
+    <div class="row">
+        <div class="col-lg-2">
+            <strong>Step : 1</strong>
+        </div>
+        <div class="col-lg-6">
+            <a href="~/bulktemplate/BulkUploadTemplate.xlsx" class="btn btn-primary">Download Template</a>
+        </div>
+    </div>
+    <br />
+    <br/>
+    <form asp-antiforgery="true" class="form-horizontal" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-lg-2">
+                <strong>Step : 2</strong>
+            </div>
+            <div class="col-lg-4">
+                <input type="file" name="file" />
 
+            </div>
+            <div class="col-lg-2">
+                <input type="submit" value="Upload" class="btn btn-primary" />
+            </div>
+        </div>
+      </form>
+</div>
+</div>

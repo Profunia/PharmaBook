@@ -8,6 +8,8 @@ using PharmaBook.Services;
 using PharmaBook.ViewModel;
 using PharmaBook.Entities;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -47,14 +49,7 @@ namespace PharmaBook.Controllers
                     objMap.lastUpdated = DateTime.Now.ToString();
                     objMap.isActive = true;
                     objMap.cusUserName = User.Identity.Name;
-
-                    //objMap.batchNo = obj.batchNo;
-                    //objMap.companyName = obj.companyName;                    
-                    //objMap.expDate = obj.expDate;                                     
-                    //objMap.openingStock = obj.openingStock;
-                    //objMap.name = obj.name;
-                    //objMap.MRP = obj.MRP;
-                                        
+                                                            
                     _iProduct.Add(objMap);
                     _iProduct.Commit();
                     msg = obj.name + " medicine has been successfully added!!";
@@ -84,12 +79,32 @@ namespace PharmaBook.Controllers
                
             }
             return Json(msg);
-        }        
+        }
+        [HttpGet]
         public IActionResult BulkUpload()
         {
             return View();
         }
-        
+
+        [ValidateAntiForgeryToken, HttpPost]
+        public IActionResult BulkUpload(IFormFile file)
+        {
+           
+            if (file.Length > 0)
+            {
+                string fileExtension = Path.GetExtension(file.FileName.Trim('"'));
+                if(fileExtension.Equals(".xlsx") || fileExtension.Equals(".xls"))
+                {
+                    //TODO
+                }
+                else
+                {
+                    string msg = "invalid file format";
+                }
+            }
+                return View();
+        }
+
         public JsonResult GetAllMedicine()
         {
             string username = User.Identity.Name;
