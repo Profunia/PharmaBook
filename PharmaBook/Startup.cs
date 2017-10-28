@@ -50,6 +50,9 @@ namespace PharmaBook
             services.AddScoped<IVendorServices, VendorServices>();
             services.AddScoped<Imaster,MasterInvcSrvice>();
             services.AddScoped<IChild, ChildInvcSrvice>();
+
+            services.AddScoped<IMasterPOServices, MasterPOServices>();
+            services.AddScoped<IchildPoServices, ChildPOServices>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
