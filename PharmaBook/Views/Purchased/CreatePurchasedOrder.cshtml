@@ -1,7 +1,7 @@
 ﻿<h2>Create Purchased Order</h2>
 
 <div  ng-controller="PurchasedController">
-    <div id="CreatePo" ng-show="!isPreview">
+    <div id="CreatePo" ng-show="!isPreview && !isSucessDB">
         <div class="blankpage-main">
             <div class="row">
                 <div class="col-xs-6">
@@ -71,7 +71,7 @@
         </div>
 
     </div>
-    <div id="Preview" ng-show="isPreview">
+    <div id="Preview" ng-show="isPreview && !isSucessDB">
         <div class="blankpage-main">
 
             <div class="row">
@@ -134,5 +134,18 @@
 
             </div>
         </div>
-
+    <div ng-show="isSucessDB">
+        <div class="blankpage-main">
+            <div class="row alert alert-success" ng-show="isSucessDB">
+                <strong>Success!</strong> Purschsed order has been successfully created!!
+                <br /><br /> <hr />
+                <a class="btn btn-primary" asp-action="Index" asp-controller="Purchased"> 
+                    << Purchsed Inbox
+                </a>
+            </div>
+            <div class="row alert alert-danger" ng-show="!isSucessDB">
+                <strong>Error!</strong> Due to some reasone, purchased not able to created!! please try again.
+            </div>
+        </div>
+     </div>
 </div>

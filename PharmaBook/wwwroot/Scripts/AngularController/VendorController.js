@@ -358,8 +358,7 @@ app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootS
         
         if ($event.target.checked) {
             
-            var temp = ProdList[index];
-            console.log(temp);
+            var temp = ProdList[index];            
             var CreateObj = {
                 productIndex: index,
                 ProdID: temp.id,
@@ -367,6 +366,7 @@ app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootS
                 MedicineName: temp.name,
                 Mfg: temp.companyName,
                 Qty: '',
+                VendorID: $scope.vendorID,
                 Remarks: ''
             }
             $scope.PreCreatePO.push(CreateObj)
@@ -401,8 +401,21 @@ app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootS
         }
 
         if ($scope.isReadyToCallAPI) {
-            // API call
-            console.log($scope.PreCreatePO);
+
+            $scope.isSucessDB = false;           
+            var obj = $scope.PreCreatePO;            
+            $http({
+                method: 'post',
+                url: "/Purchased/CreatePO",
+                data: JSON.stringify(obj),
+                dataType: "json"
+            }).then(function (res) {
+                $scope.isSucessDB = true;
+
+            }, function (error) {
+                $scope.isSucessDB = false;
+            })
+            
         }
     }
 
