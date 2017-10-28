@@ -19,6 +19,15 @@ namespace PharmaBook.Controllers
         private Imaster _imaster;
         private IChild _ichild;
         private IProduct _iProduct;
+
+        [HttpGet]
+        public IActionResult InvInbox()
+        {
+            return View();
+        }
+
+        
+
         public SalesController(Imaster master, IChild child, IProduct product)
         {
             _imaster = master;
