@@ -24,6 +24,11 @@ namespace PharmaBook.Controllers
         {
             return View();
         }
+        public JsonResult GetVendorByID(int id)
+        {
+            var selectedVendor = _iVendorServices.GetById(id);
+            return Json(selectedVendor);
+        }
         public JsonResult VendorCreate([FromBody]VendorDtl obj)
         {
             string msg = string.Empty;
@@ -32,13 +37,7 @@ namespace PharmaBook.Controllers
                 if(ModelState.IsValid)
                 {
                     obj.cusUserName = User.Identity.Name;
-                    var create = Mapper.Map<Vendor>(obj);
-                    //    new Vendor();
-                    //create.vendorName = obj.vendorName;
-                    //create.vendorAddress = obj.vendorAddress;
-                    //create.vendorMobile = obj.vendorMobile;
-                    //create.vendorCompnay = obj.vendorCompnay;
-                    //create.cusUserName = obj.cusUserName;
+                    var create = Mapper.Map<Vendor>(obj);                   
 
                     _iVendorServices.Add(create);
                     _iVendorServices.Commit();

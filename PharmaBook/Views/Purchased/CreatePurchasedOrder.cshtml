@@ -1,0 +1,24 @@
+﻿<h2>Create Purchased Order</h2>
+<div class="blankpage-main" ng-controller="PurchasedController">
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>Select Vendor</label> <span style="color:red;">*</span>
+
+                <select class="form-control" id="exampleSelect1"
+                        ng-options="s.id as s.vendorName for s in VendorList"
+                        ng-model="vendorID" ng-change="getSelectedVendor()"></select>
+            </div>
+        </div>
+        <div class="col-xs-6" ng-show="isVendorSelected">
+            <p>
+                Selected vendor details : <br /><hr />
+                Vendor ID:  <strong>{{vendorID}}</strong><br />
+                Name : <strong> {{selectedVendor.vendorName }}</strong>,
+                From : <strong> {{selectedVendor.vendorCompnay}}</strong>,
+                Address : <strong> {{selectedVendor.vendorAddress}}</strong>
+            </p>
+        </div>
+
+    </div>
+</div>

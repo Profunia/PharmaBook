@@ -1,0 +1,44 @@
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Stock Inbox</h2>
+<div class="blankpage-main" ng-controller="StockController">
+   
+    
+        <div class="row">
+            <div class="col-xs-6">
+                <label>Total Medicine : <strong> {{ProductList.length}}</strong> </label>
+            </div>
+            <div class="col-xs-6">
+                <input type="text" placeholder="search" ng-model="search" class="form-control" />
+            </div>
+        </div>
+        
+        <hr />
+        <table class="table table-striped table-advance table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Medicine Name</th>
+                    <th>Batch No</th>
+                    <th>Exp Date</th>
+                    <th>Mfg</th>
+                    <th>M.R.P</th>
+                    <th>Avl Stock</th>                    
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in ProductList|orderBy:'openingStock' | filter:search">
+                    <td>{{$index+1}}</td>
+                    <td>{{item.name }}</td>
+                    <td>{{item.batchNo}}</td>
+                    <td>{{item.expDate| date:'dd/MM/yyyy'}}</td>
+                    <td>{{item.companyName}}</td>
+                    <td>{{item.mrp}}</td>
+                    <td>{{item.openingStock}}</td>                    
+                </tr>
+            </tbody>
+        </table>
+    </div>

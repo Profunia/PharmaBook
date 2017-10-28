@@ -18,6 +18,15 @@ app.factory('loadvndor', ['$http', '$rootScope', function ($http, $rootScope) {
         }
         )
     }
+
+    fac.getVendorbyID = function (id) {
+        $http.get('/Vendor/GetVendorByID/'+id).then(function (res) {
+            $rootScope.selectedVendor = res.data;
+            
+        }, function (error) {
+        }
+        )
+    };
     return fac;
 }])
 app.controller('MyController', function ($scope, $http, loadvndor) {
@@ -102,7 +111,7 @@ app.controller('MyController', function ($scope, $http, loadvndor) {
     }
 })
 app.controller('ProductController', function ($scope, $http, $location, loadvndor, $window) {
-    debugger
+    
     loadvndor.getvndr();
     loadvndor.getprdct();
     $scope.divhide1 = false;
@@ -198,8 +207,6 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
 })
 
 app.controller('SalesController', function ($scope, $http, loadvndor) {
-
-
     function initialSetup() {
         $scope.cartlists = [];
         loadvndor.getprdct()
@@ -310,3 +317,22 @@ app.controller('SalesController', function ($scope, $http, loadvndor) {
         })
     }
 })
+
+app.controller('StockController', function ($scope, $http, loadvndor, $rootScope) {
+    
+    loadvndor.getprdct();
+    
+});
+
+app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootScope) {
+    loadvndor.getvndr();
+    loadvndor.getprdct();
+
+    $scope.isVendorSelected = false;
+    $scope.vendorID;
+    $scope.getSelectedVendor = function () {
+        loadvndor.getVendorbyID($scope.vendorID);
+        $scope.isVendorSelected = true;
+    }
+
+});
