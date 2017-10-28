@@ -14,15 +14,16 @@ app.factory('loadvndor', ['$http', '$rootScope', function ($http, $rootScope) {
     fac.getprdct = function () {
         $http.get('/Product/GetAllMedicine').then(function (res) {
             $rootScope.ProductList = res.data;
+            
         }, function (error) {
         }
         )
     }
 
     fac.getVendorbyID = function (id) {
-        $http.get('/Vendor/GetVendorByID/'+id).then(function (res) {
+        $http.get('/Vendor/GetVendorByID/' + id).then(function (res) {
             $rootScope.selectedVendor = res.data;
-            
+
         }, function (error) {
         }
         )
@@ -111,7 +112,7 @@ app.controller('MyController', function ($scope, $http, loadvndor) {
     }
 })
 app.controller('ProductController', function ($scope, $http, $location, loadvndor, $window) {
-    
+
     loadvndor.getvndr();
     loadvndor.getprdct();
     $scope.divhide1 = false;
@@ -319,20 +320,90 @@ app.controller('SalesController', function ($scope, $http, loadvndor) {
 })
 
 app.controller('StockController', function ($scope, $http, loadvndor, $rootScope) {
-    
+
     loadvndor.getprdct();
-    
+
 });
 
-app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootScope) {
+app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootScope, $filter) {
     loadvndor.getvndr();
     loadvndor.getprdct();
+    $scope.isPreview = false;
+    $scope.previewPO = function () {
+        
+        
+
+        if (!$scope.vendorID) {            
+            $scope.vendorErrMsg = "- please select vendor.";
+        }
+        else {
+            $scope.vendorErrMsg = '';
+        }
+        if ($scope.PreCreatePO.length < 1) {
+            $scope.poErrMsg ="- please select at least one medicine";
+        }
+        else {
+            $scope.poErrMsg = '';
+        }
+
+        if ($scope.vendorID && $scope.PreCreatePO.length > 0) {
+            $scope.isPreview = !$scope.isPreview;
+        }
+    }
+   
+    $scope.PreCreatePO = [];
+    $scope.toggleItemIndex = function ($event, index) {
+        $event.stopPropagation();
+        var ProdList = $filter('orderBy')($rootScope.ProductList, 'openingStock');       
+        
+        if ($event.target.checked) {
+            
+            var temp = ProdList[index];
+            console.log(temp);
+            var CreateObj = {
+                productIndex: index,
+                ProdID: temp.id,
+                AvlStock: temp.openingStock,
+                MedicineName: temp.name,
+                Mfg: temp.companyName,
+                Qty: '',
+                Remarks: ''
+            }
+            $scope.PreCreatePO.push(CreateObj)
+        }
+        else {
+            for (var i = $scope.PreCreatePO.length - 1; i >= 0; i--) {
+                if ($scope.PreCreatePO[i].productIndex == index) {
+                    $scope.PreCreatePO.splice(i, 1);
+                }
+            }
+           
+        }                
+    }
 
     $scope.isVendorSelected = false;
     $scope.vendorID;
     $scope.getSelectedVendor = function () {
         loadvndor.getVendorbyID($scope.vendorID);
         $scope.isVendorSelected = true;
+    }
+
+    $scope.createPoOrder = function () {
+        $scope.errEntry = "";
+        $scope.isReadyToCallAPI = false;       
+        for (var i = 0; i < $scope.PreCreatePO.length; i++) {           
+            if ($scope.PreCreatePO[i].Qty)
+                $scope.isReadyToCallAPI = true;
+            else {
+                $scope.errEntry = "please provide Qty.";
+                $scope.isReadyToCallAPI = false;
+            }
+        }
+
+        if ($scope.isReadyToCallAPI) {
+            // API call
+            console.log($scope.PreCreatePO);
+        }
     }
 
 });

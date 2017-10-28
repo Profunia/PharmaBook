@@ -1,24 +1,138 @@
 ﻿<h2>Create Purchased Order</h2>
-<div class="blankpage-main" ng-controller="PurchasedController">
-    <div class="row">
-        <div class="col-xs-6">
-            <div class="form-group">
-                <label>Select Vendor</label> <span style="color:red;">*</span>
 
-                <select class="form-control" id="exampleSelect1"
-                        ng-options="s.id as s.vendorName for s in VendorList"
-                        ng-model="vendorID" ng-change="getSelectedVendor()"></select>
+<div  ng-controller="PurchasedController">
+    <div id="CreatePo" ng-show="!isPreview">
+        <div class="blankpage-main">
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label>Select Vendor</label> <span style="color:red;">*</span>
+
+                        <select class="form-control" id="exampleSelect1"
+                                ng-options="s.id as s.vendorName for s in VendorList"
+                                ng-model="vendorID" ng-change="getSelectedVendor()"></select>
+                        <br />
+                        <span style="color:red;">
+                            {{vendorErrMsg}}<br />
+                            {{poErrMsg}}
+                        </span>
+                    </div>
+                </div>
+                <div class="col-xs-6" ng-show="isVendorSelected">
+                    <p>
+                        Selected vendor details : <br /><hr />
+                        Vendor ID:  <strong>{{vendorID}}</strong><br />
+                        Name : <strong> {{selectedVendor.vendorName }}</strong>,
+                        From : <strong> {{selectedVendor.vendorCompnay}}</strong>,
+                        Address : <strong> {{selectedVendor.vendorAddress}}</strong>
+                    </p>
+                </div>
+
             </div>
         </div>
-        <div class="col-xs-6" ng-show="isVendorSelected">
-            <p>
-                Selected vendor details : <br /><hr />
-                Vendor ID:  <strong>{{vendorID}}</strong><br />
-                Name : <strong> {{selectedVendor.vendorName }}</strong>,
-                From : <strong> {{selectedVendor.vendorCompnay}}</strong>,
-                Address : <strong> {{selectedVendor.vendorAddress}}</strong>
-            </p>
+        <br />
+        <div class="blankpage-main">
+            <div class="row">
+                <div class="col-xs-6">
+                    <label>Total Medicine : <strong> {{ProductList.length}}</strong> </label><br />
+                    <label>You have selected Medicine for PO : <strong>{{PreCreatePO.length}}</strong></label>
+                    <button class="btn btn-primary" style="float:right;" ng-click="previewPO();"> Preview PO</button>
+                </div>
+                <div class="col-xs-6">
+                    <input type="text" placeholder="search" ng-model="search" class="form-control" />
+                    
+                    
+                </div>
+            </div>
+
+            <hr />
+            <table class="table table-striped table-advance table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Medicine Name</th>
+                        <th>Mfg</th>
+                        <th>Avl Stock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in ProductList|orderBy:'openingStock' | filter:search">
+                        <td>
+                            <input type="checkbox" value="{{item.id}}" ng-checked="item.selected"
+                                   ng-click="toggleItemIndex($event, $index)" />
+                        </td>
+                        <td>{{item.name }}</td>
+                        <td>{{item.companyName}}</td>
+                        <td>{{item.openingStock}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
         </div>
 
     </div>
+    <div id="Preview" ng-show="isPreview">
+        <div class="blankpage-main">
+
+            <div class="row">
+                <button class="btn btn-primary" ng-click="previewPO();"><< Back to Create purchased entry</button>
+                <label>You have selected Medicine for PO : <strong>{{PreCreatePO.length}}</strong></label>
+            </div>
+            <hr />
+
+            <div class="row" ng-show="isVendorSelected">
+                
+                    <p>
+                        Selected vendor details : <br />
+                        Vendor ID:  <strong>{{vendorID}}</strong><br />
+                        Name : <strong> {{selectedVendor.vendorName }}</strong>,
+                        From : <strong> {{selectedVendor.vendorCompnay}}</strong>, <br/>
+                        Address : <strong> {{selectedVendor.vendorAddress}}</strong>
+                        Contact : <strong> {{selectedVendor.vendorMobile}}</strong>
+                    </p>
+                
+            </div>
+            <hr />
+            <span ng-if="!isReadyToCallAPI" style="color:red;">
+                {{errEntry}}
+            </span>
+            <table class="table table-striped table-advance table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Medicine Name</th>
+                        <th>Mfg</th>
+                        <th>Avl Stock</th>
+                        <th>Qty <span style="color:red;">*</span> </th>
+                        <th>Remark</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in PreCreatePO">
+                        <td>
+                            {{$index + 1}}
+                        </td>
+                        <td>{{item.MedicineName }}</td>                        
+                        <td>{{item.Mfg}}</td>
+                        <td>{{item.AvlStock}}</td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="item.Qty" />
+                        </td>
+                        <td>
+                            <input type="text"  class="form-control" ng-model="item.Remarks" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <br />
+            <div class="row">
+                <button class="btn btn-primary" ng-click="createPoOrder();">
+                    Submit
+                </button>
+            </div>
+
+            </div>
+        </div>
+
 </div>
