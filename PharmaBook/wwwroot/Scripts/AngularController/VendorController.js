@@ -20,7 +20,7 @@ app.factory('loadvndor', ['$http', '$rootScope', function ($http, $rootScope) {
     }
     return fac;
 }])
-app.controller('MyController', function ($scope, $http,loadvndor) {
+app.controller('MyController', function ($scope, $http, loadvndor) {
     loadvndor.getvndr();
     $scope.divhide1 = false;
     $scope.divhide2 = true;
@@ -31,8 +31,8 @@ app.controller('MyController', function ($scope, $http,loadvndor) {
         Address: '',
         Mobile: '',
         Company: '',
-        UserName:''
-    }   
+        UserName: ''
+    }
     debugger
     $scope.AddValues = function () {
         debugger
@@ -49,18 +49,18 @@ app.controller('MyController', function ($scope, $http,loadvndor) {
             url: "/Vendor/VendorCreate",
             data: JSON.stringify(obj),
             dataType: "json"
-           // headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        }).then(function (response) {       
+            // headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        }).then(function (response) {
             loadvndor.getvndr();
         }, function (error) {
-            
-        })        
+
+        })
     }
     var counter = 0;
     $scope.showdata = function (item, inc) {
         $scope.savebtn = true;
         $scope.editbtn = false;
-        $scope.cClass = item.id;        
+        $scope.cClass = item.id;
     }
     $scope.Updtdata = function (item) {
         var obj = { 'Id': item.id, 'vendorName': item.vendorName, 'vendorAddress': item.vendorAddress, 'vendorMobile': item.vendorMobile, 'vendorCompnay': item.vendorCompnay, 'cusUserName': item.cusUserName };
@@ -74,7 +74,7 @@ app.controller('MyController', function ($scope, $http,loadvndor) {
             loadvndor.getvndr();
         }, function (error) {
 
-            })
+        })
         $scope.cClass = false;
         $scope.savebtn = false;
         $scope.editbtn = true;
@@ -102,9 +102,9 @@ app.controller('MyController', function ($scope, $http,loadvndor) {
     }
 })
 app.controller('ProductController', function ($scope, $http, $location, loadvndor, $window) {
-    debugger 
+    debugger
     loadvndor.getvndr();
-    loadvndor.getprdct();   
+    loadvndor.getprdct();
     $scope.divhide1 = false;
     $scope.divhide2 = true;
     $scope.savebtn = false;
@@ -146,30 +146,30 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
     $scope.showdata = function (item, inc) {
         $scope.savebtn = true;
         $scope.cClass = item.id;
-        $scope.editbtn = false;      
+        $scope.editbtn = false;
     }
-    $scope.Updtdata = function (item) {       
+    $scope.Updtdata = function (item) {
         var obj = {
             'Id': item.id,
             'name': item.name,
-            'batchNo': item.batchNo,            
+            'batchNo': item.batchNo,
             'expDate': item.expDate,
             'companyName': item.companyName,
             'MRP': item.mrp,
             'openingStock': item.openingStock,
             'vendorID': item.vendorID,
-            'cusUserName': item.cusUserName      
+            'cusUserName': item.cusUserName
         };
         $http({
             method: 'post',
             url: "/Product/UpdateMedicn",
             data: obj,
-            datatype: "json",            
+            datatype: "json",
         }).then(function (response) {
             loadvndor.getprdct();
         }, function (error) {
 
-            })       
+        })
         $scope.cClass = false;
         $scope.savebtn = false;
         $scope.editbtn = true;
@@ -185,8 +185,7 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
                 });
         }
     }
-    $scope.bcktoinbx = function (type)
-    {
+    $scope.bcktoinbx = function (type) {
         if (type == "create") {
             $scope.divhide1 = false;
             $scope.divhide2 = true;
@@ -199,50 +198,60 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
 })
 
 app.controller('SalesController', function ($scope, $http, loadvndor) {
-    debugger
-    $scope.cartlists = [];
-    loadvndor.getprdct()
-    $scope.PrdId = '',
-    $scope.Qty = '';
-    $scope.master = {
-        Id: '',
-        InvId: '',
-        PatientName: '',
-        PatientAdres: '',
-        DrName: '',
-        RegNo: ''
-    }
-    $scope.child = {
-        Id: '',        
-        Name: '',       
-        Description: '',
-        Mrg: '',
-        BatchNo: '',
-        ExpDt: '',
-        Amount: ''
-    }
-    $scope.AddMstrInvc = function () {
-        var obj = {
-            'PatientName': $scope.master.PatientName,
-            'PatientAdres': $scope.master.PatientAdres,
-            'DrName': $scope.master.DrName,
-            'RegNo': $scope.master.RegNo
-        };
-        $http({
-            method: 'post',
-            url: "/Sales/AddMasterInvc",
-            data: JSON.stringify(obj),
-            dataType: "json"
-            // headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        }).then(function (response) {
 
-        }, function (error) {
 
-        })
+    function initialSetup() {
+        $scope.cartlists = [];
+        loadvndor.getprdct()
+        $scope.PrdId = '',
+            $scope.Qty = '';
+        $scope.master = {
+            Id: '',
+            InvId: '',
+            PatientName: '',
+            PatientAdres: '',
+            DrName: '',
+            RegNo: ''
+        }
+        $scope.child = {
+            Id: '',
+            Name: '',
+            Description: '',
+            Mrg: '',
+            BatchNo: '',
+            ExpDt: '',
+            Amount: ''
+        }
     }
+    initialSetup();
+    $scope.isCreatedInvoice = false;
+    $scope.switchToInvoicePage = function () {
+        initialSetup();
+        $scope.isCreatedInvoice = false;
+    }
+    //$scope.AddMstrInvc = function () {
+    //    var obj = {
+    //        'PatientName': $scope.master.PatientName,
+    //        'PatientAdres': $scope.master.PatientAdres,
+    //        'DrName': $scope.master.DrName,
+    //        'RegNo': $scope.master.RegNo
+    //    };
+    //    $http({
+    //        method: 'post',
+    //        url: "/Sales/AddMasterInvc",
+    //        data: JSON.stringify(obj),
+    //        dataType: "json"
+    //        // headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    //    }).then(function (response) {
+    //        $scope.isCreatedInvoice = true;
+    //        $scope.successMessage = "Invoice has been successfully created..!";
+    //    }, function (error) {
+
+    //    })
+    //}
     var final = 0;
     var total = 0;
-    $scope.AddChildInvc = function () {       
+    $scope.AddChildInvc = function () {
         var qty = $scope.Qty
         var price = $scope.child.Amount
         total = (qty * price);
@@ -260,25 +269,24 @@ app.controller('SalesController', function ($scope, $http, loadvndor) {
     }
     $scope.DelCrtIitem = function (index) {
         total = $scope.child.Amount;
-        final -= total;       
+        final -= total;
         $scope.totalprice = final;
         $scope.cartlists.splice(index, 1);
     }
     $scope.medicineselect = function () {
         var id = $scope.PrdId;
         $http.get('/Product/GetMedicnById/?id=' + id).then(function (res) {
-            $scope.child = {  Description: res.data.companyName, BatchNo: res.data.batchNo, ExpDt: res.data.expDate, Amount: res.data.mrp };
+            $scope.child = { Description: res.data.companyName, BatchNo: res.data.batchNo, ExpDt: res.data.expDate, Amount: res.data.mrp };
         }, function (error) {
         })
     }
-    
+
     $scope.SaveInvc = function () {
-        if ($scope.master.PatientName == '' || $scope.master.PatientAdres == '' || $scope.master.DrName == '' || $scope.master.RegNo == '')
-        {
+        if ($scope.master.PatientName == '' || $scope.master.PatientAdres == '' || $scope.master.DrName == '' || $scope.master.RegNo == '') {
             $scope.master.PatientName = 'Guest',
-            $scope.master.PatientAdres = 'Guest',
-            $scope.master.DrName = 'Guest',
-            $scope.master.RegNo = 'Guest'
+                $scope.master.PatientAdres = '',
+                $scope.master.DrName = '',
+                $scope.master.RegNo = ''
         }
         var obj1 = {
             'PatientName': $scope.master.PatientName,
@@ -295,9 +303,10 @@ app.controller('SalesController', function ($scope, $http, loadvndor) {
             data: JSON.stringify(obj),
             dataType: "json"
         }).then(function (response) {
-
+            $scope.isCreatedInvoice = true;
+            $scope.successMessage = "Invoice has been successfully created..!";
         }, function (error) {
 
         })
-    }    
+    }
 })

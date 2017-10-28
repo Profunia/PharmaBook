@@ -18,10 +18,12 @@ namespace PharmaBook.Controllers
     {
         private Imaster _imaster;
         private IChild _ichild;
-        public SalesController(Imaster master, IChild child)
+        private IProduct _iProduct;
+        public SalesController(Imaster master, IChild child, IProduct product)
         {
             _imaster = master;
             _ichild = child;
+            _iProduct = product;
         }
         // GET: /<controller>/
         public IActionResult Index()
@@ -47,6 +49,13 @@ namespace PharmaBook.Controllers
                      chldinvc.MasterInvID = _imaster.getlastproduct().Id; 
                     _ichild.Add(chldinvc);
                     _ichild.Commit();
+
+
+                    // update product table for stock 
+                    var productstock = _iProduct.GetById(i.PrdId);
+                    int availableStock = productstock.openingStock;
+                    productstock.openingStock = (availableStock - i.Qty);
+                    _iProduct.Commit();
                 }                
             }
             catch
