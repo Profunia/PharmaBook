@@ -439,12 +439,33 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
     getPurchasedInbox();
     $scope.backtoPurchased = function () {
         $scope.childPoView = !$scope.childPoView;
+        
     }
-
+    $scope.backToMail = function () {
+        $scope.purchasedEntryView = !$scope.purchasedEntryView;
+        $scope.childPoView = !$scope.childPoView;
+    }
+    $scope.purchasedEntryView = false;
     $scope.CreatePurchased = function () {
-        var Prepurchased = $scope.childPO;
+        $scope.Prepurchased = [];
+        console.log($scope.childPO.cpoList);
+        for (var i = 0; i < $scope.childPO.cpoList.length; i++) {
+            var model = {
+                ProductID: $scope.childPO.cpoList[i].productID,
+                Name: $scope.childPO.cpoList[i].productName,
+                Mfg: $scope.childPO.cpoList[i].mfg,
+                Qty: $scope.childPO.cpoList[i].qty,
+                BatchNo: $scope.childPO.cpoList[i].batchNo,
+                MRP: $scope.childPO.cpoList[i].mrp,
+                ExpDate: $scope.childPO.cpoList[i].expDate,
+                Remark: $scope.childPO.cpoList[i].remarks
+            }
+            $scope.Prepurchased.push(model);
+        }
+       // $scope.Prepurchased = $scope.childPO;
+        $scope.purchasedEntryView = true;
         console.log("Purchased Entry");
-        console.log(Prepurchased);
+        console.log($scope.Prepurchased);
 
 
     }
@@ -470,6 +491,24 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
         console.log(val);
         $scope.childPO = val;
         $scope.childPoView = !$scope.childPoView;
+    }
+
+    // purchased Entry 
+    $scope.onSubmitforCreatePurchased = function () {
+       var obj= $scope.Prepurchased;
+
+        $http({
+            method: 'post',
+            url: "/Purchased/EntryCreatePurchase",
+            data: JSON.stringify(obj),
+            dataType: "json"
+        }).then(function (response) {           
+            $scope.Successmsg = "Invoice has been successfully created..!";
+            alert($scope.Successmsg);
+        }, function (error) {
+
+        })
+
     }
 
 });

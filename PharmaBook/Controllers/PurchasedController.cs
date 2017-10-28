@@ -109,7 +109,10 @@ namespace PharmaBook.Controllers
                         cpo.ProductName = productInfo.name;
                         cpo.Mfg = productInfo.companyName;
                         cpo.Remarks = cItem.Remarks;
-                        cpo.Qty = cItem.Qty;                        
+                        cpo.Qty = cItem.Qty;
+                        cpo.BatchNo = productInfo.batchNo;
+                        cpo.MRP = productInfo.MRP;
+                        cpo.ExpDate = productInfo.expDate.ToString("dd/MM/yyyy");
                         cpoList.Add(cpo);
 
                     }
@@ -147,6 +150,13 @@ namespace PharmaBook.Controllers
 
                 return BadRequest();
             }           
+        }
+
+        [HttpPost]
+        public IActionResult EntryCreatePurchase([FromBody]IEnumerable<CreatePurchased> obj)
+        {
+
+            return Ok();
         }
 
     }

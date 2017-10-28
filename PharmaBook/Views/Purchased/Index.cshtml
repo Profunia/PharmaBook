@@ -5,7 +5,7 @@
 
 <h2>Purchased Inbox</h2>
 <div class="blankpage-main" ng-controller="PurchasedInboxController">
-    <div ng-show="!childPoView">
+    <div ng-show="!childPoView && !purchasedEntryView">
 
 
         <div class="row">
@@ -48,7 +48,7 @@
             </tbody>
         </table>
     </div>
-    <div ng-show="childPoView">
+    <div ng-show="childPoView && !purchasedEntryView">
         <div class="row">
             <div class="col-xs-6">
                 <label>Total Medicine: <strong> {{childPO.cpoList.length}}</strong> </label><br /> 
@@ -93,5 +93,60 @@
         </table>
     </div>
    
+    <div ng-show="purchasedEntryView">
+        
+        <div class="row">
+            <div class="col-xs-4">
+                <button class="btn btn-primary" ng-click="backToMail();">
+                    << Purchased Order Inbox
+                </button>
+            </div>
+            <div class="col-xs-8">
+                <label>Total Medicine: <strong> {{childPO.cpoList.length}}</strong> </label><br />
+                <label>Vendor : </label>
+                {{childPO.vendorName }}, {{childPO.vendorCompany}}, {{childPO.vendorAddress}}, {{childPO.vendorContact}}
+            </div>
+          
+        </div>
+        <table class="table table-striped table-advance table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    
+                    <th>Name</th>
+                    <th>Mfg</th>
+                    <th>Qty</th>
+                    <th>Batch No.</th>
+                    <th>MRP</th>
+                    <th>Exp Date</th>
+                    <th>Remark</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in Prepurchased">
+                    <td>
+                        {{$index + 1}}
+                    </td>
+                    
+                    <td>{{item.Name}}</td>
+                    <td>{{item.Mfg}}</td>
+                    <td><input type="text" ng-model="item.Qty" class="form-control" placeholder="Qty" /></td>
+                    <td><input type="text" ng-model="item.BatchNo" class="form-control" placeholder="batch No" /></td>
+                    <td><input type="text" ng-model="item.MRP" class="form-control" placeholder="MRP" /></td>
+                    <td><input type="text" ng-model="item.ExpDate" class="form-control" placeholder="Exp Date" /></td>
+                    <td><input type="text" ng-model="item.Remark" class="form-control" placeholder="Remarks" /></td>
+                    
+                </tr>
+            </tbody>
+        </table>
+
+        <hr />
+        <button class="btn btn-primary" ng-click="onSubmitforCreatePurchased()">
+            Submit
+        </button>
+
+    </div>
+
      
 </div>

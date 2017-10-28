@@ -35,7 +35,22 @@ namespace PharmaBook.ViewModel
         public string Mfg { get; set; }
         public string Remarks { get; set; }
         public int Qty { get; set; }
+        public string BatchNo { get; set; }
+        public string MRP { get; set; }
+        public string ExpDate { get; set; }
 
+    }
+
+    public class CreatePurchased
+    {
+        public int ProductID { get; set; }
+        public string Name { get; set; }
+        public string Mfg { get; set; }
+        public int Qty { get; set; }
+        public string BatchNo { get; set; }
+        public string MRP { get; set; }
+        public string ExpDate { get; set; }
+        public string Remark { get; set; }
     }
 
 }
