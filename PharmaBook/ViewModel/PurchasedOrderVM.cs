@@ -9,10 +9,36 @@ namespace PharmaBook.ViewModel
         public string ProdID { get; set; }
         public string Qty { get; set; }
         public string Remarks { get; set; }
+        public List<MPO> mpoList { get; set; }
+        public List<CPO> cpoList { get; set; }
     }
 
-    public class createPoVM
+    public class MPO
     {
-        public IEnumerable<PurchasedOrderVM> purchasedOrderVM { get; set; }
+        public int MasterPOid { get; set; }
+        public string VendorName { get; set; }
+        public string VendorAddress { get; set; }
+        public string VendorContact { get; set; }
+        public string VendorCompany { get; set; }
+        public string PlacedOrder { get; set; }
+        public int NoOfItems { get; set; }
+        public string Status { get; set; }
+        public List<CPO> cpoList { get; set; }
     }
+
+    public class CPO
+    {
+        public int ChildPoId { get; set; }
+        public int ProductID { get; set; }
+        public string ProductName { get; set; }
+        public int masterPOid { get; set; }
+        public string Mfg { get; set; }
+        public string Remarks { get; set; }
+        public int Qty { get; set; }
+
+    }
+
 }
+
+
+

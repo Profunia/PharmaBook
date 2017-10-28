@@ -419,4 +419,57 @@ app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootS
         }
     }
 
+
+});
+
+app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $rootScope, $filter) {
+    $scope.masterPo = [];
+    $scope.childPoView = false;
+    function getPurchasedInbox()
+    {
+        $http.get('/Purchased/InboxPO').then(function (res) {
+            console.log(res.data);
+            $scope.masterPo = res.data.masterPo;
+
+        }, function (error) {
+
+        })
+
+    }
+    getPurchasedInbox();
+    $scope.backtoPurchased = function () {
+        $scope.childPoView = !$scope.childPoView;
+    }
+
+    $scope.CreatePurchased = function () {
+        var Prepurchased = $scope.childPO;
+        console.log("Purchased Entry");
+        console.log(Prepurchased);
+
+
+    }
+    $scope.DeletePurchasedItem = function (val) {        
+        if (confirm('are you sure want to delete ?? \n medicine : ' + val.productName + "\n Mfg : " + val.mfg)) {
+            var childId = val.childPoId;
+            $http.post('/Purchased/childPoDelete/' + childId).then(function (res) {
+                console.log(res.data);
+                alert('successfully deleted... \n medicine : ' + val.productName + '\n Mfg : ' + val.mfg);
+                $scope.backtoPurchased();
+                getPurchasedInbox();
+
+            }, function (error) {
+
+            })
+            console.log(val);
+            
+
+        }        
+    }
+
+    $scope.childDetails = function (val) {
+        console.log(val);
+        $scope.childPO = val;
+        $scope.childPoView = !$scope.childPoView;
+    }
+
 });

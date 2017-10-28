@@ -14,10 +14,17 @@ namespace PharmaBook.Controllers
     {
         private IMasterPOServices _iMasterPo;
         private IchildPoServices _iChildPO;
-        public PurchasedController(IMasterPOServices iMasterPOServices, IchildPoServices ichildPoServices)
+        public IVendorServices _iVendor;
+        private IProduct _iProduct;
+        public PurchasedController(IMasterPOServices iMasterPOServices, 
+            IVendorServices ivendor,
+            IProduct iProduct,
+            IchildPoServices ichildPoServices)
         {
             _iMasterPo = iMasterPOServices;
             _iChildPO = ichildPoServices;
+            _iVendor = ivendor;
+            _iProduct = iProduct;
         }
         public IActionResult Index()
         {
@@ -62,6 +69,84 @@ namespace PharmaBook.Controllers
             }
 
             return Json("success");
+        }
+
+        public IActionResult InboxPO()
+        {
+            try
+            {
+                Dictionary<string, object> dList = new Dictionary<string, object>();
+                List<MPO> mpoList = new List<MPO>();
+                List<CPO> cpoList = new List<CPO>();
+                var PurchasedOrder = _iMasterPo.GetAll(User.Identity.Name).OrderByDescending(x => x.Id).ToList();
+                foreach (var Item in PurchasedOrder)
+                {
+                    MPO mpo = new MPO();
+                    CPO cpo = null;
+
+                    // filling master Details 
+                    var vendorInfo = _iVendor.GetById(Item.VendorID);
+                    mpo.VendorName = vendorInfo.vendorName;
+                    mpo.VendorAddress = vendorInfo.vendorAddress;
+                    mpo.VendorContact = vendorInfo.vendorMobile;
+                    mpo.VendorCompany = vendorInfo.vendorCompnay;
+                    mpo.PlacedOrder = Item.placedOrderDt.ToString("dd/MM/yyyy");
+                    var childObj = _iChildPO.GetAll().Where(x => x.masterPOid == Item.Id).ToList();
+                    mpo.NoOfItems = childObj.Count();
+                    mpo.MasterPOid = Item.Id;
+                    mpo.Status = Item.isActive ? "Open" : "Closed";
+
+
+                    cpoList = new List<CPO>();
+                    // child Purchased order filled 
+                    foreach (var cItem in childObj)
+                    {
+                        cpo = new CPO();
+                        cpo.ChildPoId = cItem.Id;
+                        cpo.ProductID = cItem.ProdID;
+                        cpo.masterPOid = cItem.masterPOid;
+                        var productInfo = _iProduct.GetById(cItem.ProdID);
+                        cpo.ProductName = productInfo.name;
+                        cpo.Mfg = productInfo.companyName;
+                        cpo.Remarks = cItem.Remarks;
+                        cpo.Qty = cItem.Qty;                        
+                        cpoList.Add(cpo);
+
+                    }
+                    mpo.cpoList = cpoList;
+                    mpoList.Add(mpo);
+                }
+                
+
+                dList.Add("masterPo", mpoList);
+               // dList.Add("childPo", cpoList);
+
+                return Ok(dList);
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+            
+        } 
+
+        [HttpPost]
+        public IActionResult childPoDelete(int id)
+        {
+            try
+            {
+                var childPo = _iChildPO.GetById(id);
+                _iChildPO.Delete(childPo);
+                _iChildPO.Commit();
+
+                return Ok();
+            }
+            catch
+            {
+
+                return BadRequest();
+            }           
         }
 
     }
