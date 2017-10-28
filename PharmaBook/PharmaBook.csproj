@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <Content Include="wwwroot\images\successImage.png" />
+    <Content Include="wwwroot\Scripts\AngularController\CustomController.js" />
+    <Content Include="wwwroot\Scripts\AngularController\SiteController.js" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AngularJS.Core" Version="1.6.5" />

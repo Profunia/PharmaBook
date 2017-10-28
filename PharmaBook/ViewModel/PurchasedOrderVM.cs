@@ -16,6 +16,7 @@ namespace PharmaBook.ViewModel
     public class MPO
     {
         public int MasterPOid { get; set; }
+        public int vendorID { get; set; }
         public string VendorName { get; set; }
         public string VendorAddress { get; set; }
         public string VendorContact { get; set; }
@@ -44,6 +45,8 @@ namespace PharmaBook.ViewModel
     public class CreatePurchased
     {
         public int ProductID { get; set; }
+        public int vendorID { get; set; }
+        public int MasterPOid { get; set; }
         public string Name { get; set; }
         public string Mfg { get; set; }
         public int Qty { get; set; }

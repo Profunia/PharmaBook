@@ -63,6 +63,12 @@ namespace PharmaBook.Controllers
                     purchasedHistory.qty = Convert.ToString(obj.openingStock);
                     purchasedHistory.purchasedDated = DateTime.Now;
                     purchasedHistory.cusUserName = User.Identity.Name;
+                    purchasedHistory.BatchNo = obj.batchNo;
+                    purchasedHistory.ExpDate = obj.expDate.ToString();
+                    purchasedHistory.Mfg = obj.companyName;
+                    purchasedHistory.Name = obj.name;
+                    purchasedHistory.Remark = "Newly added";
+
                     _iPurchased.Add(purchasedHistory);
                     _iPurchased.Commit();
                     //return RedirectToAction("Index");

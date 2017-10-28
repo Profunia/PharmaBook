@@ -455,6 +455,8 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
                 Name: $scope.childPO.cpoList[i].productName,
                 Mfg: $scope.childPO.cpoList[i].mfg,
                 Qty: $scope.childPO.cpoList[i].qty,
+                vendorID: $scope.childPO.vendorID,
+                masterPOid: $scope.childPO.masterPOid,
                 BatchNo: $scope.childPO.cpoList[i].batchNo,
                 MRP: $scope.childPO.cpoList[i].mrp,
                 ExpDate: $scope.childPO.cpoList[i].expDate,
@@ -496,19 +498,34 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
     // purchased Entry 
     $scope.onSubmitforCreatePurchased = function () {
        var obj= $scope.Prepurchased;
-
+       $scope.isSuccessPOEntry = false;
         $http({
             method: 'post',
             url: "/Purchased/EntryCreatePurchase",
             data: JSON.stringify(obj),
             dataType: "json"
         }).then(function (response) {           
-            $scope.Successmsg = "Invoice has been successfully created..!";
-            alert($scope.Successmsg);
-        }, function (error) {
+            $scope.POmsg = "Purchased Entry has been successfully created..!";
+            $scope.isSuccessPOEntry = true;            
+            }, function (error) {
+                $scope.isSuccessPOEntry = false;
+                $scope.POmsg = "Something went wrong.. please try again..";
 
         })
 
     }
-
+    $scope.inboxfiler = "Open";
+    $scope.onInboxFiler = function (val) {
+        if (val == "Open") {
+            $scope.inboxfiler = "Open";
+        }
+        else if (val == "Closed")
+        {
+            $scope.inboxfiler = "Closed";
+        }
+        else {
+            $scope.inboxfiler = '';
+        }
+    }
+ 
 });
