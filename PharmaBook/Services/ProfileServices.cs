@@ -10,10 +10,11 @@ namespace PharmaBook.Services
     public interface IProfileServices
     {
         void Add(UserProfile profile);        
-        void Update(UserProfile profile);       
+        //void Update(UserProfile profile);       
         void Commit();
         IEnumerable<UserProfile> GetAll(string userName);
         UserProfile GetById(int Id);
+        UserProfile GetByUserName(string userName);
     }
 
 
@@ -44,9 +45,13 @@ namespace PharmaBook.Services
             return _context.UserProfile.Find(Id);
         }
 
-        public void Update(UserProfile profile)
+        //public void Update(UserProfile profile)
+        //{
+        //    _context.Entry(profile).State = EntityState.Modified;
+        //}
+        public UserProfile GetByUserName(string userName)
         {
-            _context.Entry(profile).State = EntityState.Modified;
+            return _context.UserProfile.FirstOrDefault(x => x.userName.Equals(userName));
         }
     }
 }

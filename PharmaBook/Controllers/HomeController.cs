@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using PharmaBook.Services;
 using PharmaBook.ViewModel;
+using PharmaBook.Entities;
+using AutoMapper;
 
 namespace PharmaBook.Controllers
 {
@@ -19,7 +21,9 @@ namespace PharmaBook.Controllers
         private IPurchasedHistory _iPurchasedhistory;
         private IVendorServices _iVendor;
         private IMasterPOServices _iMasterPo;
+        private IProfileServices _iProfile;
         public HomeController(IProduct iProduct,
+            IProfileServices iProfile,
             Imaster imaster, 
             IChild ichild,
             IMasterPOServices iMasterPo,
@@ -32,6 +36,7 @@ namespace PharmaBook.Controllers
             _iPurchasedhistory = iPurchased;
             _iVendor = iVendorServices;
             _iMasterPo = iMasterPo;
+            _iProfile = iProfile;
         }
 
         public IActionResult Index()
@@ -157,6 +162,25 @@ namespace PharmaBook.Controllers
         public IActionResult Error()
         {
             return View();
+        }
+
+        public IActionResult Profile()
+        {
+            var model = _iProfile.GetByUserName(User.Identity.Name);
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Profile(UserProfile Obj)
+        {
+            UserProfile medicn = _iProfile.GetByUserName(User.Identity.Name);
+            Mapper.Map(medicn, Obj);
+            var a = medicn;
+          //  _iProfile.Update(medicn);
+            _iProfile.Commit();
+            ViewBag.msg = "Successfully updated";
+            var laste= _iProfile.GetByUserName(User.Identity.Name);
+            return View(laste);
         }
     }
 }

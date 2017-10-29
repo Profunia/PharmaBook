@@ -1,0 +1,79 @@
+﻿@model UserProfile
+<h2>User Profile</h2>
+<div class="blankpage-main">
+
+    @if (!string.IsNullOrEmpty(ViewBag.msg))
+    {
+        <div class="row alert alert-success">
+            @ViewBag.msg
+
+        </div>
+
+    }
+    <form method="post" asp-action="Profile" asp-controller="Home">
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label>Clinic Name</label>
+                    <input type="text" class="form-control" asp-for="Name" />
+                </div>
+                <div class="form-group">
+                    <label>Sub Title</label>
+                    <input type="text" class="form-control" value="Chemist & Druggist" asp-for="subTitle" />
+                </div>
+                <div class="form-group">
+                    <label>DL No</label>
+                    <input type="text" class="form-control" asp-for="DLNo" />
+                </div>
+                <div class="form-group">
+                    <label>Mobile</label>
+                    <input type="text" class="form-control" asp-for="Mobile" />
+                </div>
+                <div class="form-group">
+                    <label>UserName :</label> <strong>@Model.userName</strong>
+
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label>Address 1</label>
+                    <input type="text" class="form-control" asp-for="Address1" />
+                </div>
+                <div class="form-group">
+                    <label>Address2</label>
+                    <input type="text" class="form-control" asp-for="Address2" />
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="text" class="form-control" asp-for="Email" />
+                </div>
+                <div class="form-group">
+                    <label>Account Exp Dt</label> <strong>@Model.AccountExpDt</strong>
+
+                </div>
+            
+                <div class="form-group">
+                    <label>Account Status : </label>
+                    @{
+                        string str = string.Empty;
+                        if (Model.IsActive)
+                        {
+                            str = "Active";
+                        }
+                        else
+                        {
+                            str = "De-Active";
+                        }
+                    }
+                    <strong>@str</strong>
+
+                </div>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Update" />
+        </div>
+
+    </form>
+
+
+
+</div>

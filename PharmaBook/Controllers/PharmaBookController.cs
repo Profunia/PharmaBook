@@ -51,7 +51,7 @@ namespace PharmaBook.Controllers
 
             medicn.AccountExpDt = model.AccountExpDt;
             medicn.IsActive = model.IsActive;
-            _iProfileServices.Update(medicn);
+          //  _iProfileServices.Update(medicn);
             _iProfileServices.Commit();
             TempData["msg"]="Successfullt updated";
             return RedirectToAction("Admin");
