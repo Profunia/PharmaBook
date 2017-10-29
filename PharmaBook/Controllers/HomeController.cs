@@ -18,9 +18,11 @@ namespace PharmaBook.Controllers
         private IChild _ichild;
         private IPurchasedHistory _iPurchasedhistory;
         private IVendorServices _iVendor;
+        private IMasterPOServices _iMasterPo;
         public HomeController(IProduct iProduct,
             Imaster imaster, 
             IChild ichild,
+            IMasterPOServices iMasterPo,
             IVendorServices iVendorServices,
             IPurchasedHistory iPurchased)
         {
@@ -29,10 +31,19 @@ namespace PharmaBook.Controllers
             _ichild = ichild;
             _iPurchasedhistory = iPurchased;
             _iVendor = iVendorServices;
+            _iMasterPo = iMasterPo;
         }
 
         public IActionResult Index()
         {
+            DateTime dt = DateTime.Now.AddMonths(3);
+            var Products = _iProduct.GetAll(User.Identity.Name);
+            var ProductExp = Products.Where(x => x.expDate >= dt && x.expDate <= dt).ToList();
+
+            ViewBag.outOfStock = Products.Where(x => x.openingStock <= 10).Count();
+            ViewBag.TotalExpMedicine = ProductExp.Count();
+
+            ViewBag.OpenedPO = _iMasterPo.GetAll(User.Identity.Name).Where(x => x.isActive == true).Count();
             return View();
         }
 
