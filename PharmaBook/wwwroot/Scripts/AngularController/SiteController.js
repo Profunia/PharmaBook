@@ -529,3 +529,125 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
     }
  
 });
+
+app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvndor, $rootScope, $filter) {
+    loadvndor.getvndr();
+    loadvndor.getprdct();
+    $scope.isVendorSelected = false;
+    $scope.vendorID;
+    $scope.getSelectedVendor = function () {
+        loadvndor.getVendorbyID($scope.vendorID);
+        $scope.isVendorSelected = !$scope.isVendorSelected;
+    }
+    $scope.child = {
+        Id: '',
+        Name: '',
+        Mfg: '',        
+        BatchNo: '',
+        ExpDt: '',
+        Mrp: '',
+        Qty: '',
+        Remarks:''
+    }
+    $scope.cartlists = [];
+    $scope.AddChildInvc = function () {        
+        var qty = $scope.Qty
+        if ($scope.child.Qty && $scope.child.Mfg && $scope.child.BatchNo && $scope.child.ExpDt && $scope.child.Mrp) {
+            $scope.err = "";
+            $scope.cartlists.push({
+                'PrdId': $scope.PrdId,
+                'Name': $scope.child.Name,
+                'Qty': $scope.child.Qty,
+                'ExpDt': $scope.child.ExpDt,
+                'Mrp': $scope.child.Mrp,
+                'Mfg': $scope.child.Mfg,
+                'BatchNo': $scope.child.BatchNo,
+                'Remarks': $scope.child.Remarks
+            });
+            $scope.child = [];
+            console.log($scope.cartlists);
+
+        }
+        else {
+            $scope.err = "please provide required fields (*)";
+               
+        }
+       
+    }
+    $scope.medicineselect = function () {
+        var id = $scope.PrdId;
+        $http.get('/Product/GetMedicnById/?id=' + id).then(function (res) {
+            console.log(res.data);
+            $scope.child = {
+                Name:res.data.name,
+                Mfg: res.data.companyName,
+                Mrp: res.data.mrp,
+                BatchNo: res.data.batchNo,
+                ExpDt: res.data.expDate,
+                Amount: res.data.mrp,
+                AvlStock: res.data.openingStock
+            };
+        }, function (error) {
+        })
+    }
+    $scope.DelCrtIitem = function (index) {      
+        $scope.cartlists.splice(index, 1);
+    }
+
+    $scope.isPreview = false;
+    $scope.goBackfrmPreview = function () {
+        $scope.isPreview = !$scope.isPreview;
+    }
+    $scope.onSubmit = function () {
+        // TODO API Call
+
+        $scope.Prepurchased = [];
+        console.log($scope.cartlists)
+        for (var i = 0; i < $scope.cartlists.length; i++) {
+            var model = {
+                ProductID: $scope.cartlists[i].PrdId,
+                Name: $scope.cartlists[i].Name,
+                Mfg: $scope.cartlists[i].Mfg,
+                Qty: $scope.cartlists[i].Qty,
+                vendorID: $scope.vendorID,
+                //masterPOid: $scope.childPO.masterPOid,
+                BatchNo: $scope.cartlists[i].BatchNo,
+                MRP: $scope.cartlists[i].Mrp,
+                ExpDate: $scope.cartlists[i].ExpDt,
+                Remark: $scope.cartlists[i].Remarks
+            }
+            $scope.Prepurchased.push(model);
+        }
+       
+        var obj = $scope.Prepurchased;
+        $scope.isSuccessPOEntry = false;
+        $http({
+            method: 'post',
+            url: "/Purchased/EntryCreatePurchase",
+            data: JSON.stringify(obj),
+            dataType: "json"
+        }).then(function (response) {
+            $scope.POmsg = "Purchased Entry has been successfully created..!";
+            $scope.isSuccessPOEntry = true;
+        }, function (error) {
+            $scope.isSuccessPOEntry = false;
+            $scope.POmsg = "Something went wrong.. please try again..";
+
+        })
+
+        
+    }
+
+    $scope.Preview = function () {
+        if (!$scope.vendorID) {
+            $scope.vendorErrMsg = "please select vendor";
+        }
+        else {
+            $scope.vendorErrMsg = "";
+            // TODO
+            $scope.isPreview = !$scope.isPreview;
+
+        }
+    }
+
+});

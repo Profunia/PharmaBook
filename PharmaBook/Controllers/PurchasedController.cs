@@ -195,12 +195,14 @@ namespace PharmaBook.Controllers
 
 
                 }
-
-                // update purchased order closed 
-                var po = _iMasterPo.GetById(obj.FirstOrDefault().MasterPOid);
-                po.isActive = false;
-                _iMasterPo.Update(po);
-                _iMasterPo.Commit();
+                if (obj.FirstOrDefault().MasterPOid != 0)
+                {
+                    // update purchased order closed 
+                    var po = _iMasterPo.GetById(obj.FirstOrDefault().MasterPOid);
+                    po.isActive = false;
+                    _iMasterPo.Update(po);
+                    _iMasterPo.Commit();
+                }
             }
             catch 
             {
@@ -210,6 +212,12 @@ namespace PharmaBook.Controllers
             
             return Ok();
         }
+
+        public IActionResult CreateDirectPO()
+        {
+            return View();
+        }
+
 
     }
 }

@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <Content Include="wwwroot\images\successImage.png" />
-    <Content Include="wwwroot\Scripts\AngularController\CustomController.js" />
     <Content Include="wwwroot\Scripts\AngularController\SiteController.js" />
   </ItemGroup>
   <ItemGroup>
