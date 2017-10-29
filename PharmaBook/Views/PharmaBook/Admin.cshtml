@@ -1,0 +1,51 @@
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<link href="~/css/bootstrap.css" rel="stylesheet" type="text/css" media="all">
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Admin</title>
+</head>
+@model IList<UserProfile>
+<body>
+    <div class="container">
+        <a href="/PharmaBook/Register">Registration</a>
+     <br />
+        <h3>
+            @if(TempData["msg"]!=null){
+                @TempData["msg"]
+        }
+        </h3>
+       <table class="table">
+           <thead>
+               <tr>
+                   <th>User Name</th>
+                   <th>Clint Name</th>
+                   <th>DL No</th>
+                   <th>IsActive</th>
+                   <th>Last Login</th>
+                   <th>Account Exp</th>
+                   <th></th>
+               </tr>
+           </thead>
+           <tbody>
+              @foreach(var item in Model){
+               <tr>
+                   <td>@item.userName</td>
+                   <td>@item.Name</td>
+                   <td>@item.DLNo</td>
+                   <td>@item.IsActive</td>
+                   <td>@item.lastLogin</td>
+                   <td>@item.AccountExpDt</td>
+                   <td><a href="/PharmaBook/EditUser/@(item.Id)">Edit</a></td>
+               </tr>
+                       }
+           </tbody>
+       </table>
+    </div>
+</body>
+</html>

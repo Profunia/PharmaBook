@@ -67,40 +67,7 @@ namespace PharmaBook.Controllers
             await _singInManager.SignOutAsync();
             return RedirectToAction("Login", "Account");
         }
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = new User { UserName = model.UserName };
-
-                var createResult = await _userManager.CreateAsync(user, model.Password);
-                if (createResult.Succeeded)
-                {
-                    await _singInManager.SignInAsync(user, false);
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    foreach (var error in createResult.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
-                }
-            }
-            else
-            {
-                ModelState.AddModelError("", "Please provide the valid information");
-            }
-           
-            return View();
-        }
+        
         public IActionResult Index()
         {
             return View();

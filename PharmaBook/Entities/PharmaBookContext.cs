@@ -19,5 +19,6 @@ namespace PharmaBook.Entities
 
         public DbSet<MasterPO> MasterPO { get; set; }
         public DbSet<ChildPO> ChildPO { get; set; }
+        public DbSet<UserProfile> UserProfile { get; set; }
     }
 }
