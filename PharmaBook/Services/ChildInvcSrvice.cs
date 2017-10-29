@@ -13,7 +13,7 @@ namespace PharmaBook.Services
         void Update(ChildInvoice chldinvc);
         ChildInvoice getlastproduct();
         void Commit();
-        IEnumerable<ChildInvoice> GetAll(string userName);
+        IEnumerable<ChildInvoice> GetAll();
         ChildInvoice GetById(int Id);
     }
     public class ChildInvcSrvice : IChild
@@ -38,7 +38,7 @@ namespace PharmaBook.Services
             _context.Remove(chldinvc);
         }
 
-        public IEnumerable<ChildInvoice> GetAll(string userName)
+        public IEnumerable<ChildInvoice> GetAll()
         {
             return _context.InvChild.OrderByDescending(x => x.Id).ToList();
         }

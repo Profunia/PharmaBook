@@ -651,3 +651,9 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
     }
 
 });
+
+app.controller('DashBoardController', function ($scope, $http, loadvndor, $rootScope, $filter) {
+
+
+
+});
