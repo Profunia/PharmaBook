@@ -16,12 +16,19 @@ namespace PharmaBook.Controllers
         private IProduct _iProduct;
         private Imaster _imaster;
         private IChild _ichild;
-        public HomeController(IProduct iProduct, Imaster imaster, IChild ichild)
+        private IPurchasedHistory _iPurchasedhistory;
+        private IVendorServices _iVendor;
+        public HomeController(IProduct iProduct,
+            Imaster imaster, 
+            IChild ichild,
+            IVendorServices iVendorServices,
+            IPurchasedHistory iPurchased)
         {
             _iProduct = iProduct;
             _imaster = imaster;
-            _ichild = ichild;            
-
+            _ichild = ichild;
+            _iPurchasedhistory = iPurchased;
+            _iVendor = iVendorServices;
         }
 
         public IActionResult Index()
@@ -37,7 +44,7 @@ namespace PharmaBook.Controllers
         }
 
         [HttpPost]
-        public IActionResult topSellingMedicone()
+        public IActionResult topSellingMedicine()
         {
             try
             {
@@ -74,6 +81,60 @@ namespace PharmaBook.Controllers
 
             
         }
+
+        [HttpPost]
+        public IActionResult topVendorList()
+        {
+            try
+            {
+                List<graphModelVM> gList = new List<graphModelVM>();
+                DateTime valdt = DateTime.Now.AddMonths(-3);
+                var InvList = (from m in _iPurchasedhistory.GetAll(User.Identity.Name).Where(x => x.purchasedDated > valdt)                               
+                               select new { m.vendorID} into x
+                               group x by new { x.vendorID } into g
+                               select new
+                               {
+                                   VID = g.Key.vendorID,
+                                   Total = g.Count()
+                               }).ToList();
+
+                graphModelVM graph = null;
+                foreach (var item in InvList.OrderByDescending(x => x.Total).Take(10))
+                {
+                    try
+                    {
+                        graph = new graphModelVM();
+                        int vendorId = Convert.ToInt32(item.VID);
+                        if (vendorId == 0)
+                        {
+                            graph.Name = "Self";
+                            graph.Value = item.Total;
+                        }
+                        else
+                        {
+                            var vInfo = _iVendor.GetById(vendorId);
+                            graph.Name = vInfo.vendorName + ", " + vInfo.vendorCompnay;
+                            graph.Value = item.Total;
+                        }
+                        gList.Add(graph);
+                    }
+                    catch 
+                    {
+
+                       
+                    }
+
+                }
+
+                return Ok(gList);
+            }
+            catch
+            {
+
+                return BadRequest();
+            }
+        }
+
 
         public IActionResult Contact()
         {
