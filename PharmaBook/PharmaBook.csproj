@@ -7,6 +7,14 @@
   <PropertyGroup>
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\images\successImage.png" />
+    <Content Include="wwwroot\Scripts\AngularController\SiteController.js" />
+    <Content Include="wwwroot\Scripts\dashboard.js" />
+    <Content Include="wwwroot\Scripts\highcharts.js" />
+    <Content Include="wwwroot\Scripts\highcharts.js.map" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AngularJS.Core" Version="1.6.5" />
     <PackageReference Include="AutoMapper" Version="6.1.1" />
@@ -31,7 +39,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Account\" />
-    <Folder Include="wwwroot\bulktemplate\" />
   </ItemGroup>
 
 </Project>

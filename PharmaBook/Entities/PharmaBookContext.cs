@@ -16,5 +16,9 @@ namespace PharmaBook.Entities
 
         public DbSet<MasterInvoice> InvMaster { get; set; }
         public DbSet<ChildInvoice> InvChild { get; set; }
+
+        public DbSet<MasterPO> MasterPO { get; set; }
+        public DbSet<ChildPO> ChildPO { get; set; }
+        public DbSet<UserProfile> UserProfile { get; set; }
     }
 }

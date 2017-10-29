@@ -8,9 +8,10 @@ using PharmaBook.Entities;
 namespace PharmaBook.Migrations
 {
     [DbContext(typeof(PharmaBookContext))]
-    partial class PharmaBookContextModelSnapshot : ModelSnapshot
+    [Migration("20171028162116_modifiedPurchasedHistory")]
+    partial class modifiedPurchasedHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -316,42 +317,6 @@ namespace PharmaBook.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("PharmaBook.Entities.UserProfile", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("AccountExpDt");
-
-                    b.Property<string>("Address1");
-
-                    b.Property<string>("Address2");
-
-                    b.Property<DateTime>("CreatedDt");
-
-                    b.Property<string>("DLNo");
-
-                    b.Property<string>("Email");
-
-                    b.Property<bool>("IsActive");
-
-                    b.Property<string>("Mobile");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("Pwd");
-
-                    b.Property<DateTime>("lastLogin");
-
-                    b.Property<string>("subTitle");
-
-                    b.Property<string>("userName");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UserProfile");
                 });
 
             modelBuilder.Entity("PharmaBook.Entities.Vendor", b =>

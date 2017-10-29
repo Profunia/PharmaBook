@@ -19,7 +19,9 @@
     <link href='//fonts.googleapis.com/css?family=Carrois+Gothic' rel='stylesheet' type='text/css'>
     <link href='//fonts.googleapis.com/css?family=Work+Sans:400,500,600' rel='stylesheet' type='text/css'>
   <!--Angular 2 config-->
-  
+
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/highcharts.js"></script>
 
     @*@Html.Raw(JavaScriptSnippet.FullScript)*@
 </head>
@@ -46,8 +48,9 @@
                 <!-- /script-for sticky-nav -->
                 <!--inner block start here-->
                 <div class="inner-block" ng-app="MyModuleA">
-                    
-                    @RenderBody()
+                    <div class="blank">
+                        @RenderBody()
+                    </div>
                 </div>
                 <!--inner block end here-->
                     <!--copy rights start here-->
@@ -100,7 +103,8 @@
     <script src="~/js/bootstrap.js"> </script>
     <!-- mother grid end here-->
     <script src="~/Scripts/angular.js"></script>
-    <script src="~/Scripts/AngularController/VendorController.js"></script>
+    <script src="~/Scripts/AngularController/SiteController.js"></script>
+    <script src="~/Scripts/dashboard.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
