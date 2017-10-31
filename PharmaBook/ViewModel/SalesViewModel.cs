@@ -9,5 +9,6 @@ namespace PharmaBook.ViewModel
     {
         public InvcChildVmdl[] childinvc {get;set;}
         public InvcMstrVmdl masterinvc { get; set; }
+        public IEnumerable<InvcChildVmdl> invcchld { get; set; }
     }
 }
