@@ -2,7 +2,7 @@
     Layout = null;
 }
 
-@model UserProfile
+@model UserProfileVM
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -35,6 +35,8 @@
                     <div class="form-group">
                         <label>Mobile</label>
                         <input type="text" class="form-control" asp-for="Mobile" />
+                        @Html.HiddenFor(x=>x.CreatedDt)
+                        @Html.HiddenFor(x=>x.lastLogin)
                     </div>
                     <div class="form-group">
                         <label>UserName</label>
@@ -57,11 +59,7 @@
                     <div class="form-group">
                         <label>Account Exp Dt</label>
                         <input type="date" class="form-control" asp-for="AccountExpDt" />
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="text" class="form-control" asp-for="Pwd" />
-                    </div>
+                    </div>                  
                     <div class="form-group">
                         <label>isActive</label>
                         <input type="checkbox" class="form-control" asp-for="IsActive" />

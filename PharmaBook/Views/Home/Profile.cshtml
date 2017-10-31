@@ -1,11 +1,11 @@
-﻿@model UserProfile
+﻿@model UserProfileVM
 <h2>User Profile</h2>
 <div class="blankpage-main">
 
-    @if (!string.IsNullOrEmpty(ViewBag.msg))
+    @if (TempData["msg"]!=null)
     {
         <div class="row alert alert-success">
-            @ViewBag.msg
+            @TempData["msg"]
 
         </div>
 
@@ -30,17 +30,23 @@
                     <input type="text" class="form-control" asp-for="Mobile" />
                 </div>
                 <div class="form-group">
-                    <label>UserName :</label> <strong>@Model.userName</strong>
+                    <label>UserName :</label> <strong>@{ 
+                        if (Model != null)
+                        {
+                           <span> @Model.userName</span>
+                            }
+                        }
+                    </strong>
 
                 </div>
             </div>
             <div class="col-xs-6">
                 <div class="form-group">
-                    <label>Address 1</label>
+                    <label>Address Line 1</label>
                     <input type="text" class="form-control" asp-for="Address1" />
                 </div>
                 <div class="form-group">
-                    <label>Address2</label>
+                    <label>Address Line 2</label>
                     <input type="text" class="form-control" asp-for="Address2" />
                 </div>
                 <div class="form-group">
@@ -48,30 +54,43 @@
                     <input type="text" class="form-control" asp-for="Email" />
                 </div>
                 <div class="form-group">
-                    <label>Account Exp Dt</label> <strong>@Model.AccountExpDt</strong>
-
-                </div>
+                    <label>Account Expiry Date</label> <strong>
+    @{
+        if (Model != null)
+        {
+            
+                            <span> @Model.AccountExpDt</span>
+                            @Html.HiddenFor(x=>x.AccountExpDt)
+            @Html.HiddenFor(x=>x.CreatedDt)
+            @Html.HiddenFor(x=>x.userName)
+            @Html.HiddenFor(x=>x.lastLogin)
+                        }
+                    }
+                </strong>
             
                 <div class="form-group">
                     <label>Account Status : </label>
-                    @{
-                        string str = string.Empty;
-                        if (Model.IsActive)
+                    @{ string str = string.Empty;
+                        if (Model != null)
                         {
-                            str = "Active";
-                        }
-                        else
-                        {
-                            str = "De-Active";
+
+                            if (Model.IsActive)
+                            {
+                                str = "<span style='color:green;'>Active</span>";
+                            }
+                            else
+                            {
+                                str = "<span style='color:red;'>De-Active</span>";
+                            }
                         }
                     }
-                    <strong>@str</strong>
+                    <strong>@Html.Raw(str)</strong>
 
                 </div>
             </div>
             <input type="submit" class="btn btn-primary" value="Update" />
         </div>
-
+            </div>
     </form>
 
 

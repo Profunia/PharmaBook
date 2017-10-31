@@ -20,6 +20,8 @@
                 @TempData["msg"]
         }
         </h3>
+        <hr />
+         <h3>Total Member : @Model.Count() </h3>
        <table class="table">
            <thead>
                <tr>
@@ -38,7 +40,19 @@
                    <td>@item.userName</td>
                    <td>@item.Name</td>
                    <td>@item.DLNo</td>
-                   <td>@item.IsActive</td>
+                   <td>
+                   @{ 
+                       string str = string.Empty;
+                       if (item.IsActive)
+                       {
+                           str = "<span style='color:green;'>Active</span>";
+                       }
+                       else
+                       {
+                           str = "<span style='color:red;'>De-Active</span>";
+                       }
+                   }
+                   @Html.Raw(str)</td>
                    <td>@item.lastLogin</td>
                    <td>@item.AccountExpDt</td>
                    <td><a href="/PharmaBook/EditUser/@(item.Id)">Edit</a></td>

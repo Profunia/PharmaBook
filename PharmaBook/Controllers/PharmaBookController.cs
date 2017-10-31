@@ -27,7 +27,7 @@ namespace PharmaBook.Controllers
         }
         public IActionResult Admin()
         {
-            var users = _iProfileServices.GetAll(User.Identity.Name);
+            var users = _iProfileServices.GetAllforAdmin();
             return View(users);
         }
 
@@ -41,24 +41,25 @@ namespace PharmaBook.Controllers
         public IActionResult EditUser(int id)
         {
             var model = _iProfileServices.GetById(id);
-            return View(model);
+            var VM = Mapper.Map<UserProfileVM>(model);
+            return View(VM);
         }
         [HttpPost]
-        public IActionResult EditUser(UserProfile model, int id)
+        public IActionResult EditUser(UserProfileVM model, int id)
         {
             UserProfile medicn = _iProfileServices.GetById(id);
-            // Mapper.Map(model, medicn);
+             Mapper.Map(model, medicn);
 
-            medicn.AccountExpDt = model.AccountExpDt;
-            medicn.IsActive = model.IsActive;
+            //medicn.AccountExpDt = model.AccountExpDt;
+            //medicn.IsActive = model.IsActive;
           //  _iProfileServices.Update(medicn);
             _iProfileServices.Commit();
-            TempData["msg"]="Successfullt updated";
+            TempData["msg"]="Successfully updated";
             return RedirectToAction("Admin");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(UserProfile model)
+        public async Task<IActionResult> Register(UserProfileVM model)
         {
             if (ModelState.IsValid)
             {
@@ -71,6 +72,7 @@ namespace PharmaBook.Controllers
                     model.CreatedDt = DateTime.Now;
                     model.userName = model.userName;
                     model.IsActive = true;
+                    model.lastLogin = DateTime.Now;
                     UserProfile objMap = Mapper.Map<UserProfile>(model);
                     _iProfileServices.Add(objMap);
                     _iProfileServices.Commit();

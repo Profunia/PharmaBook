@@ -15,6 +15,7 @@ namespace PharmaBook.Services
         IEnumerable<UserProfile> GetAll(string userName);
         UserProfile GetById(int Id);
         UserProfile GetByUserName(string userName);
+        IEnumerable<UserProfile> GetAllforAdmin();
     }
 
 
@@ -43,6 +44,10 @@ namespace PharmaBook.Services
         public UserProfile GetById(int Id)
         {
             return _context.UserProfile.Find(Id);
+        }
+        public IEnumerable<UserProfile> GetAllforAdmin()
+        {
+            return _context.UserProfile.OrderByDescending(x => x.Id).ToList();
         }
 
         //public void Update(UserProfile profile)

@@ -166,21 +166,23 @@ namespace PharmaBook.Controllers
 
         public IActionResult Profile()
         {
-            var model = _iProfile.GetByUserName(User.Identity.Name);
-            return View(model);
+            var model = _iProfile.GetByUserName(User.Identity.Name);            
+            var modelVM = Mapper.Map<UserProfileVM>(model);
+            return View(modelVM);
         }
 
         [HttpPost]
-        public IActionResult Profile(UserProfile Obj)
+        public IActionResult Profile(UserProfileVM Obj)
         {
             UserProfile medicn = _iProfile.GetByUserName(User.Identity.Name);
-            Mapper.Map(medicn, Obj);
+         
+            Mapper.Map(Obj,medicn);
             var a = medicn;
-          //  _iProfile.Update(medicn);
+           
             _iProfile.Commit();
-            ViewBag.msg = "Successfully updated";
+            TempData["msg"] = "Successfully updated";
             var laste= _iProfile.GetByUserName(User.Identity.Name);
-            return View(laste);
+            return RedirectToAction("Profile");
         }
     }
 }

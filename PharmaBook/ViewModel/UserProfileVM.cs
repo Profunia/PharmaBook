@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace PharmaBook.Entities
+namespace PharmaBook.ViewModel
 {
-    public class UserProfile
+    public class UserProfileVM
     {
-        public int Id { get; set; }
+        
         public DateTime lastLogin { get; set; }
         public string Name { get; set; }
         public string subTitle { get; set; }
@@ -15,7 +15,8 @@ namespace PharmaBook.Entities
         public string DLNo { get; set; }
         public string userName { get; set; }
         public DateTime CreatedDt { get; set; }
-        public DateTime AccountExpDt { get; set; }        
+        public DateTime AccountExpDt { get; set; }
+        public string Pwd { get; set; }
         public bool IsActive { get; set; }
     }
 }
