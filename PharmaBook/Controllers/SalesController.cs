@@ -39,9 +39,20 @@ namespace PharmaBook.Controllers
         {
             return View();
         }
+        public IActionResult Invoice(int? id)
+        {
+            SalesViewModel slsvwmdl = new SalesViewModel();
+            MasterInvoice mstrobj = _imaster.getlastproduct();
+            var chldinvoice = _ichild.GetAll(mstrobj.Id);
+            var lst = Mapper.Map<IEnumerable<InvcChildVmdl>>(chldinvoice);
+            slsvwmdl.invcchld = lst;
+            slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mstrobj);
+            return View(slsvwmdl);
+        }
         public JsonResult AddMasterInvc([FromBody]SalesViewModel slsmodel)
         {            
             string msg = string.Empty;
+            SalesViewModel slsvwmdl = new SalesViewModel();                        
             string username = User.Identity.Name;
             try
             {
@@ -50,21 +61,14 @@ namespace PharmaBook.Controllers
                 MasterInvoice obj = Mapper.Map<MasterInvoice>(msterinvoice);
                 obj.InvCrtdate = DateTime.Now;
                 _imaster.Add(obj);
-                _imaster.Commit();
+                //_imaster.Commit();
+                MasterInvoice mstrobj = _imaster.getlastproduct();
                 foreach (var i in childinvoice)
                 {
-                    ChildInvoice chldinvc = Mapper.Map<ChildInvoice>(i);                   
-                    var id= _imaster.getlastproduct();
-                     chldinvc.MasterInvID = _imaster.getlastproduct().Id; 
+                    ChildInvoice chldinvc = Mapper.Map<ChildInvoice>(i);
+                    chldinvc.MasterInvID = mstrobj.Id;
                     _ichild.Add(chldinvc);
                     _ichild.Commit();
-
-
-                    // update product table for stock 
-                    var productstock = _iProduct.GetById(i.PrdId);
-                    int availableStock = productstock.openingStock;
-                    productstock.openingStock = (availableStock - i.Qty);
-                    _iProduct.Commit();
                 }                
             }
             catch
@@ -73,5 +77,15 @@ namespace PharmaBook.Controllers
             }
             return Json(msg);
         } 
+        public JsonResult GetInvoice([FromHeader] int id)
+        {
+            SalesViewModel slsvwmdl = new SalesViewModel();
+            MasterInvoice mstrobj = _imaster.getlastproduct();
+            var chldinvoice = _ichild.GetAll(mstrobj.Id);
+            var lst = Mapper.Map<IEnumerable<InvcChildVmdl>>(chldinvoice);
+            slsvwmdl.invcchld = lst;
+            slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mstrobj);
+            return Json(slsvwmdl);
+        }
     }
 }
