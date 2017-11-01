@@ -51,12 +51,11 @@ namespace PharmaBook.Controllers
         }
         public JsonResult AddMasterInvc([FromBody]SalesViewModel slsmodel)
         {            
-            string msg = string.Empty;
-            SalesViewModel slsvwmdl = new SalesViewModel();                        
-            string username = User.Identity.Name;
+            string msg = string.Empty;            
             try
             {
                 var childinvoice = slsmodel.childinvc;
+                slsmodel.masterinvc.UserName= User.Identity.Name;
                 var msterinvoice = slsmodel.masterinvc;
                 MasterInvoice obj = Mapper.Map<MasterInvoice>(msterinvoice);
                 obj.InvCrtdate = DateTime.Now;

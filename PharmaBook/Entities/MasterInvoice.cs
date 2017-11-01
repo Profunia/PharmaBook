@@ -14,6 +14,6 @@ namespace PharmaBook.Entities
         public string DrName { get; set; }
         public string RegNo { get; set; }
         public DateTime InvCrtdate { get; set; }
-        
+        public string UserName { get; set; }
     }
 }
