@@ -91,12 +91,19 @@ namespace PharmaBook.Controllers
                     CPO cpo = null;
 
                     // filling master Details 
-                    var vendorInfo = _iVendor.GetById(Item.VendorID);
-                    mpo.vendorID = Item.VendorID;
-                    mpo.VendorName = vendorInfo.vendorName;
-                    mpo.VendorAddress = vendorInfo.vendorAddress;
-                    mpo.VendorContact = vendorInfo.vendorMobile;
-                    mpo.VendorCompany = vendorInfo.vendorCompnay;
+                    if (Item.VendorID != 0)
+                    {
+                        var vendorInfo = _iVendor.GetById(Item.VendorID);
+                        mpo.vendorID = Item.VendorID;
+                        mpo.VendorName = vendorInfo.vendorName;
+                        mpo.VendorAddress = vendorInfo.vendorAddress;
+                        mpo.VendorContact = vendorInfo.vendorMobile;
+                        mpo.VendorCompany = vendorInfo.vendorCompnay;
+                    }
+                    else
+                    {
+                        mpo.VendorName = "Self";
+                    }
                     mpo.PlacedOrder = Item.placedOrderDt.ToString("dd/MM/yyyy");
                     var childObj = _iChildPO.GetAll().Where(x => x.masterPOid == Item.Id).ToList();
                     mpo.NoOfItems = childObj.Count();
@@ -134,10 +141,10 @@ namespace PharmaBook.Controllers
 
                 return Ok(dList);
             }
-            catch (Exception)
+            catch (Exception rp)
             {
 
-                return BadRequest();
+                return BadRequest(rp.Message);
             }
             
         } 

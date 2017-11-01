@@ -147,7 +147,7 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
             dataType: "json"
             // headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         }).then(function (response) {
-            $window.location.href = "http://localhost:49440/Product/Index";
+            $window.location.href = "/Product/Index";
         }, function (error) {
 
         })
@@ -318,7 +318,7 @@ app.controller('SalesController', function ($scope, $http, loadvndor) {
         })
     }
     $scope.PrintInvoice = function () {
-        window.location="http://localhost:49440/Sales/Invoice";
+        window.location="/Sales/Invoice";
     }
 })
 
@@ -431,7 +431,7 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
     function getPurchasedInbox()
     {
         $http.get('/Purchased/InboxPO').then(function (res) {
-            console.log(res.data);
+        
             $scope.masterPo = res.data.masterPo;
 
         }, function (error) {
@@ -451,7 +451,7 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
     $scope.purchasedEntryView = false;
     $scope.CreatePurchased = function () {
         $scope.Prepurchased = [];
-        console.log($scope.childPO.cpoList);
+       
         for (var i = 0; i < $scope.childPO.cpoList.length; i++) {
             var model = {
                 ProductID: $scope.childPO.cpoList[i].productID,
@@ -468,9 +468,7 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
             $scope.Prepurchased.push(model);
         }
        // $scope.Prepurchased = $scope.childPO;
-        $scope.purchasedEntryView = true;
-        console.log("Purchased Entry");
-        console.log($scope.Prepurchased);
+        $scope.purchasedEntryView = true;    
 
 
     }
@@ -478,7 +476,7 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
         if (confirm('are you sure want to delete ?? \n medicine : ' + val.productName + "\n Mfg : " + val.mfg)) {
             var childId = val.childPoId;
             $http.post('/Purchased/childPoDelete/' + childId).then(function (res) {
-                console.log(res.data);
+              
                 alert('successfully deleted... \n medicine : ' + val.productName + '\n Mfg : ' + val.mfg);
                 $scope.backtoPurchased();
                 getPurchasedInbox();
@@ -486,14 +484,12 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
             }, function (error) {
 
             })
-            console.log(val);
-            
+                      
 
         }        
     }
 
-    $scope.childDetails = function (val) {
-        console.log(val);
+    $scope.childDetails = function (val) {      
         $scope.childPO = val;
         $scope.childPoView = !$scope.childPoView;
     }
@@ -567,8 +563,7 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
                 'BatchNo': $scope.child.BatchNo,
                 'Remarks': $scope.child.Remarks
             });
-            $scope.child = [];
-            console.log($scope.cartlists);
+            $scope.child = [];           
 
         }
         else {
@@ -580,7 +575,7 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
     $scope.medicineselect = function () {
         var id = $scope.PrdId;
         $http.get('/Product/GetMedicnById/?id=' + id).then(function (res) {
-            console.log(res.data);
+          
             $scope.child = {
                 Name:res.data.name,
                 Mfg: res.data.companyName,
@@ -604,8 +599,7 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
     $scope.onSubmit = function () {
         // TODO API Call
 
-        $scope.Prepurchased = [];
-        console.log($scope.cartlists)
+        $scope.Prepurchased = [];      
         for (var i = 0; i < $scope.cartlists.length; i++) {
             var model = {
                 ProductID: $scope.cartlists[i].PrdId,
@@ -655,8 +649,18 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
 
 });
 
-app.controller('DashBoardController', function ($scope, $http, loadvndor, $rootScope, $filter) {
+app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $rootScope, $filter) {
 
+    $scope.a = function () {
+        alert(1);
+    }
+    $scope.InvoiceList = [];
+    $http.get('/Sales/GetAllInvoice').then(function (res) {
+        $scope.InvoiceList = res.data;
+        console.log(res.data);
+    }, function (error) {
+        console.log(error.data);
+    })
 
 
 });

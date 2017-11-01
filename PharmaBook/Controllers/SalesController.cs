@@ -8,6 +8,7 @@ using PharmaBook.ViewModel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -85,6 +86,39 @@ namespace PharmaBook.Controllers
             slsvwmdl.invcchld = lst;
             slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mstrobj);
             return Json(slsvwmdl);
+        }
+
+        public IActionResult GetAllInvoice()
+        {
+            try
+            {
+                MasterInv svm = null;
+                List<MasterInv> sList = new List<MasterInv>();
+                var InvList = _imaster.GetAll(User.Identity.Name).Where(x=>x.UserName!=null).ToList();
+                foreach (var item in InvList)
+                {
+                    svm = new MasterInv();
+                    svm.Id = item.Id;
+                    svm.InvId = item.InvId;
+                    svm.Patient = item.PatientName;
+                    svm.Paddress = item.PatientAdres;
+                    svm.DocName = item.DrName;
+                    svm.DocRegi = item.RegNo;
+                    svm.CreatedDate = item.InvCrtdate.ToString("dd/MM/yyyy");
+                    var child= _ichild.GetAll().Where(x => x.MasterInvID == item.Id).ToList();
+                    svm.NoOfMedicine = child.Count();
+                    svm.BillingAmount = child.Sum(x => x.Amount).ToString();
+
+     
+                }
+                return Ok(sList);
+            }
+            catch (Exception ep)
+            {
+                return BadRequest(ep.Message);
+            }
+
+           
         }
     }
 }
