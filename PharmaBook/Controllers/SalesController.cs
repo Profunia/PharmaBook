@@ -39,11 +39,11 @@ namespace PharmaBook.Controllers
         {
             return View();
         }
-        public IActionResult Invoice(int? id)
+        public IActionResult Invoice()
         {
             SalesViewModel slsvwmdl = new SalesViewModel();
             MasterInvoice mstrobj = _imaster.getlastproduct();
-            var chldinvoice = _ichild.GetAll();
+            var chldinvoice = _ichild.GetById(mstrobj.Id);            
             var lst = Mapper.Map<IEnumerable<InvcChildVmdl>>(chldinvoice);
             slsvwmdl.invcchld = lst;
             slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mstrobj);
@@ -61,7 +61,7 @@ namespace PharmaBook.Controllers
                 MasterInvoice obj = Mapper.Map<MasterInvoice>(msterinvoice);
                 obj.InvCrtdate = DateTime.Now;
                 _imaster.Add(obj);
-                //_imaster.Commit();
+                _imaster.Commit();
                 MasterInvoice mstrobj = _imaster.getlastproduct();
                 foreach (var i in childinvoice)
                 {
@@ -81,7 +81,7 @@ namespace PharmaBook.Controllers
         {
             SalesViewModel slsvwmdl = new SalesViewModel();
             MasterInvoice mstrobj = _imaster.getlastproduct();
-            var chldinvoice = _ichild.GetAll(mstrobj.Id);
+            var chldinvoice = _ichild.GetAll();
             var lst = Mapper.Map<IEnumerable<InvcChildVmdl>>(chldinvoice);
             slsvwmdl.invcchld = lst;
             slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mstrobj);

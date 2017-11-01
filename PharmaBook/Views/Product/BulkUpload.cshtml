@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "BulkUpload";
 }
-
+@model SalesViewModel
 
     <h2>Create Bulk Medicine</h2>
 <div class="blankpage-main">
@@ -30,5 +30,29 @@
             </div>
         </div>
       </form>
+    <div class="row">
+       
+            @if (@Model.successlst != null)
+            {
+                <div class="col-lg-2">
+                    <strong>Total Success : @Model.successlst.Count()</strong>
+                </div>
+            }
+                
+        
+            @if (@Model.duplictlst != null)
+            {
+            <div class="col-lg-4">
+                <strong>Total Duplicate : @Model.duplictlst.Count()</strong>
+            </div>
+            }    
+        
+            @if (@Model.producterrlst != null)
+            {
+                <div class="col-lg-2">
+                    <strong>Total Error : @Model.producterrlst.Count()</strong>
+                </div>
+            }    
+    </div>
 </div>
 

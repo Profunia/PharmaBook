@@ -91,13 +91,13 @@
                                     <td>{{$index+1}}</td>
                                     <td><span ng-hide="cClass==item.id">{{item.name }}</span><input type="text" ng-model="item.name" ng-show="cClass==item.id" /></td>
                                     <td class="hidden-phone"><span ng-hide="cClass==item.id">{{item.batchNo}}</span><input type="text" ng-model="item.batchNo" ng-show="cClass==item.id" /></td>
-                                    <td><span ng-hide="cClass==item.id">{{item.expDate| date:'dd/MM/yyyy'}}</span><input type="date" ng-model="item.expDate" ng-show="cClass==item.id" /></td>
+                                    <td><span ng-hide="cClass==item.id">{{item.expDate| date:'dd/MM/yyyy'}}</span><input type="date" ng-model="item.expDate" ng-show="cClass==item.id" value="item.expDate"/></td>
                                     <td><span ng-hide="cClass==item.id">{{item.companyName}}</span><input type="text" ng-model="item.companyName" ng-show="cClass==item.id" /></td>
                                     <td><span ng-hide="cClass==item.id">{{item.mrp}}</span><input type="text" ng-model="item.mrp" ng-show="cClass==item.id" /></td>
-                                    <td><span ng-hide="cClass==item.id">{{item.openingStock}}</span><input type="text" ng-model="item.openingStock" ng-show="cClass==item.id" /></td>
+                                    <td><span ng-hide="cClass==item.id">{{item.openingStock}}</span><span ng-show="cClass==item.id">{{item.openingStock}}</span></td>
                                     <td>
-                                        <button class="btn btn-success btn-xs" ng-click="Updtdata(item)" ng-if="savebtn"><i class="fa fa-check"></i>Save</button>
-                                        <button class="btn btn-primary btn-xs" ng-click="showdata(item,1)" ng-if="editbtn"><i class="fa fa-pencil"></i>Edit</button>
+                                        <button class="btn btn-success btn-xs" ng-click="Updtdata(item)" ng-show="cClass==item.id"><i class="fa fa-check"></i>Save</button>
+                                        <button class="btn btn-primary btn-xs" ng-click="showdata(item,1)" ng-hide="cClass==item.id"><i class="fa fa-pencil"></i>Edit</button>
                                         <button class="btn btn-danger btn-xs" ng-click="delitem(item.id)"><i class="fa fa-trash-o"></i> Delete</button>
                                     </td>
                                 </tr>

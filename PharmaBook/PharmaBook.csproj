@@ -13,13 +13,13 @@
     <Content Remove="wwwroot/bulktemplate\~%24BulkUploadTemplate.xlsx" />
   </ItemGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <Content Include="wwwroot\images\successImage.png" />
     <Content Include="wwwroot\Scripts\AngularController\SiteController.js" />
     <Content Include="wwwroot\Scripts\dashboard.js" />
     <Content Include="wwwroot\Scripts\highcharts.js" />
     <Content Include="wwwroot\Scripts\highcharts.js.map" />
-  </ItemGroup>
+  </ItemGroup>-->
   <ItemGroup>
     <PackageReference Include="AngularJS.Core" Version="1.6.5" />
     <PackageReference Include="AutoMapper" Version="6.1.1" />
