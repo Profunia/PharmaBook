@@ -74,7 +74,6 @@ namespace PharmaBook.Controllers
                     purchasedHistory.Mfg = obj.companyName;
                     purchasedHistory.Name = obj.name;
                     purchasedHistory.Remark = string.IsNullOrEmpty(obj.Remarks) ? "Newly added" : obj.Remarks;
-
                     _iPurchased.Add(purchasedHistory);
                     _iPurchased.Commit();
                     //return RedirectToAction("Index");
@@ -97,12 +96,14 @@ namespace PharmaBook.Controllers
         [HttpGet]
         public IActionResult BulkUpload()
         {
-            return View();
+            SalesViewModel obj = new SalesViewModel();
+            return View(obj);
         }
 
         [ValidateAntiForgeryToken, HttpPost]
         public IActionResult BulkUpload(IFormFile file)
         {
+            SalesViewModel obj = new SalesViewModel();
             if (file.Length > 0)
             {              
                 string fileExtension = Path.GetExtension(file.FileName.Trim('"'));
@@ -128,32 +129,65 @@ namespace PharmaBook.Controllers
                         int rowCount = worksheet.Dimension.Rows;
                         int ColCount = worksheet.Dimension.Columns;
                         bool bHeaderRow = true;
-                        ProductViewModel productDetails = null;
+                        ProductViewModel productDetails = null;                        
+                        obj.successlst= new List<ProductViewModel>();
+                        obj.successlst = new List<ProductViewModel>();
+                        obj.producterrlst = new List<ProductError>();
                         for (int row = 1; row <= rowCount; row++)
                         {
+                            var lst = _iProduct.GetAll(User.Identity.Name);
+                            var lastproduct = _iProduct.GetAll(User.Identity.Name).FirstOrDefault(); 
+                            string DplictrowData = string.Empty;
+                            string rowData = string.Empty;
                             productDetails = new ProductViewModel();
+                            ProductError producterr = new ProductError();
+                            string medicine = string.Empty;
+                            string mfg= string.Empty;
                             for (int col = 1; col <= ColCount; col++)
-                            {
-                               
+                            {                               
                                 if (bHeaderRow)
                                 {
                                     string HeaderTitle = Convert.ToString(worksheet.Cells[row, col].Value);
                                     columnName.Add(HeaderTitle);
-
                                 }
                                 else
                                 {                                    
                                     string cName = columnName[col - 1];
-                                    string rowData = Convert.ToString(worksheet.Cells[row, col].Value);
+                                    rowData = Convert.ToString(worksheet.Cells[row, col].Value);
+                                    //DplictrowData = Convert.ToString(worksheet.Cells[row - 1, col].Value);
                                     
                                     // assign excel data to product view model
-                                    if(cName.Equals("MedicineName"))
+                                    if (cName.Equals("MedicineName"))
                                     {
-                                        productDetails.name = rowData;
+                                        if (rowData != null && lastproduct.name!= rowData)
+                                        {
+                                            productDetails.name = rowData;
+                                        }
+                                        else
+                                        {
+                                            if(lastproduct.name == rowData)
+                                            {
+                                                medicine = rowData;
+                                            }
+                                            if(productDetails.name==null)
+                                            {
+                                                producterr.name = "Medicine name required";
+                                            }
+                                        }
                                     }
                                     else if (cName.Equals("BatchNo"))
                                     {
-                                        productDetails.batchNo = rowData;
+                                        if (rowData != "")
+                                        {
+                                            productDetails.batchNo = rowData;
+                                        }
+                                        else
+                                        {
+                                            if (productDetails.batchNo == null)
+                                            {
+                                                producterr.batchNo = "batchNo required";
+                                            }
+                                        }
                                     }
                                     else if (cName.Equals("Stock"))
                                     {
@@ -161,22 +195,63 @@ namespace PharmaBook.Controllers
                                         {
                                             productDetails.openingStock = Convert.ToInt32(rowData);
                                         }
-                                        
+                                        else
+                                        {
+                                            if (productDetails.openingStock == 0)
+                                            {
+                                                producterr.openingStock = "openingStock required";
+                                            }
+                                        }
+
                                     }
                                     else if (cName.Equals("Mfg"))
                                     {
-                                        productDetails.companyName = rowData;
+                                        if (rowData != null&& lastproduct.companyName != rowData)
+                                        {
+                                            productDetails.companyName = rowData;
+                                        }
+                                        else
+                                        {
+                                            if (lastproduct.companyName == rowData)
+                                            {
+                                                mfg = rowData;
+                                            }
+                                            if (productDetails.companyName == null)
+                                            {
+                                                producterr.companyName = "companyName required";
+                                            }
+                                        }
                                     }
                                     else if (cName.Equals("MRP"))
                                     {
-                                        productDetails.MRP = rowData;
+                                        if (rowData != null)
+                                        {
+                                            productDetails.MRP = rowData;
+                                        }
+                                        else
+                                        {
+                                            if (productDetails.MRP == null)
+                                            {
+                                                producterr.MRP = "MRP required";
+                                            }
+                                        }
                                     }
                                     else if (cName.Equals("ExpDate"))
                                     {
-                                        if (!string.IsNullOrEmpty(rowData))
-                                        {  
-                                            productDetails.expDate = commonServices.ConvertToDate(rowData);                                             
-                                        }                                    
+                                        if (rowData != null)
+                                        {
+                                            if (!string.IsNullOrEmpty(rowData))
+                                            {
+                                                productDetails.expDate = commonServices.ConvertToDate(rowData);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (productDetails.expDate == null)
+                                            {
+                                                producterr.expDate = "expDate required";
+                                            }
+                                        }
                                        
                                     }
                                     else if (cName.Equals("VendorID"))
@@ -189,23 +264,30 @@ namespace PharmaBook.Controllers
                                     else if (cName.Equals("Remark"))
                                     {
                                         productDetails.Remarks = rowData;
-                                    }
-                                  
+
+                                    }                                  
 
                                 }
-                            }
-
+                            }                            
                             if (bHeaderRow == false)
                             {
-                                var status = Create(productDetails);
+                                if(productDetails.name!=null&& productDetails.batchNo!=null&& productDetails.openingStock!=0&& productDetails.companyName!=null&& productDetails.MRP!=null&& productDetails.expDate!=null)
+                                {
+                                    obj.successlst.Add(productDetails);
+                                    var status = Create(productDetails);
+                                }
+                                else if (medicine != "" && mfg != "")
+                                {
+                                    obj.duplictlst.Add(productDetails);                                    
+                                }
+                                else if(producterr.name != null || producterr.batchNo != null || producterr.openingStock == null || producterr.companyName != null || producterr.MRP != null || producterr.expDate != null)
+                                {
+                                    obj.producterrlst.Add(producterr);
+                                }
                                 
                             }
-
                             bHeaderRow = false;
-                            
-
                         }
-
                     }
                 }
                 else
@@ -213,7 +295,7 @@ namespace PharmaBook.Controllers
                     string msg = "invalid file format";
                 }
             }
-            return View();
+            return View(obj);
         }
 
         public JsonResult GetAllMedicine()
