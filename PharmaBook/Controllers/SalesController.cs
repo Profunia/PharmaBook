@@ -43,7 +43,7 @@ namespace PharmaBook.Controllers
         {
             SalesViewModel slsvwmdl = new SalesViewModel();
             MasterInvoice mstrobj = _imaster.getlastproduct();
-            var chldinvoice = _ichild.GetAll(mstrobj.Id);
+            var chldinvoice = _ichild.GetAll();
             var lst = Mapper.Map<IEnumerable<InvcChildVmdl>>(chldinvoice);
             slsvwmdl.invcchld = lst;
             slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mstrobj);

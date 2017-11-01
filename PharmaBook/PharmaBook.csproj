@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot/24c61767-2c79-44ed-b906-2ea3160f5e71.xlsx" />
     <Content Remove="wwwroot/bulktemplate\~%24BulkUploadTemplate.xlsx" />
   </ItemGroup>
 
