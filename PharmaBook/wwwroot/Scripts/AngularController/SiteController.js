@@ -34,8 +34,8 @@ app.controller('MyController', function ($scope, $http, loadvndor) {
     loadvndor.getvndr();
     $scope.divhide1 = false;
     $scope.divhide2 = true;
-    $scope.savebtn = false;
-    $scope.editbtn = true;
+    //$scope.savebtn = false;
+    //$scope.cClass = true;
     $scope.Item = {
         Name: '',
         Address: '',
@@ -68,8 +68,8 @@ app.controller('MyController', function ($scope, $http, loadvndor) {
     }
     var counter = 0;
     $scope.showdata = function (item, inc) {
-        $scope.savebtn = true;
-        $scope.editbtn = false;
+        //$scope.savebtn = true;
+        //$scope.editbtn = false;
         $scope.cClass = item.id;
     }
     $scope.Updtdata = function (item) {
