@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using PharmaBook.Services;
@@ -9,11 +10,11 @@ using PharmaBook.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using System.IO;
-using System.Data.SqlClient;
-using System.Data;
-using System.Data.SqlClient;
-using ExcelDataReader;
+using OfficeOpenXml;
 using System.Text;
+using Microsoft.AspNetCore.Hosting;
+using System.Globalization;
+
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace PharmaBook.Controllers
@@ -23,10 +24,12 @@ namespace PharmaBook.Controllers
     {
         private IProduct _iProduct;
         private IPurchasedHistory _iPurchased;
-        public ProductController(IProduct product, IPurchasedHistory ipurchasedHistory)
+        private readonly IHostingEnvironment _hostingEnvironment;
+        public ProductController(IHostingEnvironment hostingEnvironment, IProduct product, IPurchasedHistory ipurchasedHistory)
         {
             _iProduct = product;
             _iPurchased = ipurchasedHistory;
+            _hostingEnvironment = hostingEnvironment;
         }
         // GET: /<controller>/
         public IActionResult Index()
@@ -40,26 +43,26 @@ namespace PharmaBook.Controllers
             return View();
         }
         [HttpPost]
-        public JsonResult Create([FromBody]ProductViewModel obj)
+        public IActionResult Create([FromBody]ProductViewModel obj)
         {
             String msg = string.Empty;
             try
             {
                 if (ModelState.IsValid)
                 {
-                   
+
                     Product objMap = Mapper.Map<Product>(obj);
                     objMap.lastUpdated = DateTime.Now.ToString();
                     objMap.isActive = true;
                     objMap.cusUserName = User.Identity.Name;
-                                                            
+
                     _iProduct.Add(objMap);
                     _iProduct.Commit();
                     msg = obj.name + " medicine has been successfully added!!";
 
                     // update product histry table
                     PurchasedHistory purchasedHistory = new PurchasedHistory();
-                    var pId= _iProduct.GetAll(User.Identity.Name).OrderByDescending(x=>x.Id).FirstOrDefault().Id;                    
+                    var pId = _iProduct.GetAll(User.Identity.Name).OrderByDescending(x => x.Id).FirstOrDefault().Id;
                     purchasedHistory.ProductID = pId;
                     purchasedHistory.vendorID = obj.vendorID; // Replace with Vendor ID
                     purchasedHistory.MRP = obj.MRP;
@@ -70,11 +73,12 @@ namespace PharmaBook.Controllers
                     purchasedHistory.ExpDate = obj.expDate.ToString();
                     purchasedHistory.Mfg = obj.companyName;
                     purchasedHistory.Name = obj.name;
-                    purchasedHistory.Remark = "Newly added";
+                    purchasedHistory.Remark = string.IsNullOrEmpty(obj.Remarks) ? "Newly added" : obj.Remarks;
 
                     _iPurchased.Add(purchasedHistory);
                     _iPurchased.Commit();
                     //return RedirectToAction("Index");
+                   
                 }
                 else
                 {
@@ -85,9 +89,10 @@ namespace PharmaBook.Controllers
             catch (Exception ep)
             {
 
-               
+
             }
-            return Json(msg);
+            
+            return Ok(msg);
         }
         [HttpGet]
         public IActionResult BulkUpload()
@@ -98,79 +103,117 @@ namespace PharmaBook.Controllers
         [ValidateAntiForgeryToken, HttpPost]
         public IActionResult BulkUpload(IFormFile file)
         {
-            string body = null;
             if (file.Length > 0)
-            {
+            {              
                 string fileExtension = Path.GetExtension(file.FileName.Trim('"'));
-                if (fileExtension.Equals(".xlsx") || fileExtension.Equals(".xls"))
+                if (fileExtension.Equals(".xlsx"))
                 {
-                    //if (file != null && file.Length > 0)
-                    //{
-                    //    StreamReader reader = new StreamReader(Server.MapPath("~/HtmlUpload/" + filenm));
-                    //    body = reader.ReadToEnd();
-                    //    if (Request.Files["file"].ContentLength > 0)
-                    //    {
-                    //        string fileExtension = System.IO.Path.GetExtension(Request.Files["file"].FileName);
-                    //        if (fileExtension == ".xls" || fileExtension == ".xlsx")
-                    //        {
-                    //            string filename = Path.GetFileName(Request.Files["file"].FileName);
-                    //            string fileLocation = string.Format("{0}{1}", Server.MapPath("~/Content/UploadedFile"), filename);
-                    //            if (System.IO.File.Exists(fileLocation))
-                    //                System.IO.File.Delete(fileLocation);
-                    //            Request.Files["file"].SaveAs(fileLocation);
-                    //            string excelConnectionString = string.Empty;
-                    //            if (fileExtension == ".xls")
-                    //            {
-                    //                excelConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileLocation + ";Extended Properties=\"Excel 8.0;HDR=Yes;IMEX=2\"";
-                    //            }
-                    //            else if (fileExtension == ".xlsx")
-                    //            {
-                    //                excelConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileLocation + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
-                    //            }
-                    //            OleDbConnection excelConnection = new OleDbConnection(excelConnectionString);
-                    //            excelConnection.Open();
-                    //            DataTable dt = new DataTable();
-                    //            dt = excelConnection.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
-                    //            if (dt == null)
-                    //            {
-                    //                return null;
-                    //            }
-                    //            String[] excelsheets = new String[dt.Rows.Count];
-                    //            int t = 0;
-                    //            foreach (DataRow row in dt.Rows)
-                    //            {
-                    //                excelsheets[t] = row["TABLE_NAME"].ToString();
-                    //                t++;
-                    //            }
-                    //            OleDbConnection excelConnection1 = new OleDbConnection(excelConnectionString);
-                    //            DataSet ds = new DataSet();
-                    //            string query = string.Format("Select * from [{0}]", excelsheets[0]);
-                    //            using (OleDbDataAdapter dataAdapter = new OleDbDataAdapter(query, excelConnection1))
-                    //            {
-                    //                dataAdapter.Fill(ds);
-                    //            }
-                    //            {
-                    //                for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
-                    //                {
-                    //                    //  mstEmpInformation _information = new mstEmpInformation();                               
-                    //                    _information.intEmpId = Convert.ToInt32((ds.Tables[0].Rows[i]["SL_No"])); ;
-                    //                    _information.txtEmpFirstName = Convert.ToString(ds.Tables[0].Rows[i]["Employee_Name"]);
-                    //                    _information.txtEmailID = _information.txtEmailID = Convert.ToString(ds.Tables[0].Rows[i]["Emailid"]);
+                    //TODO
+                    // File Upload
+                    string sWebRootFolder = _hostingEnvironment.WebRootPath;
+                    string sFileName = file.FileName;
+                    string UnicFileName = Guid.NewGuid() + Path.GetExtension(file.FileName.Trim('"'));
+                    using (var fileStream = new FileStream(Path.Combine(sWebRootFolder, UnicFileName), FileMode.Create))
+                    {
+                        
+                        file.CopyToAsync(fileStream);
+                    }
 
-                    //                }
+                    // Import 
+                    FileInfo file1 = new FileInfo(Path.Combine(sWebRootFolder, UnicFileName));
+                    using (ExcelPackage package = new ExcelPackage(file1))
+                    {
+                        List<string> columnName = new List<string>();
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+                        int rowCount = worksheet.Dimension.Rows;
+                        int ColCount = worksheet.Dimension.Columns;
+                        bool bHeaderRow = true;
+                        ProductViewModel productDetails = null;
+                        for (int row = 1; row <= rowCount; row++)
+                        {
+                            productDetails = new ProductViewModel();
+                            for (int col = 1; col <= ColCount; col++)
+                            {
+                               
+                                if (bHeaderRow)
+                                {
+                                    string HeaderTitle = Convert.ToString(worksheet.Cells[row, col].Value);
+                                    columnName.Add(HeaderTitle);
 
-                    //            }
+                                }
+                                else
+                                {                                    
+                                    string cName = columnName[col - 1];
+                                    string rowData = Convert.ToString(worksheet.Cells[row, col].Value);
+                                    
+                                    // assign excel data to product view model
+                                    if(cName.Equals("MedicineName"))
+                                    {
+                                        productDetails.name = rowData;
+                                    }
+                                    else if (cName.Equals("BatchNo"))
+                                    {
+                                        productDetails.batchNo = rowData;
+                                    }
+                                    else if (cName.Equals("Stock"))
+                                    {
+                                        if (!string.IsNullOrEmpty(rowData))
+                                        {
+                                            productDetails.openingStock = Convert.ToInt32(rowData);
+                                        }
+                                        
+                                    }
+                                    else if (cName.Equals("Mfg"))
+                                    {
+                                        productDetails.companyName = rowData;
+                                    }
+                                    else if (cName.Equals("MRP"))
+                                    {
+                                        productDetails.MRP = rowData;
+                                    }
+                                    else if (cName.Equals("ExpDate"))
+                                    {
+                                        if (!string.IsNullOrEmpty(rowData))
+                                        {  
+                                            productDetails.expDate = commonServices.ConvertToDate(rowData);                                             
+                                        }                                    
+                                       
+                                    }
+                                    else if (cName.Equals("VendorID"))
+                                    {
+                                        if (!string.IsNullOrEmpty(rowData))
+                                            productDetails.vendorID = Convert.ToInt32(rowData);
+                                        else
+                                            productDetails.vendorID = 0;
+                                    }
+                                    else if (cName.Equals("Remark"))
+                                    {
+                                        productDetails.Remarks = rowData;
+                                    }
+                                  
 
-                    //        }
-                    //    }
-                    //    else
-                    //    {
-                    //        string msg = "invalid file format";
-                    //    }
-                    //}
+                                }
+                            }
+
+                            if (bHeaderRow == false)
+                            {
+                                var status = Create(productDetails);
+                                
+                            }
+
+                            bHeaderRow = false;
+                            
+
+                        }
+
+                    }
+                }
+                else
+                {
+                    string msg = "invalid file format";
                 }
             }
-                return View();
+            return View();
         }
 
         public JsonResult GetAllMedicine()
@@ -184,7 +227,7 @@ namespace PharmaBook.Controllers
         }
         public JsonResult GetMedicnById([FromHeader] int id)
         {
-            var productlist = _iProduct.GetById(id);           
+            var productlist = _iProduct.GetById(id);
             return Json(productlist);
         }
         public JsonResult UpdateMedicn([FromBody]ProductViewModel prdvwmdl)
@@ -195,7 +238,7 @@ namespace PharmaBook.Controllers
                 var medicn = _iProduct.GetById(prdvwmdl.Id);
                 Mapper.Map(prdvwmdl, medicn);
                 medicn.lastUpdated = DateTime.Now.ToString();
-                medicn.isActive = true;                        
+                medicn.isActive = true;
                 _iProduct.Update(medicn);
                 _iProduct.Commit();
                 msg = "Medicne Updated Successfulyy";

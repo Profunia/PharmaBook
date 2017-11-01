@@ -317,6 +317,9 @@ app.controller('SalesController', function ($scope, $http, loadvndor) {
 
         })
     }
+    $scope.PrintInvoice = function () {
+        window.location="http://localhost:49440/Sales/Invoice";
+    }
 })
 
 app.controller('StockController', function ($scope, $http, loadvndor, $rootScope) {
