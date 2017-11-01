@@ -115,11 +115,9 @@ namespace PharmaBook.Controllers
                     string sFileName = file.FileName;
                     string UnicFileName = Guid.NewGuid() + Path.GetExtension(file.FileName.Trim('"'));
                     using (var fileStream = new FileStream(Path.Combine(sWebRootFolder, UnicFileName), FileMode.Create))
-                    {
-                        
+                    {                        
                         file.CopyToAsync(fileStream);
                     }
-
                     // Import 
                     FileInfo file1 = new FileInfo(Path.Combine(sWebRootFolder, UnicFileName));
                     using (ExcelPackage package = new ExcelPackage(file1))
@@ -131,12 +129,11 @@ namespace PharmaBook.Controllers
                         bool bHeaderRow = true;
                         ProductViewModel productDetails = null;                        
                         obj.successlst= new List<ProductViewModel>();
-                        obj.successlst = new List<ProductViewModel>();
+                        obj.duplictlst = new List<Duplicatelist>();
                         obj.producterrlst = new List<ProductError>();
                         for (int row = 1; row <= rowCount; row++)
-                        {
-                            var lst = _iProduct.GetAll(User.Identity.Name);
-                            var lastproduct = _iProduct.GetAll(User.Identity.Name).FirstOrDefault(); 
+                        {                            
+                            var productlst = _iProduct.GetAll(User.Identity.Name); 
                             string DplictrowData = string.Empty;
                             string rowData = string.Empty;
                             productDetails = new ProductViewModel();
@@ -159,14 +156,14 @@ namespace PharmaBook.Controllers
                                     // assign excel data to product view model
                                     if (cName.Equals("MedicineName"))
                                     {
-                                        if (rowData != null && lastproduct.name!= rowData)
+                                        if (rowData != null && productlst.Any(x=>x.name== rowData) != true)
                                         {
                                             productDetails.name = rowData;
                                         }
                                         else
                                         {
-                                            if(lastproduct.name == rowData)
-                                            {
+                                            if(productlst.Any(x => x.name == rowData) == true)
+                                            {                                                
                                                 medicine = rowData;
                                             }
                                             if(productDetails.name==null)
@@ -206,14 +203,14 @@ namespace PharmaBook.Controllers
                                     }
                                     else if (cName.Equals("Mfg"))
                                     {
-                                        if (rowData != null&& lastproduct.companyName != rowData)
+                                        if (rowData != null&& productlst.Any(x => x.companyName == rowData) != true)
                                         {
                                             productDetails.companyName = rowData;
                                         }
                                         else
                                         {
-                                            if (lastproduct.companyName == rowData)
-                                            {
+                                            if (productlst.Any(x => x.companyName == rowData) == true)
+                                            {                                               
                                                 mfg = rowData;
                                             }
                                             if (productDetails.companyName == null)
@@ -278,7 +275,10 @@ namespace PharmaBook.Controllers
                                 }
                                 else if (medicine != "" && mfg != "")
                                 {
-                                    obj.duplictlst.Add(productDetails);                                    
+                                    Duplicatelist dplctobj = new Duplicatelist();
+                                    dplctobj.name = medicine;
+                                    dplctobj.companyName = mfg;
+                                    obj.duplictlst.Add(dplctobj);                             
                                 }
                                 else if(producterr.name != null || producterr.batchNo != null || producterr.openingStock == null || producterr.companyName != null || producterr.MRP != null || producterr.expDate != null)
                                 {
