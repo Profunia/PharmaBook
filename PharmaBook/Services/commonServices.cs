@@ -9,6 +9,12 @@ namespace PharmaBook.Services
 {
     public static class commonServices
     {
+        public static string getDynamicId()
+        {
+            Random rnd = new Random();
+            int Dynaid =rnd.Next(100000, 999999);
+            return Convert.ToString(Dynaid);
+        }
 
         public static double getDoubleValue(string str)
         {

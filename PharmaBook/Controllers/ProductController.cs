@@ -50,9 +50,10 @@ namespace PharmaBook.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    
 
                     Product objMap = Mapper.Map<Product>(obj);
-                    objMap.lastUpdated = DateTime.Now.ToString();
+                    objMap.lastUpdated = DateTime.Now.ToString();                    
                     objMap.isActive = true;
                     objMap.cusUserName = User.Identity.Name;
 

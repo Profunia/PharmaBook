@@ -15,6 +15,7 @@ namespace PharmaBook.Services
         void Commit();
         IEnumerable<ChildInvoice> GetAll();
         IEnumerable<ChildInvoice> GetById(int Id);
+        ChildInvoice GetIdByPK(int Id);
     }
     public class ChildInvcSrvice : IChild
     {
@@ -55,6 +56,10 @@ namespace PharmaBook.Services
         IEnumerable<ChildInvoice> IChild.GetById(int id)
         {
             return _context.InvChild.Where(x => x.MasterInvID == id).ToList();
+        }
+      public ChildInvoice GetIdByPK(int Id)
+        {
+            return _context.InvChild.Find(Id);
         }
     }
 }
