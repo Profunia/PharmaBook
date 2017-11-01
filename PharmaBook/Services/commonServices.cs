@@ -1,6 +1,7 @@
 ﻿
     using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace PharmaBook.Services
             else
                 return 0;
         }
-        public static int getIntValue(string str)
+        public static int ConvertToInt(string str)
         {
             if (!string.IsNullOrEmpty(str))
             {
@@ -36,6 +37,13 @@ namespace PharmaBook.Services
                 return str;
             else
                 return "N/A";
+        }
+        public static DateTime ConvertToDate(string str)
+        {
+            var provider = CultureInfo.InvariantCulture;
+            provider = new CultureInfo("en-US");
+            DateTime dt = DateTime.ParseExact(str, "dd/MM/yyyy", provider);
+            return dt;
         }
         public static string getDateValue(DateTime? str)
         {

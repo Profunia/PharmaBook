@@ -21,6 +21,7 @@ namespace PharmaBook.ViewModel
         public string lastUpdated { get; set; }
         public string cusUserName { get; set; }
         public int? vendorID { get; set; }
+        public string Remarks { get; set; }
 
 
         public IEnumerable<Product> products { get; set; }

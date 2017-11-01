@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot/bulktemplate\~%24BulkUploadTemplate.xlsx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="wwwroot\images\successImage.png" />
     <Content Include="wwwroot\Scripts\AngularController\SiteController.js" />
     <Content Include="wwwroot\Scripts\dashboard.js" />
@@ -18,6 +22,7 @@
   <ItemGroup>
     <PackageReference Include="AngularJS.Core" Version="1.6.5" />
     <PackageReference Include="AutoMapper" Version="6.1.1" />
+    <PackageReference Include="EPPlus.Core" Version="1.5.2" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
