@@ -59,12 +59,7 @@ namespace PharmaBook.Controllers
                 if (ModelState.IsValid)
                 {
                     var create =_iVendorServices.GetById(obj.Id);
-                    Mapper.Map(obj, create);
-                    //create.vendorName = obj.vendorName;
-                    //create.vendorAddress = obj.vendorAddress;
-                    //create.vendorMobile = obj.vendorMobile;
-                    //create.vendorCompnay = obj.vendorCompnay;
-                    //create.cusUserName = obj.cusUserName;
+                    Mapper.Map(obj, create);                   
 
                     _iVendorServices.Update(create);
                     _iVendorServices.Commit();                   
@@ -82,7 +77,7 @@ namespace PharmaBook.Controllers
             var lst = (object)null;
             try
             {
-                var vendorlist = _iVendorServices.GetAll();
+                var vendorlist = _iVendorServices.GetAll(User.Identity.Name);
                 //lst = vendorlist;
                 lst = Mapper.Map<IEnumerable<VendorDtl>>(vendorlist);
             }

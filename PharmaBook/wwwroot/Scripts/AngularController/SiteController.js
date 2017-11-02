@@ -36,6 +36,7 @@ app.controller('MyController', function ($scope, $http, loadvndor) {
     $scope.divhide2 = true;
     //$scope.savebtn = false;
     //$scope.cClass = true;
+    $scope.isPreview = false;
     $scope.Item = {
         Name: '',
         Address: '',
@@ -62,8 +63,9 @@ app.controller('MyController', function ($scope, $http, loadvndor) {
             // headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         }).then(function (response) {
             loadvndor.getvndr();
+            $scope.isPreview = true;
         }, function (error) {
-
+            $scope.isPreview = false;
         })
     }
     var counter = 0;

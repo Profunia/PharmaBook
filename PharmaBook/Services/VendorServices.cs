@@ -9,7 +9,7 @@ namespace PharmaBook.Services
 {
     public interface IVendorServices
     {
-        IEnumerable<Vendor> GetAll();
+        IEnumerable<Vendor> GetAll(string userName);
         Vendor GetById(int id);
         void Update(Vendor vndr);
         void Delete(Vendor vndrdlt);
@@ -39,9 +39,10 @@ namespace PharmaBook.Services
             _context.Remove(vndrdlt);
         }
 
-        public IEnumerable<Vendor> GetAll()
+        public IEnumerable<Vendor> GetAll(string userName)
         {
-            return _context.vendors.OrderBy(x => x.vendorName);
+            return _context.vendors.Where(x=>x.cusUserName.Equals(userName) 
+            && x.cusUserName!=null).OrderBy(x => x.vendorName);
         }
 
         public Vendor GetById(int id)
