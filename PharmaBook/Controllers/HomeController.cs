@@ -65,8 +65,14 @@ namespace PharmaBook.Controllers
             try
             {
                 List<graphModelVM> gList = new List<graphModelVM>();
-                DateTime valdt = DateTime.Now.AddMonths(-3);
-                var InvList = (from m in _imaster.GetAll(User.Identity.Name).Where(x => x.InvCrtdate > valdt)
+                DateTime StartDt= DateTime.Now.AddMonths(-3);
+                DateTime Enddt = DateTime.Now;
+                var masterInv = _imaster.GetAll(User.Identity.Name)
+                               .Where(x => x.InvCrtdate.Date >= StartDt.Date 
+                               && x.InvCrtdate.Date <= Enddt.Date
+                               && x.UserName!=null).ToList();
+                
+                var InvList = (from m in masterInv
                                join c in _ichild.GetAll() on m.Id equals c.MasterInvID
                                select new { c.PrdId, c.Qty } into x
                                group x by new { x.PrdId } into g
@@ -88,10 +94,10 @@ namespace PharmaBook.Controllers
                 }
                 return Ok(gList);
             }
-            catch 
+            catch (Exception e)
             {
 
-                return BadRequest();
+                return BadRequest(e.Message);
             }
 
 
@@ -104,8 +110,13 @@ namespace PharmaBook.Controllers
             try
             {
                 List<graphModelVM> gList = new List<graphModelVM>();
-                DateTime valdt = DateTime.Now.AddMonths(-3);
-                var InvList = (from m in _iPurchasedhistory.GetAll(User.Identity.Name).Where(x => x.purchasedDated > valdt)                               
+                DateTime StartDt = DateTime.Now.AddMonths(-3);
+                DateTime Enddt = DateTime.Now;
+                var purchasedHis = _iPurchasedhistory.GetAll(User.Identity.Name)
+                               .Where(x => x.purchasedDated >= StartDt && x.purchasedDated <= Enddt
+                               && x.cusUserName != null).ToList();
+
+                var InvList = (from m in purchasedHis                               
                                select new { m.vendorID} into x
                                group x by new { x.vendorID } into g
                                select new
@@ -134,9 +145,9 @@ namespace PharmaBook.Controllers
                         }
                         gList.Add(graph);
                     }
-                    catch 
+                    catch (Exception e)
                     {
-
+                        return BadRequest(e.Message);
                        
                     }
 

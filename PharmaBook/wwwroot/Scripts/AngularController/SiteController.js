@@ -657,18 +657,18 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
     
     $http.get('/Sales/GetAllInvoice').then(function (res) {
         $scope.InvList = res.data;
-        console.log(res.data);
+       
     }, function (error) {
-        console.log(error.data);
+     
     })
 
     $scope.childDetails = function (val) {
-        console.log(val);
+   
         $scope.Mastinv = val;
         $scope.isPreview = true;
     }
     $scope.onReturn = function () {
-        console.log($scope.ReturnInv)
+      
         if ($scope.ReturnInv.length >= 1) {
             $scope.returnPreview = true;
         }
@@ -680,7 +680,7 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
     $scope.isSucessDB = false;
     $scope.ngSubmitReturn = function () {
         var obj = $scope.ReturnInv;
-        console.log(obj)
+      
         $http({
             method: 'post',
             url: "/Sales/ReturnMedicine",
@@ -714,7 +714,7 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
                 remarks: ''
             }
             $scope.ReturnInv.push(CreateObj);
-            console.log($scope.ReturnInv)
+           
         }
         else {
             for (var i = $scope.ReturnInv.length - 1; i >= 0; i--) {

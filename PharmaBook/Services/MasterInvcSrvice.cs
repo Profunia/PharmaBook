@@ -41,7 +41,7 @@ namespace PharmaBook.Services
 
         public IEnumerable<MasterInvoice> GetAll(string userName)
         {
-             return _context.InvMaster.OrderByDescending(x => x.Id).ToList();
+             return _context.InvMaster.Where(x=>x.UserName==userName).OrderByDescending(x => x.Id).ToList();
         }
 
         public MasterInvoice GetById(int Id)

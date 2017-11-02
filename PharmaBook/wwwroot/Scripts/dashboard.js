@@ -18,8 +18,9 @@
             console.log(vendordata);
             DreawPieChart(vendordata);
         },
-        error: function (Result) {
-            alert("Error");
+        error: function (err) {
+            console.log("topVendorList");
+            console.log(err);
         }
     });
 
@@ -92,8 +93,9 @@
             }            
             DreawChart(data);
         },
-        error: function (Result) {
-            alert("Error");
+        error: function (err) {
+            console.log("topSellingMedicine");
+            console.log(err);
         }
     });
 
