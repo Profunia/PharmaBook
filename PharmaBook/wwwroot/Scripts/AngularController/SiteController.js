@@ -210,7 +210,14 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
 })
 
 app.controller('SalesController', function ($scope, $http, loadvndor) {
+    var final = 0;
+    var total = 0;
     function initialSetup() {
+        $scope.isPreview=false;
+        final = 0;
+        total = 0;
+        $scope.unitprice = '';
+        $scope.totalprice = '';
         $scope.cartlists = [];
         loadvndor.getprdct()
         $scope.PrdId = '',
@@ -259,8 +266,7 @@ app.controller('SalesController', function ($scope, $http, loadvndor) {
 
     //    })
     //}
-    var final = 0;
-    var total = 0;
+   
     $scope.AddChildInvc = function () {
         var qty = $scope.Qty
         var price = $scope.child.Amount
