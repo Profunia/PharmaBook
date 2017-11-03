@@ -32,11 +32,11 @@ namespace PharmaBook.Controllers
             _hostingEnvironment = hostingEnvironment;
         }
         // GET: /<controller>/
-        public IActionResult Index()
-        {
-            var model = _iProduct.GetAll(User.Identity.Name);
-            return View(model);
-        }
+        //public IActionResult Index()
+        //{
+        //    var model = _iProduct.GetAll(User.Identity.Name);
+        //    return View(model);
+        //}
         [HttpGet]
         public IActionResult Create()
         {

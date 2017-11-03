@@ -149,7 +149,7 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
             dataType: "json"
             // headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         }).then(function (response) {
-            $window.location.href = "/Product/Index";
+            $window.location.href = "/Product/Create";
         }, function (error) {
 
         })

@@ -67,12 +67,14 @@
                     <div class="row">
                         <div class="col-xs-4">
                             <a href="" class="btn btn-primary" ng-click="bcktoinbx('inbox')">Create New Medicine</a>                           
+                            <br/>
+                            <label>Total Medicine : {{ProductList.length}}</label>
                         </div>
                         <div class="col-xs-8 right">
                             <input type="text" placeholder="Search Vendor" class="form-control" ng-model="searchbox" />
                         </div>
                     </div>
-                    <div style="overflow: auto;height: 350px;">
+                    <div style="overflow: auto;height: 550px;">
                         <table class="table table-striped table-advance table-hover">
                             <thead>
                                 <tr>
@@ -89,11 +91,11 @@
                             <tbody>
                                 <tr ng-repeat="item in ProductList|filter: searchbox">
                                     <td>{{$index+1}}</td>
-                                    <td><span ng-hide="cClass==item.id">{{item.name }}</span><input type="text" ng-model="item.name" ng-show="cClass==item.id" /></td>
-                                    <td class="hidden-phone"><span ng-hide="cClass==item.id">{{item.batchNo}}</span><input type="text" ng-model="item.batchNo" ng-show="cClass==item.id" /></td>
-                                    <td><span ng-hide="cClass==item.id">{{item.expDate| date:'dd/MM/yyyy'}}</span><input type="date" ng-model="item.expDate" ng-show="cClass==item.id" value="item.expDate"/></td>
-                                    <td><span ng-hide="cClass==item.id">{{item.companyName}}</span><input type="text" ng-model="item.companyName" ng-show="cClass==item.id" /></td>
-                                    <td><span ng-hide="cClass==item.id">{{item.mrp}}</span><input type="text" ng-model="item.mrp" ng-show="cClass==item.id" /></td>
+                                    <td><span ng-hide="cClass==item.id">{{item.name }}</span><input type="text" ng-model="item.name" ng-show="cClass==item.id" style="width: 160px;" /></td>
+                                    <td class="hidden-phone"><span ng-hide="cClass==item.id">{{item.batchNo}}</span><input type="text" ng-model="item.batchNo" ng-show="cClass==item.id" style="width: 110px;" /></td>
+                                    <td><span ng-hide="cClass==item.id">{{item.expDate| date:'dd/MM/yyyy'}}</span><input type="text" ng-model="item.expDate | date:'dd/MM/yyyy'" style="width: 110px;" ng-show="cClass==item.id"/></td>
+                                    <td><span ng-hide="cClass==item.id">{{item.companyName}}</span><input type="text" ng-model="item.companyName" ng-show="cClass==item.id" style="width: 110px;" /></td>
+                                    <td><span ng-hide="cClass==item.id">{{item.mrp}}</span><input type="text" ng-model="item.mrp" ng-show="cClass==item.id" style="width: 110px;" /></td>
                                     <td><span ng-hide="cClass==item.id">{{item.openingStock}}</span><span ng-show="cClass==item.id">{{item.openingStock}}</span></td>
                                     <td>
                                         <button class="btn btn-success btn-xs" ng-click="Updtdata(item)" ng-show="cClass==item.id"><i class="fa fa-check"></i>Save</button>
