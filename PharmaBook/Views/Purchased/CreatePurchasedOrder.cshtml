@@ -116,7 +116,7 @@
                         <td>{{item.Mfg}}</td>
                         <td>{{item.AvlStock}}</td>
                         <td>
-                            <input type="text" class="form-control" ng-model="item.Qty" />
+                            <input type="number" min="1" class="form-control" ng-model="item.Qty" />
                         </td>
                         <td>
                             <input type="text"  class="form-control" ng-model="item.Remarks" />

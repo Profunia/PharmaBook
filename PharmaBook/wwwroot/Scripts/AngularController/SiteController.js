@@ -136,29 +136,36 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
         vendorID: ''
     }
     $scope.AddMedcin = function () {
-        $rootScope.isLoadingScreenActive = true;
-        var obj = {
-            'name': $scope.MediProdct.MedicineName,
-            'batchNo': $scope.MediProdct.batchNo,
-            'openingStock': $scope.MediProdct.openingStock,
-            'expDate': $scope.MediProdct.ExpDt,
-            'companyName': $scope.MediProdct.CompanyName,
-            'MRP': $scope.MediProdct.MRP,
-            'vendorID': $scope.MediProdct.vendorID
-        };
-        console.log(obj);
-        $http({
-            method: 'post',
-            url: "/Product/Create",
-            data: JSON.stringify(obj),
-            dataType: "json"
-            // headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        }).then(function (response) {
-            $window.location.href = "/Product/Create";
-            $rootScope.isLoadingScreenActive = false;
+
+        if ($scope.MediProdct.MedicineName && $scope.MediProdct.batchNo && $scope.MediProdct.openingStock
+            && $scope.MediProdct.ExpDt && $scope.MediProdct.MRP) {
+            $rootScope.isLoadingScreenActive = true;
+            var obj = {
+                'name': $scope.MediProdct.MedicineName,
+                'batchNo': $scope.MediProdct.batchNo,
+                'openingStock': $scope.MediProdct.openingStock,
+                'expDate': $scope.MediProdct.ExpDt,
+                'companyName': $scope.MediProdct.CompanyName,
+                'MRP': $scope.MediProdct.MRP,
+                'vendorID': $scope.MediProdct.vendorID
+            };
+            console.log(obj);
+            $http({
+                method: 'post',
+                url: "/Product/Create",
+                data: JSON.stringify(obj),
+                dataType: "json"
+                // headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).then(function (response) {
+                $window.location.href = "/Product/Create";
+                $rootScope.isLoadingScreenActive = false;
             }, function (error) {
                 $rootScope.isLoadingScreenActive = false;
-        })
+            })
+        }
+        else {
+            $scope.rqtErr = "please provide required fields";
+        }
     }
     var counter = 0;
     $scope.showdata = function (item, inc) {
@@ -278,19 +285,26 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
    
     $scope.AddChildInvc = function () {
         var qty = $scope.Qty
-        var price = $scope.child.Amount
-        total = (qty * price);
-        final += total;
-        $scope.unitprice = price;
-        $scope.totalprice = final;
-        $scope.cartlists.push({
-            'PrdId': $scope.PrdId,
-            'Qty': $scope.Qty,
-            'ExpDt': $scope.child.ExpDt,
-            'Amount': total,
-            'Description': $scope.child.Description,
-            'BatchNo': $scope.child.BatchNo
-        });
+        $scope.ErrMsg = '';
+        if ($scope.PrdId && $scope.Qty  && $scope.child.Description) {
+            var price = $scope.child.Amount
+            total = (qty * price);
+            final += total;
+            $scope.unitprice = price;
+            $scope.totalprice = final;
+            $scope.cartlists.push({
+                'PrdId': $scope.PrdId,
+                'Qty': $scope.Qty,
+                'ExpDt': $scope.child.ExpDt,
+                'Amount': total,
+                'Description': $scope.child.Description,
+                'BatchNo': $scope.child.BatchNo
+            });
+           
+        }
+        else {
+            $scope.ErrMsg = "please fill required fields";
+        }
     }
     $scope.DelCrtIitem = function (index) {
         total = $scope.child.Amount;
