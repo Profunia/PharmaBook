@@ -13,7 +13,7 @@ namespace PharmaBook.ViewModel
         [Required(ErrorMessage = "Please provide Batch Number")]
         public string batchNo { get; set; }
         [Required(ErrorMessage ="Please provide Exp Date")]
-        public DateTime expDate { get; set; }
+        public string expDate { get; set; }
         public string companyName { get; set; }
         public string MRP { get; set; }     
         [Required(ErrorMessage = "Please provide opening Stock")]

@@ -13,8 +13,7 @@ app.factory('loadvndor', ['$http', '$rootScope', function ($http, $rootScope) {
     }
     fac.getprdct = function () {
         $http.get('/Product/GetAllMedicine').then(function (res) {
-            $rootScope.ProductList = res.data;
-            
+            $rootScope.ProductList = res.data;            
         }, function (error) {
         }
         )
@@ -133,11 +132,13 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
         ExpDt: '',
         CompanyName: '',
         MRP: '',
-        vendorID: ''
+        vendorID: '',
+        Remarks:''
     }
     $scope.AddMedcin = function () {
 
-        if ($scope.MediProdct.MedicineName && $scope.MediProdct.batchNo && $scope.MediProdct.openingStock
+        if ($scope.MediProdct.MedicineName && $scope.MediProdct.batchNo
+            && $scope.MediProdct.openingStock && $scope.MediProdct.CompanyName
             && $scope.MediProdct.ExpDt && $scope.MediProdct.MRP) {
             $rootScope.isLoadingScreenActive = true;
             var obj = {
@@ -147,7 +148,8 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
                 'expDate': $scope.MediProdct.ExpDt,
                 'companyName': $scope.MediProdct.CompanyName,
                 'MRP': $scope.MediProdct.MRP,
-                'vendorID': $scope.MediProdct.vendorID
+                'vendorID': $scope.MediProdct.vendorID,
+                'Remarks': $scope.MediProdct.Remarks
             };
             console.log(obj);
             $http({
@@ -186,6 +188,7 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
             'vendorID': item.vendorID,
             'cusUserName': item.cusUserName
         };
+        console.log(obj);
         $http({
             method: 'post',
             url: "/Product/UpdateMedicn",
