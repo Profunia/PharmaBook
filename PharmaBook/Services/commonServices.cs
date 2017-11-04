@@ -1,7 +1,11 @@
 ﻿
-    using System;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using PharmaBook.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -62,5 +66,31 @@ namespace PharmaBook.Services
             else
                 return "N/A";
         }
+    }
+
+    public class BulkFileUpload
+    {
+        private readonly IHostingEnvironment _hostingEnvironment;
+        public BulkFileUpload(IHostingEnvironment hostingEnvironment)
+        {
+            _hostingEnvironment = hostingEnvironment;
+        }
+        public async Task<string> fileUpload(IFormFile file)
+        {
+            SalesViewModel obj = new SalesViewModel();
+            var uploads = _hostingEnvironment.WebRootPath;
+            string uploadFileName = string.Empty;
+            if (file.Length > 0)
+            {
+                string UnicFileName = Guid.NewGuid() + Path.GetExtension(file.FileName.Trim('"'));
+                using (var fileStream = new FileStream(Path.Combine(uploads, UnicFileName), FileMode.Create))
+                {
+                    uploadFileName = UnicFileName;
+                    await file.CopyToAsync(fileStream);
+                }
+            }
+            return uploadFileName;
+        }
+
     }
 }

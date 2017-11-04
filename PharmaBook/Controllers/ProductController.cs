@@ -102,7 +102,7 @@ namespace PharmaBook.Controllers
         }
 
         [ValidateAntiForgeryToken, HttpPost]
-        public IActionResult BulkUpload(IFormFile file)
+        public async Task<IActionResult> BulkUpload(IFormFile file)
         {
             SalesViewModel obj = new SalesViewModel();
             if (file.Length > 0)
@@ -112,13 +112,9 @@ namespace PharmaBook.Controllers
                 {
                     //TODO
                     // File Upload
-                    string sWebRootFolder = _hostingEnvironment.WebRootPath;
-                    string sFileName = file.FileName;
-                    string UnicFileName = Guid.NewGuid() + Path.GetExtension(file.FileName.Trim('"'));
-                    using (var fileStream = new FileStream(Path.Combine(sWebRootFolder, UnicFileName), FileMode.Create))
-                    {                        
-                        file.CopyToAsync(fileStream);
-                    }
+                    BulkFileUpload blk = new BulkFileUpload(_hostingEnvironment);
+                    string UnicFileName= await blk.fileUpload(file);                    
+                    string sWebRootFolder = _hostingEnvironment.WebRootPath;                 
                     // Import 
                     FileInfo file1 = new FileInfo(Path.Combine(sWebRootFolder, UnicFileName));
                     using (ExcelPackage package = new ExcelPackage(file1))
@@ -183,7 +179,7 @@ namespace PharmaBook.Controllers
                                         {
                                             if (productDetails.batchNo == null)
                                             {
-                                                producterr.batchNo = "batchNo required";
+                                                producterr.batchNo = "BatchNo required";
                                             }
                                         }
                                     }
@@ -197,7 +193,7 @@ namespace PharmaBook.Controllers
                                         {
                                             if (productDetails.openingStock == 0)
                                             {
-                                                producterr.openingStock = "openingStock required";
+                                                producterr.openingStock = "Stock required";
                                             }
                                         }
 
@@ -216,7 +212,7 @@ namespace PharmaBook.Controllers
                                             }
                                             if (productDetails.companyName == null)
                                             {
-                                                producterr.companyName = "companyName required";
+                                                producterr.companyName = "Mfg required";
                                             }
                                         }
                                     }
