@@ -28,10 +28,35 @@
                     <span asp-for="batchNo" style="color:red;"></span>
                 </div>
 
+                <div class="row alert alert-success">
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <label>Stef</label>
+                            <input class="form-control" type="number" min="1" placeholder="Stef" ng-model="stef">
+                           
+                            </div>
+                        </div>
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <label>Tablets/capsule</label>
+                            <input class="form-control" type="number" min="1" placeholder="tablets" ng-model="tablets">
+                        </div> 
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <label>Each Stef Price</label>
+                            <input class="form-control" type="text" placeholder="Stef Price" ng-model="StefPrice" ng-keyup="getStockMRP()">
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <small id="emailHelp" class="form-text text-muted">Note : 3 stef x 10 tablets = 30 stocks </small>
+                    </div>
+                </div>               
+                
                 <div class="form-group">
+
                     <label>Stock <span style="color:red;"> *</span></label>
-                    <input class="form-control" type="number" min="1" required placeholder="Opening Stock" ng-model="MediProdct.openingStock">
-                    <small id="emailHelp" class="form-text text-muted">Note : 3 stef x 10 tablets = 30 stocks </small>
+                    <input class="form-control" type="number" min="1" ng-disabled="isStefActive" required placeholder="Opening Stock" ng-model="MediProdct.openingStock">                   
                     <span asp-for="openingStock" style="color:red;"></span>
                 </div>
                 <div class="form-group">
@@ -47,7 +72,7 @@
                 </div>
                 <div class="form-group">
                     <label>MRP <span style="color:red;"> *</span></label>
-                    <input class="form-control" placeholder="MRP" ng-model="MediProdct.MRP">
+                    <input class="form-control" placeholder="MRP" ng-disabled="isStefActive" ng-model="MediProdct.MRP">
                 </div>
                 <div class="form-group">
                     <label for="exampleSelect1">Select Vendor</label>

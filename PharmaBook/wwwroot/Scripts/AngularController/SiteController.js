@@ -118,7 +118,31 @@ app.controller('MyController', function ($scope, $http, loadvndor, $rootScope) {
     }
 })
 app.controller('ProductController', function ($scope, $http, $location, $rootScope,loadvndor, $window) {
-
+    $scope.isStefActive = false;
+    $scope.stef = '';
+    $scope.tablets = '';
+    $scope.StefPrice = '';
+    $scope.getStockMRP = function () {
+        if ($scope.StefPrice) {
+            if ($scope.stef && $scope.tablets) {
+                $scope.MediProdct.openingStock = $scope.stef * $scope.tablets;
+                var unitPrice = $scope.StefPrice * $scope.stef;
+                console.log(unitPrice)
+                $scope.MediProdct.MRP = unitPrice / $scope.MediProdct.openingStock;
+                $scope.isStefActive = true;
+                $scope.MediProdct.Remarks = "Stef " + $scope.stef + " x tablets/capsule " + $scope.tablets + " & each stef Price " + $scope.StefPrice;  
+            }
+        }
+        else {
+            $scope.isStefActive = false;
+            $scope.stef = '';
+            $scope.tablets = '';
+            $scope.StefPrice = '';
+            $scope.MediProdct.Remarks = '';
+            $scope.MediProdct.MRP = '';
+            $scope.MediProdct.openingStock = '';
+        }
+    }
     loadvndor.getvndr();
     loadvndor.getprdct();
     $scope.divhide1 = false;
