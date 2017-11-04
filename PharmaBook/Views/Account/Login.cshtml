@@ -12,66 +12,64 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
    
     <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <link href="~/css/bootstrap.css" rel="stylesheet" type="text/css" media="all">
-    <!-- Custom Theme files -->
-    <link href="~/css/style.css" rel="stylesheet" type="text/css" media="all" />
-    <!--js-->
-    <script src="~/js/jquery-2.1.1.min.js"></script>
-    <!--icons-css-->
-    <link href="~/css/font-awesome.css" rel="stylesheet">
-    <!--Google Fonts-->
-    <link href='//fonts.googleapis.com/css?family=Carrois+Gothic' rel='stylesheet' type='text/css'>
-    <link href='//fonts.googleapis.com/css?family=Work+Sans:400,500,600' rel='stylesheet' type='text/css'>
-    <!--static chart-->
+    <!-- //Meta Tags -->
+    <!-- font-awesome-stylesheet -->
+    <link href="~/Login/css/font-awesome.css" rel="stylesheet">
+    <!-- //font-awesome-stylesheet -->
+    <link href="~/Login/css/style.css" rel='stylesheet' type='text/css' />
+    <!--fonts-->
+    <link href="//fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800" rel="stylesheet">
+    <!--//fonts--> 
 </head>
 <body>
-    <div class="login-page">
-        
-        <div class="login-main">            
-            <div class="login-head">
-                <h1>Login</h1>
+    <!-- main-content -->
+    <h1>Welcome to PharmaBook</h1>
+    <div class="main-content-agileits">
+        <!-- left-content -->
+        <div class="left-text-w3ls">
+            <h3>Software Features</h3>
+            <p><a class="fa fa-bullseye" aria-hidden="true"></a>Quick Access</p>
+            <p><a class="fa fa-bullseye" aria-hidden="true"></a>Dashboard</p>
+            <p><a class="fa fa-bullseye" aria-hidden="true"></a>Reporting</p>
+            <p><a class="fa fa-bullseye" aria-hidden="true"></a>Purchase Management</p>
+            <p><a class="fa fa-bullseye" aria-hidden="true"></a>Stock Management</p>
+            <p><a class="fa fa-bullseye" aria-hidden="true"></a>Sales Management</p>
+            <p><a class="fa fa-bullseye" aria-hidden="true"></a>Invoice Management</p>
+        </div>
+        <!-- //left-content -->
+        <!-- form -->
+        <div class="login-w3l">
+            <div class="top-img-agileits-w3layouts">
+                <h2 class="sub-head-w3-agileits">Member <span>Login</span> area</h2>
                 <div asp-validation-summary="ModelOnly" style="color:red;">
 
                 </div>
             </div>
-            <div class="login-block">
+            <div class="login-form">
                 <form method="post" asp-antiforgery="true">
-                    <input asp-for="UserName" type="text" name="UserName" placeholder="UserName" required>
-                    <input  asp-for="Password" type="password" name="password" class="lock" required placeholder="Password">
-                    <div class="forgot-top-grids">
-                        <div class="forgot-grid">
-                            <ul>
-                                <li>
-                                    <input type="checkbox" id="brand1" asp-for="RememberMe" >
-                                    <label for="brand1"><span></span>Remember me</label>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="forgot">
-                            <a href="#">Forgot password?</a>
-                        </div>
-                        <div class="clearfix"> </div>
-                    </div>
-                    <input type="submit" name="Sign In" value="Login">
-                    <h3>Not a member?<a asp-action="Register" asp-controller="Account"> Sign up now</a></h3>                   
+                    <input asp-for="UserName" type="text" name="UserName" placeholder="UserName" required />
+                    <input asp-for="Password" type="password" name="password" required placeholder="Password"/>
+                    <ul>
+                        <li>
+                            <input type="checkbox" id="brand1" asp-for="RememberMe">
+                            <label for="brand1" style="color: white;">Remember me</label>
+                        </li>
+                    </ul>
+                    <input type="submit" value="Login">
                 </form>
-              
             </div>
         </div>
+        <!-- //form -->
+        <div class="clear"></div>
     </div>
-    <!--inner block end here-->
-    <!--copy rights start here-->
-    <div class="copyrights">
-        <p>� @DateTime.Now.Year PharmaBook. All Rights Reserved </p>
+
+    <!--// main-content -->
+    <!--Copyright-->
+    <div class="footer-agileits">
+        <p>© @DateTime.Now.Year PharmaBook. All Rights Reserved | 
+        Powered by <a href="http://profunia.com/" target="_blank"> Profunia Technologies</a></p>
     </div>
-    <!--COPY rights end here-->
-    <!--scrolling js-->
-    <script src="~/js/jquery.nicescroll.js"></script>
-    <script src="~/js/scripts.js"></script>
-    <!--//scrolling js-->
-    <script src="~/js/bootstrap.js"> </script>
-    <!-- mother grid end here-->
+    <!--//Copyright-->
 </body>
 </html>
 

@@ -56,7 +56,7 @@ namespace PharmaBook.Controllers
                         return RedirectToAction("Index", "Home");
                     }
                 }
-                ModelState.AddModelError("", "Could not Login..");
+                ModelState.AddModelError("", "Invalid UserName or Password.");
             }
             return View();
         }
