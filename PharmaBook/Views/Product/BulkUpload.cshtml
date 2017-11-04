@@ -3,56 +3,213 @@
     ViewData["Title"] = "BulkUpload";
 }
 @model SalesViewModel
-
-    <h2>Create Bulk Medicine</h2>
-<div class="blankpage-main">
-    <div class="row">
-        <div class="col-lg-2">
-            <strong>Step : 1</strong>
-        </div>
-        <div class="col-lg-6">
-            <a href="~/bulktemplate/BulkUploadTemplate.xlsx" class="btn btn-primary">Download Template</a>
-        </div>
-    </div>
-    <br />
-    <br/>
-    <form asp-antiforgery="true" class="form-horizontal" method="post" enctype="multipart/form-data">
-        <div class="row">
-            <div class="col-lg-2">
-                <strong>Step : 2</strong>
-            </div>
-            <div class="col-lg-4">
-                <input type="file" name="file" />
-
-            </div>
-            <div class="col-lg-2">
-                <input type="submit" value="Upload" class="btn btn-primary" />
-            </div>
-        </div>
-      </form>
-    <div class="row">
-       
-            @if (@Model.successlst != null)
-            {
+<div ng-app="MyModuleA" ng-controller="ProductController">
+    @if (@Model.successlst == null && @Model.duplictlst == null && @Model.producterrlst == null)
+    {
+        <div class="blankpage-main">
+            <h2>Create Bulk Medicine</h2>
+            <div class="row">
                 <div class="col-lg-2">
-                    <strong>Total Success : @Model.successlst.Count()</strong>
+                    <strong>Step : 1</strong>
                 </div>
+                <div class="col-lg-6">
+                    <a href="~/bulktemplate/BulkUploadTemplate.xlsx" class="btn btn-primary">Download Template</a>
+                </div>
+            </div>
+            <br />
+            <br />
+            <form asp-antiforgery="true" class="form-horizontal" method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <strong>Step : 2</strong>
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="file" name="file" />
+
+                    </div>
+                    <div class="col-lg-2">
+                        <input type="submit" value="Upload" class="btn btn-primary" />
+                    </div>
+                </div>
+            </form>
+            <div class="row">
+
+                @if (@Model.successlst != null)
+            {
+            <div class="col-lg-2">
+                <strong>Total Success : @Model.successlst.Count()</strong>
+            </div>
             }
-                
-        
-            @if (@Model.duplictlst != null)
+
+
+                @if (@Model.duplictlst != null)
             {
             <div class="col-lg-4">
                 <strong>Total Duplicate : @Model.duplictlst.Count()</strong>
             </div>
-            }    
-        
-            @if (@Model.producterrlst != null)
+            }
+
+                @if (@Model.producterrlst != null)
             {
-                <div class="col-lg-2">
-                    <strong>Total Error : @Model.producterrlst.Count()</strong>
-                </div>
-            }    
-    </div>
+            <div class="col-lg-2">
+                <strong>Total Error : @Model.producterrlst.Count()</strong>
+            </div>
+            }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="blankpage-main">
+            <h2>Uploaded Bulk Medicine Result</h2>
+            <div class="row">
+
+                @if (@Model.successlst != null)
+                {
+                    <div class="col-lg-2">
+                        <button ng-click="bulkupldlink('successlst')">Total Success : @Model.successlst.Count()</button>
+                    </div>
+                }
+                @if (@Model.duplictlst != null)
+                {
+                    <div class="col-lg-4">
+                        <button ng-click="bulkupldlink('duplictlst')">Total Duplicate : @Model.duplictlst.Count()</button>
+
+                    </div>
+                }
+                @if (@Model.producterrlst != null)
+                {
+                    <div class="col-lg-2">
+                        <button ng-click="bulkupldlink('producterrlst')">Total Error : @Model.producterrlst.Count()</button>
+                    </div>
+                }
+            </div>
+
+        </div>
+
+
+    }
+
+    <br />
+    @if (@Model.successlst != null)
+    {
+        <div class="blankpage-main" ng-if="successlst">
+            <div class="row">
+                <h2>Successfull Values</h2>
+                <table class="table table-striped table-advance table-hover">
+                    <thead>
+                        <tr>
+                            <th>medicine name</th>
+                            <th>batch no</th>
+                            <th>stock</th>
+                            <th>mfg</th>
+                            <th>mrp</th>
+                            <th>exp date</th>
+                            <th>vendor id</th>
+                            <th>remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in Model.successlst)
+                    {
+                        <tr>
+                            <td>@i.name</td>
+                            <td>@i.batchNo</td>
+                            <td>@i.openingStock</td>
+                            <td>@i.companyName</td>
+                            <td>@i.MRP</td>
+                            <td>@i.expDate</td>
+                            @if (@i.vendorID != null)
+                            {
+                        <td>@i.vendorID</td>
+                            }
+                            else
+                            {
+                        <td>N/A</td>
+                            }
+                            @if (@i.vendorID != null)
+                            {
+                        <td>@i.Remarks</td>
+                            }
+                            else
+                            {
+                        <td>N/A</td>
+
+                            }
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    @if (@Model.duplictlst != null)
+            {
+        <div class="blankpage-main" ng-if="duplictlst">
+            <div class="row">
+                <h2>Duplicate Values</h2>
+                <table class="table table-striped table-advance table-hover">
+                    <thead>
+                        <tr>
+                            <th>Medicine Name</th>
+                            <th>Mfg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in Model.duplictlst)
+                        {
+                            <tr>
+                                <td>@i.name</td>
+                                <td>@i.companyName</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    @if (@Model.producterrlst != null)
+    {
+        <div class="blankpage-main" ng-if="producterrlst">
+            <div class="row">
+                <h2>Error Values</h2>
+                <table class="table table-striped table-advance table-hover">
+                    <thead>
+                        <tr>
+                            <th>medicine name</th>
+                            <th>batch no</th>
+                            <th>stock</th>
+                            <th>mfg</th>
+                            <th>mrp</th>
+                            <th>exp date</th>
+                            <th>vendor id</th>
+                            <th>remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in Model.producterrlst)
+                    {
+                                        <tr>
+                                            <td>@i.name</td>
+                                            <td>@i.batchNo</td>
+                                            <td>@i.openingStock</td>
+                                            <td>@i.companyName</td>
+                                            <td>@i.MRP</td>
+                                            <td>@i.expDate</td>
+                                        </tr>
+                                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
 </div>
+
+
+
+
+                     
+
+
+
 

@@ -219,6 +219,23 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
             $scope.divhide2 = false;
         }
     }
+    $scope.bulkupldlink = function (value) {
+        if (value == "successlst") {
+            $scope.successlst = true;
+            $scope.duplictlst = false;
+            $scope.producterrlst = false;
+        }
+        if (value == "duplictlst") {
+            $scope.duplictlst = true;
+            $scope.successlst = false;
+            $scope.producterrlst = false;
+        }
+        if (value == "producterrlst") {
+            $scope.producterrlst = true;
+            $scope.duplictlst = false;
+            $scope.successlst = false;
+        }
+    }
 })
 
 app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor) {
