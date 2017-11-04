@@ -30,7 +30,7 @@ app.factory('loadvndor', ['$http', '$rootScope', function ($http, $rootScope) {
     };
     return fac;
 }])
-app.controller('MyController', function ($scope, $http, loadvndor) {
+app.controller('MyController', function ($scope, $http, loadvndor, $rootScope) {
     loadvndor.getvndr();
     $scope.divhide1 = false;
     $scope.divhide2 = true;
@@ -46,8 +46,7 @@ app.controller('MyController', function ($scope, $http, loadvndor) {
     }
     debugger
     $scope.AddValues = function () {
-        debugger
-        //$scope.Item.Date = $filter('date')($scope.Item.Date, "yyyy-MM-dd");
+        $rootScope.isLoadingScreenActive = true
         var obj = {
             'vendorName': $scope.Item.Name,
             'vendorAddress': $scope.Item.Address,
@@ -64,8 +63,10 @@ app.controller('MyController', function ($scope, $http, loadvndor) {
         }).then(function (response) {
             loadvndor.getvndr();
             $scope.isPreview = true;
+            $rootScope.isLoadingScreenActive = false;
         }, function (error) {
             $scope.isPreview = false;
+            $rootScope.isLoadingScreenActive = false;
         })
     }
     var counter = 0;
@@ -76,6 +77,7 @@ app.controller('MyController', function ($scope, $http, loadvndor) {
     }
     $scope.Updtdata = function (item) {
         var obj = { 'Id': item.id, 'vendorName': item.vendorName, 'vendorAddress': item.vendorAddress, 'vendorMobile': item.vendorMobile, 'vendorCompnay': item.vendorCompnay, 'cusUserName': item.cusUserName };
+        $rootScope.isLoadingScreenActive = true;
         $http({
             method: 'post',
             url: "/Vendor/UpdtVendor",
@@ -84,21 +86,24 @@ app.controller('MyController', function ($scope, $http, loadvndor) {
             // headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         }).then(function (response) {
             loadvndor.getvndr();
+            $rootScope.isLoadingScreenActive = false;
         }, function (error) {
-
+            $rootScope.isLoadingScreenActive = false;
         })
         $scope.cClass = false;
         $scope.savebtn = false;
         $scope.editbtn = true;
     }
-    $scope.delitem = function (id) {
+    $scope.delitem = function (id) {      
         if (confirm("Do you want to continue?")) {
+            $rootScope.isLoadingScreenActive = true;
             $http.post('/Vendor/VendorDlt/?id=' + id).then(
                 function (res) {
                     loadvndor.getvndr();
+                    $rootScope.isLoadingScreenActive = false;
                 },
                 function (err) {
-
+                    $rootScope.isLoadingScreenActive = false;
                 });
         }
     }
@@ -113,7 +118,7 @@ app.controller('MyController', function ($scope, $http, loadvndor) {
         }
     }
 })
-app.controller('ProductController', function ($scope, $http, $location, loadvndor, $window) {
+app.controller('ProductController', function ($scope, $http, $location, $rootScope,loadvndor, $window) {
 
     loadvndor.getvndr();
     loadvndor.getprdct();
@@ -131,8 +136,7 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
         vendorID: ''
     }
     $scope.AddMedcin = function () {
-        debugger
-        //$scope.Item.Date = $filter('date')($scope.Item.Date, "yyyy-MM-dd");
+        $rootScope.isLoadingScreenActive = true;
         var obj = {
             'name': $scope.MediProdct.MedicineName,
             'batchNo': $scope.MediProdct.batchNo,
@@ -150,8 +154,9 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
             // headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         }).then(function (response) {
             $window.location.href = "/Product/Create";
-        }, function (error) {
-
+            $rootScope.isLoadingScreenActive = false;
+            }, function (error) {
+                $rootScope.isLoadingScreenActive = false;
         })
     }
     var counter = 0;
@@ -161,6 +166,7 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
         $scope.editbtn = false;
     }
     $scope.Updtdata = function (item) {
+        $rootScope.isLoadingScreenActive = true;
         var obj = {
             'Id': item.id,
             'name': item.name,
@@ -179,7 +185,9 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
             datatype: "json",
         }).then(function (response) {
             loadvndor.getprdct();
-        }, function (error) {
+            $rootScope.isLoadingScreenActive = false;
+            }, function (error) {
+                $rootScope.isLoadingScreenActive = false;
 
         })
         $scope.cClass = false;
@@ -187,13 +195,16 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
         $scope.editbtn = true;
     }
     $scope.delitem = function (id) {
+        
         if (confirm("Do you want to continue?")) {
+            $rootScope.isLoadingScreenActive = true;
             $http.post('/Product/DeleteMedicine/?id=' + id).then(
                 function (res) {
                     loadvndor.getprdct();
+                    $rootScope.isLoadingScreenActive = false;
                 },
                 function (err) {
-
+                    $rootScope.isLoadingScreenActive = false;
                 });
         }
     }
@@ -209,7 +220,7 @@ app.controller('ProductController', function ($scope, $http, $location, loadvndo
     }
 })
 
-app.controller('SalesController', function ($scope, $http, loadvndor) {
+app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor) {
     var final = 0;
     var total = 0;
     function initialSetup() {
@@ -246,26 +257,6 @@ app.controller('SalesController', function ($scope, $http, loadvndor) {
         initialSetup();
         $scope.isCreatedInvoice = false;
     }
-    //$scope.AddMstrInvc = function () {
-    //    var obj = {
-    //        'PatientName': $scope.master.PatientName,
-    //        'PatientAdres': $scope.master.PatientAdres,
-    //        'DrName': $scope.master.DrName,
-    //        'RegNo': $scope.master.RegNo
-    //    };
-    //    $http({
-    //        method: 'post',
-    //        url: "/Sales/AddMasterInvc",
-    //        data: JSON.stringify(obj),
-    //        dataType: "json"
-    //        // headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    //    }).then(function (response) {
-    //        $scope.isCreatedInvoice = true;
-    //        $scope.successMessage = "Invoice has been successfully created..!";
-    //    }, function (error) {
-
-    //    })
-    //}
    
     $scope.AddChildInvc = function () {
         var qty = $scope.Qty
@@ -298,6 +289,7 @@ app.controller('SalesController', function ($scope, $http, loadvndor) {
     }
 
     $scope.SaveInvc = function () {
+        $rootScope.isLoadingScreenActive = true;
         if ($scope.master.PatientName == '' || $scope.master.PatientAdres == '' || $scope.master.DrName == '' || $scope.master.RegNo == '') {
             $scope.master.PatientName = 'Guest',
                 $scope.master.PatientAdres = '',
@@ -321,8 +313,9 @@ app.controller('SalesController', function ($scope, $http, loadvndor) {
         }).then(function (response) {
             $scope.isCreatedInvoice = true;
             $scope.successMessage = "Invoice has been successfully created..!";
+            $rootScope.isLoadingScreenActive = false;
         }, function (error) {
-
+            $rootScope.isLoadingScreenActive = false;
         })
     }
     $scope.PrintInvoice = function () {
@@ -412,7 +405,7 @@ app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootS
         }
 
         if ($scope.isReadyToCallAPI) {
-
+            $rootScope.isLoadingScreenActive = true;
             $scope.isSucessDB = false;           
             var obj = $scope.PreCreatePO;            
             $http({
@@ -422,9 +415,11 @@ app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootS
                 dataType: "json"
             }).then(function (res) {
                 $scope.isSucessDB = true;
+                $rootScope.isLoadingScreenActive = false;
 
             }, function (error) {
                 $scope.isSucessDB = false;
+                $rootScope.isLoadingScreenActive = false;
             })
             
         }
@@ -480,17 +475,19 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
 
 
     }
-    $scope.DeletePurchasedItem = function (val) {        
+    $scope.DeletePurchasedItem = function (val) {  
+        
         if (confirm('are you sure want to delete ?? \n medicine : ' + val.productName + "\n Mfg : " + val.mfg)) {
             var childId = val.childPoId;
+            $rootScope.isLoadingScreenActive = true;
             $http.post('/Purchased/childPoDelete/' + childId).then(function (res) {
               
                 alert('successfully deleted... \n medicine : ' + val.productName + '\n Mfg : ' + val.mfg);
                 $scope.backtoPurchased();
                 getPurchasedInbox();
-
+                $rootScope.isLoadingScreenActive = false;
             }, function (error) {
-
+                $rootScope.isLoadingScreenActive = false;
             })
                       
 
@@ -506,6 +503,7 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
     $scope.onSubmitforCreatePurchased = function () {
        var obj= $scope.Prepurchased;
        $scope.isSuccessPOEntry = false;
+       $rootScope.isLoadingScreenActive = true;
         $http({
             method: 'post',
             url: "/Purchased/EntryCreatePurchase",
@@ -513,11 +511,12 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
             dataType: "json"
         }).then(function (response) {           
             $scope.POmsg = "Purchased Entry has been successfully created..!";
-            $scope.isSuccessPOEntry = true;            
+            $scope.isSuccessPOEntry = true;  
+            $rootScope.isLoadingScreenActive = false;
             }, function (error) {
                 $scope.isSuccessPOEntry = false;
                 $scope.POmsg = "Something went wrong.. please try again..";
-
+                $rootScope.isLoadingScreenActive = false;
         })
 
     }
@@ -606,7 +605,7 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
     }
     $scope.onSubmit = function () {
         // TODO API Call
-
+        $rootScope.isLoadingScreenActive = true;
         $scope.Prepurchased = [];      
         for (var i = 0; i < $scope.cartlists.length; i++) {
             var model = {
@@ -634,9 +633,11 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
         }).then(function (response) {
             $scope.POmsg = "Purchased Entry has been successfully created..!";
             $scope.isSuccessPOEntry = true;
+            $rootScope.isLoadingScreenActive = false;
         }, function (error) {
             $scope.isSuccessPOEntry = false;
             $scope.POmsg = "Something went wrong.. please try again..";
+            $rootScope.isLoadingScreenActive = false;
 
         })
 
@@ -688,7 +689,7 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
     $scope.isSucessDB = false;
     $scope.ngSubmitReturn = function () {
         var obj = $scope.ReturnInv;
-      
+        $rootScope.isLoadingScreenActive = true;
         $http({
             method: 'post',
             url: "/Sales/ReturnMedicine",
@@ -696,9 +697,10 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
             dataType: "json"
         }).then(function (res) {
             $scope.isSucessDB = true;
-
+            $rootScope.isLoadingScreenActive = false;
         }, function (error) {
             $scope.isSucessDB = false;
+            $rootScope.isLoadingScreenActive = false;
         })
     }
     $scope.ReturnInv = [];
@@ -733,4 +735,8 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
         }
              
     }
+});
+
+app.controller('DashboardController', function ($rootScope) {
+    $rootScope.isLoadingScreenActive = false;
 });

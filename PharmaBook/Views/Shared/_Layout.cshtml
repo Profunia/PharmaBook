@@ -11,6 +11,7 @@
     <link href="~/css/bootstrap.css" rel="stylesheet" type="text/css" media="all">
     <!-- Custom Theme files -->
     <link href="~/css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="~/css/loading.css" rel="stylesheet" />
     <!--js-->
     <script src="~/js/jquery-2.1.1.min.js"></script>
     <!--icons-css-->
@@ -18,14 +19,14 @@
     <!--Google Fonts-->
     <link href='//fonts.googleapis.com/css?family=Carrois+Gothic' rel='stylesheet' type='text/css'>
     <link href='//fonts.googleapis.com/css?family=Work+Sans:400,500,600' rel='stylesheet' type='text/css'>
-  <!--Angular 2 config-->
 
-    <script src="~/Scripts/jquery-1.10.2.js"></script>
+
     <script src="~/Scripts/highcharts.js"></script>
 
     @*@Html.Raw(JavaScriptSnippet.FullScript)*@
 </head>
-<body>
+<body ng-app="MyModuleA">
+    <div class="loading" ng-show="isLoadingScreenActive"></div>
     <div class="page-container" >
         <div class="left-content">
             <div class="mother-grid-inner">
@@ -47,7 +48,8 @@
                 </script>
                 <!-- /script-for sticky-nav -->
                 <!--inner block start here-->
-                <div class="inner-block" ng-app="MyModuleA">
+                <div class="inner-block">
+
                     <div class="blank">
                         @RenderBody()
                     </div>
