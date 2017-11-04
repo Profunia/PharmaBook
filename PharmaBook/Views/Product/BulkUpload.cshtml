@@ -66,21 +66,21 @@
 
                 @if (@Model.successlst != null)
                 {
-                    <div class="col-lg-2">
-                        <button ng-click="bulkupldlink('successlst')">Total Success : @Model.successlst.Count()</button>
+                    <div class="col-lg-4">
+                        <button class="alert alert-success" ng-click="bulkupldlink('successlst')">Total Success : @Model.successlst.Count()</button>
                     </div>
                 }
                 @if (@Model.duplictlst != null)
                 {
                     <div class="col-lg-4">
-                        <button ng-click="bulkupldlink('duplictlst')">Total Duplicate : @Model.duplictlst.Count()</button>
+                        <button class="alert alert-warning" ng-click="bulkupldlink('duplictlst')">Total Duplicate : @Model.duplictlst.Count()</button>
 
                     </div>
                 }
                 @if (@Model.producterrlst != null)
                 {
-                    <div class="col-lg-2">
-                        <button ng-click="bulkupldlink('producterrlst')">Total Error : @Model.producterrlst.Count()</button>
+                    <div class="col-lg-4">
+                        <button class="alert alert-danger" ng-click="bulkupldlink('producterrlst')">Total Error : @Model.producterrlst.Count()</button>
                     </div>
                 }
             </div>
@@ -95,18 +95,18 @@
     {
         <div class="blankpage-main" ng-if="successlst">
             <div class="row">
-                <h2>Successfull Values</h2>
+                <h2>Successfully uploaded : @Model.successlst.Count() </h2>
                 <table class="table table-striped table-advance table-hover">
                     <thead>
                         <tr>
-                            <th>medicine name</th>
-                            <th>batch no</th>
-                            <th>stock</th>
-                            <th>mfg</th>
-                            <th>mrp</th>
-                            <th>exp date</th>
-                            <th>vendor id</th>
-                            <th>remarks</th>
+                            <th>Medicine name</th>
+                            <th>Batch no</th>
+                            <th>Stock</th>
+                            <th>Mfg</th>
+                            <th>MRP</th>
+                            <th>Exp date</th>
+                            <th>Vendor id</th>
+                            <th>Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -147,7 +147,7 @@
             {
         <div class="blankpage-main" ng-if="duplictlst">
             <div class="row">
-                <h2>Duplicate Values</h2>
+                <h2>Duplicate Records : @Model.duplictlst.Count()</h2>
                 <table class="table table-striped table-advance table-hover">
                     <thead>
                         <tr>
@@ -172,18 +172,18 @@
     {
         <div class="blankpage-main" ng-if="producterrlst">
             <div class="row">
-                <h2>Error Values</h2>
+                <h2>Error while Upload : @Model.producterrlst.Count()</h2>
                 <table class="table table-striped table-advance table-hover">
                     <thead>
                         <tr>
-                            <th>medicine name</th>
-                            <th>batch no</th>
-                            <th>stock</th>
-                            <th>mfg</th>
-                            <th>mrp</th>
-                            <th>exp date</th>
-                            <th>vendor id</th>
-                            <th>remarks</th>
+                            <th>Medicine name</th>
+                            <th>Batch no</th>
+                            <th>Stock</th>
+                            <th>Mfg</th>
+                            <th>MRP</th>
+                            <th>Exp date</th>
+                            <th>Vendor id</th>
+                            <th>Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
