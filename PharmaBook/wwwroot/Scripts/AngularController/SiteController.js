@@ -146,6 +146,7 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
             'MRP': $scope.MediProdct.MRP,
             'vendorID': $scope.MediProdct.vendorID
         };
+        console.log(obj);
         $http({
             method: 'post',
             url: "/Product/Create",

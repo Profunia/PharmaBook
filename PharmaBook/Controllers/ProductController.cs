@@ -49,10 +49,9 @@ namespace PharmaBook.Controllers
             try
             {
                 if (ModelState.IsValid)
-                {
+                {                   
                     
-
-                    Product objMap = Mapper.Map<Product>(obj);
+                    Product objMap = Mapper.Map<Product>(obj);                   
                     objMap.lastUpdated = DateTime.Now.ToString();                    
                     objMap.isActive = true;
                     objMap.cusUserName = User.Identity.Name;
@@ -299,7 +298,7 @@ namespace PharmaBook.Controllers
         {
             string username = User.Identity.Name;
             var lst = (object)null;
-            var productlist = _iProduct.GetAll(username);
+            var productlist = _iProduct.GetAll(username).OrderByDescending(x=>x.Id).ToList();
             lst = Mapper.Map<IEnumerable<ProductViewModel>>(productlist);
             //List<ProductViewModel> lst = new List<ProductViewModel>();                     
             return Json(lst);

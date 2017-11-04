@@ -4,8 +4,8 @@
 }
 
 <div ng-controller="ProductController">
-    <h2>Create New Medicine</h2> 
-    <div class="blankpage-main" ng-if="divhide1"> 
+    <h2>Create New Medicine</h2>     
+    <div class="blankpage-main" ng-show="divhide1"> 
         <div class="row">
             <div class="col-xs-6">
                 <a href="" class="btn btn-primary" ng-click="bcktoinbx('create')"><< Back to Inbox</a>
@@ -35,7 +35,7 @@
                 </div>
                 <div class="form-group">
                     <label>Exp Date <span style="color:red;"> *</span></label>
-                    <input type="date" class="form-control" required placeholder="Exp Date" ng-model="MediProdct.ExpDt">
+                    <input type="text" class="form-control datepicker" required placeholder="Click here for Exp Date" ng-model="MediProdct.ExpDt">
                     <span asp-for="expDate" style="color:red;"></span>
                 </div>
             </div>
@@ -60,7 +60,7 @@
         </div>
         </div>
         <br />
-    <div class="blankpage-main" ng-if="divhide2">       
+    <div class="blankpage-main" ng-show="divhide2">       
         <div class="row mt">
             <div class="col-md-12">
                 <div class="content-panel">                    
@@ -93,7 +93,7 @@
                                     <td>{{$index+1}}</td>
                                     <td><span ng-hide="cClass==item.id">{{item.name }}</span><input type="text" ng-model="item.name" ng-show="cClass==item.id" style="width: 160px;" /></td>
                                     <td class="hidden-phone"><span ng-hide="cClass==item.id">{{item.batchNo}}</span><input type="text" ng-model="item.batchNo" ng-show="cClass==item.id" style="width: 110px;" /></td>
-                                    <td><span ng-hide="cClass==item.id">{{item.expDate| date:'dd/MM/yyyy'}}</span><input type="text" ng-model="item.expDate | date:'dd/MM/yyyy'" style="width: 110px;" ng-show="cClass==item.id"/></td>
+                                    <td><span ng-hide="cClass==item.id">{{item.expDate| date:'dd/MM/yyyy'}}</span><input type="text" ng-model="item.expDate" style="width: 110px;" ng-show="cClass==item.id"/></td>
                                     <td><span ng-hide="cClass==item.id">{{item.companyName}}</span><input type="text" ng-model="item.companyName" ng-show="cClass==item.id" style="width: 110px;" /></td>
                                     <td><span ng-hide="cClass==item.id">{{item.mrp}}</span><input type="text" ng-model="item.mrp" ng-show="cClass==item.id" style="width: 110px;" /></td>
                                     <td><span ng-hide="cClass==item.id">{{item.openingStock}}</span><span ng-show="cClass==item.id">{{item.openingStock}}</span></td>
