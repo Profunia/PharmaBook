@@ -116,6 +116,21 @@ app.controller('MyController', function ($scope, $http, loadvndor, $rootScope) {
             $scope.divhide2 = false;
         }
     }
+    $scope.purchasedhistry = [];
+    $http.get('/Product/PurchsdHstryInbx/').then(function (res) {
+        $scope.purchasedhistry = res.data;
+        for (var i = 0; i < $rootScope.VendorList.length; i++) {
+            var vendorid = $rootScope.VendorList[i].id;
+            for (var ln = 0; ln < $scope.purchasedhistry.length; ln++) {
+                if ($scope.purchasedhistry[ln].vendorID == vendorid) {
+                    $scope.purchasedhistry[ln].vendorname = $rootScope.VendorList[i].vendorName;
+                    $scope.purchasedhistry[ln].vendorcompany = $rootScope.VendorList[i].vendorCompnay;
+                    $scope.purchasedhistry[ln].vendoradres = $rootScope.VendorList[i].vendorAddress;
+                }
+            }           
+        }          
+    }, function (error) {
+    })
 })
 app.controller('ProductController', function ($scope, $http, $location, $rootScope,loadvndor, $window) {
     $scope.isStefActive = false;

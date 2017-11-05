@@ -8,12 +8,12 @@
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Remove="wwwroot/24c61767-2c79-44ed-b906-2ea3160f5e71.xlsx" />
-    <Content Remove="wwwroot/bulktemplate\~%24BulkUploadTemplate.xlsx" />
-  </ItemGroup>
+  <!--<itemgroup>
+    <content remove="wwwroot/24c61767-2c79-44ed-b906-2ea3160f5e71.xlsx" />
+    <content remove="wwwroot/bulktemplate\~%24bulkuploadtemplate.xlsx" />
+  </itemgroup>-->
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <Content Include="wwwroot\css\jquery-ui.min.css" />
     <Content Include="wwwroot\css\loading.css" />
     <Content Include="wwwroot\images\ui-icons_444444_256x240.png" />
@@ -35,7 +35,7 @@
     <Content Include="wwwroot\Login\images\right.jpg" />
     <Content Include="wwwroot\Scripts\jquery-ui.min.js" />
     <Content Include="wwwroot\Scripts\jquery.js" />
-  </ItemGroup>
+  </ItemGroup>-->
 
   <!--<ItemGroup>
     <Content Include="wwwroot\images\successImage.png" />
@@ -61,8 +61,8 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="1.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="1.0.0" />
-    
-  
+
+
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.1" />
