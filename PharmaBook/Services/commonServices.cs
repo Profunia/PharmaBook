@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using PharmaBook.Entities;
 using PharmaBook.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace PharmaBook.Services
         public static string getDynamicId()
         {
             Random rnd = new Random();
-            int Dynaid =rnd.Next(100000, 999999);
+            int Dynaid = rnd.Next(100000, 999999);
             return Convert.ToString(Dynaid);
         }
 
@@ -57,15 +58,74 @@ namespace PharmaBook.Services
         }
         public static string getDateValue(DateTime? str)
         {
-            if (str!=null)
+            if (str != null)
             {
                 DateTime dt = Convert.ToDateTime(str);
                 string d = dt.Day + " - " + dt.Month + " - " + dt.Year;
-                return d;                
+                return d;
             }
             else
                 return "N/A";
         }
+
+        public static ProductViewModel MapProductToVM(Product x)
+        {
+           ProductViewModel prd = new ProductViewModel();
+            prd.batchNo = x.batchNo;
+            prd.companyName = x.companyName;
+            prd.expDate = x.expDate.ToString("dd/MM/yyyy");
+            prd.name = x.name;
+            prd.batchNo = x.batchNo;
+            prd.MRP = x.MRP;
+            prd.openingStock = x.openingStock;
+            prd.lastUpdated = x.lastUpdated;
+            prd.cusUserName = x.cusUserName;
+            
+            prd.vendorID = x.vendorID != null ? x.vendorID : 0;
+
+            return prd;
+        }
+
+        public static Product MapVMtoProduct(ProductViewModel x)
+        {
+            Product prd = new Product();
+            prd.batchNo = x.batchNo;
+            prd.companyName = x.companyName;
+            prd.expDate = commonServices.ConvertToDate(x.expDate);
+            prd.name = x.name;
+            prd.batchNo = x.batchNo;
+            prd.MRP = x.MRP;
+            prd.openingStock = x.openingStock;
+            prd.lastUpdated = x.lastUpdated;
+            prd.cusUserName = x.cusUserName;
+            prd.vendorID = x.vendorID!=null ?  x.vendorID : 0;
+
+            return prd;
+        }
+
+        public static IList<ProductViewModel> MapProductListToVM(IList<Product> products)
+        {
+            List<ProductViewModel> pvm = new List<ProductViewModel>();
+            ProductViewModel vm = null;
+            Parallel.ForEach(products, x =>
+            {
+                vm = new ProductViewModel();
+                vm.Id = x.Id;
+                vm.batchNo = x.batchNo;
+                vm.companyName = x.companyName;
+                vm.expDate = x.expDate.ToString("dd/MM/yyy");
+                vm.name = x.name;
+                vm.batchNo = x.batchNo;
+                vm.MRP = x.MRP;
+                vm.openingStock = x.openingStock;
+                vm.lastUpdated = x.lastUpdated;
+                vm.cusUserName = x.cusUserName;
+                vm.vendorID = x.vendorID;
+                pvm.Add(vm);
+            });
+           return pvm;
+        }
+
     }
 
     public class BulkFileUpload

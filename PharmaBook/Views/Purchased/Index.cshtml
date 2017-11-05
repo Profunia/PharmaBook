@@ -140,7 +140,7 @@
 
                         <td>{{item.Name}}</td>
                         <td>{{item.Mfg}}</td>
-                        <td><input type="text" ng-model="item.Qty" class="form-control" placeholder="Qty" /></td>
+                        <td><input type="number" min="1" ng-model="item.Qty"  class="form-control" placeholder="Qty" /></td>
                         <td><input type="text" ng-model="item.BatchNo" class="form-control" placeholder="batch No" /></td>
                         <td><input type="text" ng-model="item.MRP" class="form-control" placeholder="MRP" /></td>
                         <td><input type="text" ng-model="item.ExpDate" class="form-control" placeholder="Exp Date" /></td>

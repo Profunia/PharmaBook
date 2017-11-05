@@ -178,7 +178,7 @@ namespace PharmaBook.Controllers
                     product.openingStock += item.Qty;
                     product.batchNo = item.BatchNo;
                     product.MRP = item.MRP;
-                    product.expDate = Convert.ToDateTime(item.ExpDate);
+                    product.expDate = commonServices.ConvertToDate(item.ExpDate);
                     product.lastUpdated = DateTime.Now.ToString();
                     product.vendorID = item.vendorID;
                     _iProduct.Update(product);
@@ -211,10 +211,10 @@ namespace PharmaBook.Controllers
                     _iMasterPo.Commit();
                 }
             }
-            catch 
+            catch (Exception ep)
             {
 
-                return BadRequest();
+                return BadRequest(ep.Message);
             }
             
             return Ok();

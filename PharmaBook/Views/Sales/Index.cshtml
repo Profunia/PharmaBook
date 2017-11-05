@@ -56,7 +56,7 @@
             <div class="col-xs-2">
                 <div class="form-group">
                     <label>Qty <span style="color:red;"> * </span></label>
-                    <input required class="form-control" placeholder="Qty" ng-model="Qty">
+                    <input required type="number" min="1" class="form-control" placeholder="Qty" ng-model="Qty">
                     <span asp-for="name" style="color:red;"></span>
                 </div>
             </div>
@@ -69,7 +69,7 @@
             <div class="col-xs-4">
                 <div class="form-group">
                     <label>Exp. Date </label>
-                    <input class="form-control" placeholder="Exp Date" ng-model="child.ExpDt| date :  'dd-MM-y' ">
+                    <input class="form-control" placeholder="Exp Date" ng-model="child.ExpDt ">
                     <span asp-for="batchNo" style="color:red;"></span>
                 </div>
             </div>
@@ -82,7 +82,10 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-3">
+            <div class="col-xs-6">
+                <span style="color:red">
+                    {{ErrMsg}}
+                </span>
                 <div class="form-group">
                     <br />
                     <button type="submit" class="btn btn-primary" ng-click="AddChildInvc()">Add to Cart</button>

@@ -4,18 +4,19 @@
 }
 
 <div ng-controller="ProductController">
-    <h2>Create New Medicine</h2> 
-    <div class="blankpage-main" ng-if="divhide1"> 
+    <h2>Create New Medicine</h2>
+    <div class="blankpage-main" ng-show="divhide1">
         <div class="row">
             <div class="col-xs-6">
                 <a href="" class="btn btn-primary" ng-click="bcktoinbx('create')"><< Back to Inbox</a>
                 <a href="/Product/BulkUpload" class="btn btn-primary">Create Bulk Medicine</a>
                 <hr />
-            </div>   
-           
-        </div>        
+            </div>
+
+        </div>
         <div class="row mt">
             <div class="col-xs-6">
+
                 <div class="form-group">
                     <label>Medicine Name <span style="color:red;"> *</span></label>
                     <input required class="form-control" placeholder="Medicine Name" ng-model="MediProdct.MedicineName">
@@ -27,47 +28,79 @@
                     <span asp-for="batchNo" style="color:red;"></span>
                 </div>
 
+                <div class="row alert alert-success">
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <label>Stef</label>
+                            <input class="form-control" type="number" min="1" placeholder="Stef" ng-model="stef">
+                           
+                            </div>
+                        </div>
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <label>Tablets/capsule</label>
+                            <input class="form-control" type="number" min="1" placeholder="tablets" ng-model="tablets">
+                        </div> 
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <label>Each Stef Price</label>
+                            <input class="form-control" type="text" placeholder="Stef Price" ng-model="StefPrice" ng-keyup="getStockMRP()">
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <small id="emailHelp" class="form-text text-muted">Note : 3 stef x 10 tablets = 30 stocks </small>
+                    </div>
+                </div>               
+                
                 <div class="form-group">
+
                     <label>Stock <span style="color:red;"> *</span></label>
-                    <input class="form-control" required placeholder="Opening Stock" ng-model="MediProdct.openingStock">
-                    <small id="emailHelp" class="form-text text-muted">Note : 3 stef x 10 tablets = 30 stocks </small>
+                    <input class="form-control" type="number" min="1" ng-disabled="isStefActive" required placeholder="Opening Stock" ng-model="MediProdct.openingStock">                   
                     <span asp-for="openingStock" style="color:red;"></span>
                 </div>
                 <div class="form-group">
                     <label>Exp Date <span style="color:red;"> *</span></label>
-                    <input type="date" class="form-control" required placeholder="Exp Date" ng-model="MediProdct.ExpDt">
+                    <input type="text" class="form-control datepicker" required placeholder="Click here for Exp Date" ng-model="MediProdct.ExpDt">
                     <span asp-for="expDate" style="color:red;"></span>
                 </div>
             </div>
             <div class="col-xs-6">
                 <div class="form-group">
-                    <label>Mfg</label>
+                    <label>Mfg <span style="color:red;"> *</span></label>
                     <input class="form-control" placeholder="Mfg" ng-model="MediProdct.CompanyName">
                 </div>
                 <div class="form-group">
-                    <label>MRP</label>
-                    <input class="form-control" placeholder="MRP" ng-model="MediProdct.MRP">
+                    <label>MRP <span style="color:red;"> *</span></label>
+                    <input class="form-control" placeholder="MRP" ng-disabled="isStefActive" ng-model="MediProdct.MRP">
                 </div>
                 <div class="form-group">
                     <label for="exampleSelect1">Select Vendor</label>
                     <select class="form-control" id="exampleSelect1" ng-options="s.id as s.vendorName for s in VendorList" ng-model="MediProdct.vendorID"></select>
                 </div>
                 <div class="form-group">
+                    <label for="exampleSelect1">Remarks</label>
+                    <input class="form-control" placeholder="Remarks" ng-model="MediProdct.Remarks">
+                </div>
+                <div class="form-group">
+                    <span style="color:red;">
+                        {{rqtErr}}
+                    </span>
                     <br /><br />
                     <button type="submit" class="btn btn-primary" ng-click="AddMedcin()">Submit</button>
                 </div>
             </div>
         </div>
-        </div>
-        <br />
-    <div class="blankpage-main" ng-if="divhide2">       
+    </div>
+    <br />
+    <div class="blankpage-main" ng-show="divhide2">
         <div class="row mt">
             <div class="col-md-12">
-                <div class="content-panel">                    
+                <div class="content-panel">
                     <div class="row">
                         <div class="col-xs-4">
-                            <a href="" class="btn btn-primary" ng-click="bcktoinbx('inbox')">Create New Medicine</a>                           
-                            <br/>
+                            <a href="" class="btn btn-primary" ng-click="bcktoinbx('inbox')">Create New Medicine</a>
+                            <br />
                             <label>Total Medicine : {{ProductList.length}}</label>
                         </div>
                         <div class="col-xs-8 right">
@@ -81,7 +114,7 @@
                                     <th>#</th>
                                     <th>Medicine Name</th>
                                     <th>Batch No</th>
-                                    <th>Exp Date</th>
+                                    <th>Exp Date </th>
                                     <th>Mfg</th>
                                     <th>M.R.P</th>
                                     <th>Stock</th>
@@ -90,10 +123,11 @@
                             </thead>
                             <tbody>
                                 <tr ng-repeat="item in ProductList|filter: searchbox">
-                                    <td>{{$index+1}}</td>
+                                    <td>{{$index+1}}                                    
+                                    </td>
                                     <td><span ng-hide="cClass==item.id">{{item.name }}</span><input type="text" ng-model="item.name" ng-show="cClass==item.id" style="width: 160px;" /></td>
                                     <td class="hidden-phone"><span ng-hide="cClass==item.id">{{item.batchNo}}</span><input type="text" ng-model="item.batchNo" ng-show="cClass==item.id" style="width: 110px;" /></td>
-                                    <td><span ng-hide="cClass==item.id">{{item.expDate| date:'dd/MM/yyyy'}}</span><input type="text" ng-model="item.expDate | date:'dd/MM/yyyy'" style="width: 110px;" ng-show="cClass==item.id"/></td>
+                                    <td><span ng-hide="cClass==item.id">{{item.expDate}}</span><input type="text" ng-model="item.expDate" style="width: 110px;" ng-show="cClass==item.id" /></td>
                                     <td><span ng-hide="cClass==item.id">{{item.companyName}}</span><input type="text" ng-model="item.companyName" ng-show="cClass==item.id" style="width: 110px;" /></td>
                                     <td><span ng-hide="cClass==item.id">{{item.mrp}}</span><input type="text" ng-model="item.mrp" ng-show="cClass==item.id" style="width: 110px;" /></td>
                                     <td><span ng-hide="cClass==item.id">{{item.openingStock}}</span><span ng-show="cClass==item.id">{{item.openingStock}}</span></td>

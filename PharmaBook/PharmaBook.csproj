@@ -13,6 +13,30 @@
     <Content Remove="wwwroot/bulktemplate\~%24BulkUploadTemplate.xlsx" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="wwwroot\css\jquery-ui.min.css" />
+    <Content Include="wwwroot\css\loading.css" />
+    <Content Include="wwwroot\images\ui-icons_444444_256x240.png" />
+    <Content Include="wwwroot\images\ui-icons_555555_256x240.png" />
+    <Content Include="wwwroot\images\ui-icons_777620_256x240.png" />
+    <Content Include="wwwroot\images\ui-icons_777777_256x240.png" />
+    <Content Include="wwwroot\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="wwwroot\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="wwwroot\jquery-ui.min.css" />
+    <Content Include="wwwroot\Login\css\font-awesome.css" />
+    <Content Include="wwwroot\Login\css\style.css" />
+    <Content Include="wwwroot\Login\fonts\fontawesome-webfont.eot" />
+    <Content Include="wwwroot\Login\fonts\fontawesome-webfont.svg" />
+    <Content Include="wwwroot\Login\fonts\fontawesome-webfont.ttf" />
+    <Content Include="wwwroot\Login\fonts\fontawesome-webfont.woff" />
+    <Content Include="wwwroot\Login\fonts\fontawesome-webfont.woff2" />
+    <Content Include="wwwroot\Login\fonts\FontAwesome.otf" />
+    <Content Include="wwwroot\Login\images\banner.jpg" />
+    <Content Include="wwwroot\Login\images\right.jpg" />
+    <Content Include="wwwroot\Scripts\jquery-ui.min.js" />
+    <Content Include="wwwroot\Scripts\jquery.js" />
+  </ItemGroup>
+
   <!--<ItemGroup>
     <Content Include="wwwroot\images\successImage.png" />
     <Content Include="wwwroot\Scripts\AngularController\SiteController.js" />

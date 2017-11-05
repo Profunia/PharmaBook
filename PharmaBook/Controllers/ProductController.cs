@@ -50,9 +50,8 @@ namespace PharmaBook.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    
 
-                    Product objMap = Mapper.Map<Product>(obj);
+                    Product objMap = commonServices.MapVMtoProduct(obj);
                     objMap.lastUpdated = DateTime.Now.ToString();                    
                     objMap.isActive = true;
                     objMap.cusUserName = User.Identity.Name;
@@ -89,7 +88,7 @@ namespace PharmaBook.Controllers
             catch (Exception ep)
             {
 
-
+                return BadRequest(ep.Message);
             }
             
             return Ok(msg);
@@ -236,7 +235,7 @@ namespace PharmaBook.Controllers
                                         {
                                             if (!string.IsNullOrEmpty(rowData))
                                             {
-                                                productDetails.expDate = commonServices.ConvertToDate(rowData);
+                                                productDetails.expDate = rowData;
                                             }
                                         }
                                         else
@@ -294,34 +293,40 @@ namespace PharmaBook.Controllers
             }
             return View(obj);
         }
-        public IActionResult PurchasedHistory()
+
+        public IActionResult GetAllMedicine()
         {
-            return View();
+            string username = User.Identity.Name;         
+            var productlist = _iProduct.GetAll(username).OrderByDescending(x => x.Id).ToList();
+            List<ProductViewModel> lst = (List <ProductViewModel>) commonServices.MapProductListToVM(productlist);           
+            //lst = Mapper.Map<IEnumerable<ProductViewModel>>(productlist);
+                               
+            return Ok(lst);
         }
-        public JsonResult GetAllMedicine()
-        {
-            string username = User.Identity.Name;
-            var lst = (object)null;
-            var productlist = _iProduct.GetAll(username);
-            lst = Mapper.Map<IEnumerable<ProductViewModel>>(productlist);
-            //List<ProductViewModel> lst = new List<ProductViewModel>();                     
-            return Json(lst);
-        }
-        public JsonResult GetMedicnById([FromHeader] int id)
+        public IActionResult GetMedicnById([FromHeader] int id)
         {
             var productlist = _iProduct.GetById(id);
-            return Json(productlist);
+            ProductViewModel vm = commonServices.MapProductToVM(productlist);
+            return Ok(vm);
         }
         public JsonResult UpdateMedicn([FromBody]ProductViewModel prdvwmdl)
         {
             string msg = string.Empty;
             try
             {
-                var medicn = _iProduct.GetById(prdvwmdl.Id);
-                Mapper.Map(prdvwmdl, medicn);
+                var medicn = _iProduct.GetById(prdvwmdl.Id);                
+                medicn.batchNo = prdvwmdl.batchNo;
+                medicn.companyName = prdvwmdl.companyName;
+                medicn.expDate = commonServices.ConvertToDate(prdvwmdl.expDate);
+                medicn.name = prdvwmdl.name;
+                medicn.batchNo = prdvwmdl.batchNo;
+                medicn.MRP = prdvwmdl.MRP;
+                medicn.openingStock = prdvwmdl.openingStock;
+                medicn.lastUpdated = prdvwmdl.lastUpdated;
+                medicn.cusUserName = prdvwmdl.cusUserName;
+                medicn.vendorID = prdvwmdl.vendorID != null ? prdvwmdl.vendorID : 0;
                 medicn.lastUpdated = DateTime.Now.ToString();
-                medicn.isActive = true;
-                _iProduct.Update(medicn);
+                medicn.isActive = true;                
                 _iProduct.Commit();
                 msg = "Medicne Updated Successfulyy";
             }
@@ -346,12 +351,6 @@ namespace PharmaBook.Controllers
                 msg = "Something went wrong . !!";
             }
             return Json(msg);
-        }
-        public JsonResult PurchsdHstryInbx()
-        {           
-            var purchasedhstry = _iPurchased.GetAll(User.Identity.Name);
-            var lst= Mapper.Map<IEnumerable<PurchasedHistoryVM>>(purchasedhstry);
-            return Json(lst);
         }
     }
 }
