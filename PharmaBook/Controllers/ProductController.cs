@@ -294,7 +294,10 @@ namespace PharmaBook.Controllers
             }
             return View(obj);
         }
-
+        public IActionResult PurchasedHistory()
+        {
+            return View();
+        }
         public IActionResult GetAllMedicine()
         {
             string username = User.Identity.Name;
@@ -352,6 +355,12 @@ namespace PharmaBook.Controllers
                 msg = "Something went wrong . !!";
             }
             return Json(msg);
+        }
+        public JsonResult PurchsdHstryInbx()
+        {
+            var inbxlst = _iPurchased.GetAll(User.Identity.Name);
+            var lst= Mapper.Map<IEnumerable<PurchasedHistoryVM>>(inbxlst);
+            return Json(lst);
         }
     }
 }
