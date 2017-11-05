@@ -3,11 +3,116 @@
     ViewData["Title"] = "Invoice";
 Layout=null;
 }
+<link href="~/css/bootstrap.css" rel="stylesheet" />
+<style>
+    #inv {
+        width: 21cm;min-height: 29.7cm;padding: 1cm;
+        margin: 1cm auto;border: 1px #D3D3D3 solid;
+        border-radius: 5px;background: white;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        line-height:90%;
+    }
+    .invoice-title h2, .invoice-title h3 {
+        display: inline-block;
+    }
+
+    .table > tbody > tr > .no-line {
+        border-top: none;
+    }
+
+    .table > thead > tr > .no-line {
+        border-bottom: none;
+    }
+
+    .table > tbody > tr > .thick-line {
+        border-top: 2px solid;
+    }
+</style>
 @model SalesViewModel
+<div class="container" id="inv">
+    <div class="row">
+        <div class="col-xs-12">
+             <div class="invoice-title">
+                
+            </div>
+            <div class="invoice-title">
+                <h2>Cash Memo/Prescription Register </h2><h3 class="pull-right">Inv No# @Html.DisplayFor(x=>x.masterinvc.InvId)</h3>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-xs-6">
+                    <address>
+                        <strong>Patient:</strong><br>
+                        @Html.DisplayFor(x=>x.masterinvc.PatientName)<br>
+                        @Html.DisplayFor(x => x.masterinvc.PatientAdres)                   
+                    </address>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <address>
+                        <strong>Doctor:</strong><br>
+                        @Html.DisplayFor(x => x.masterinvc.DrName)<br>
+                        @Html.DisplayFor(x => x.masterinvc.RegNo)                        
+                    </address>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+
+                </div>
+                <div class="col-xs-6 text-right">
+                    <address>
+                        <strong>Invoice Date:</strong><br>
+                        @DateTime.Now
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>Summary</strong></h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr><td class="text-center"><strong>Quantity</strong></td>
+                                    <td><strong>Item</strong></td>
+                                    <td class="text-center"><strong>Mfg</strong></td>
+                                    <td class="text-center"><strong>Batch No.</strong></td>
+                                    <td class="text-center"><strong>Exp Date</strong></td>
+                                    <td class="text-center"><strong>Price</strong></td>
+                                    <td class="text-right"><strong>Totals</strong></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{double total = 0.0;}
+                                @foreach (var item in Model.invcchld)
+                                {
+                                <tr>
+                                    <td>@item.Qty</td>
+                                    <td>@Html.Display(item.Description)</td>
+                                    <td class="text-center">$10.99</td>
+                                    <td class="text-center">1</td>
+                                    <td class="text-right">$10.99</td>
+                                </tr>                               
+                                }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div style="width: 21cm;min-height: 29.7cm;padding: 1cm;margin: 1cm auto;border: 1px #D3D3D3 solid;border-radius: 5px;background: white;box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);line-height:90%" ng-controller="SalesController">
 
-    <table border="1px solid black" style="width:100%;margin-top:20px">
-        <th align="left" style="border:none">No. : </th>
+    <table class="table" style="margin-top:20px">
+        <th align="left" style="border:none">No. : @Html.DisplayFor(x=>x.masterinvc.InvId)</th>
         <th align="center" style="border:none">Cash Memo/Prescription Register </th>
         <th align="right" style="border:none">D.L No.: (9982-S, 9983-SB)</th>
         <tr>
@@ -21,11 +126,11 @@ Layout=null;
             </table>
         </tr>
         <tr>
-            <table border="1px solid black" style="width:50%" align="">
-                <th style="border:none" align="left"><label>Student Name: </label><span ></span>&nbsp;<input type="text" asp-for="masterinvc.PatientName" readonly/></th>
-                <tr><th style="border:none" align="left"><label>Address:</label><input type="text" asp-for="masterinvc.PatientAdres" /></th></tr>
-                <tr><th style="border:none" align="left"><label>Dr.'s Name:</label><input type="text" asp-for="masterinvc.DrName" /></th></tr>
-                <tr><th style="border:none" align="left"><label>Regd. No.:</label><input type="text" asp-for="masterinvc.RegNo" /> </th></tr>
+            <table border="1px solid black" style="width:50%">
+                <th style="border:none" align="left"><label>Patient Name: </label>@Html.DisplayFor(x=>x.masterinvc.PatientName)</th>
+                <tr><th style="border:none" align="left"><label>Address:</label>@Html.DisplayFor(x => x.masterinvc.PatientAdres)</th></tr>
+                <tr><th style="border:none" align="left"><label>Dr.'s Name:</label>@Html.DisplayFor(x => x.masterinvc.DrName)</th></tr>
+                <tr><th style="border:none" align="left"><label>Regd. No.:</label>@Html.DisplayFor(x => x.masterinvc.RegNo)</th></tr>
             </table>
         </tr>
     </table>

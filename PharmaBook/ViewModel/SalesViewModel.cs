@@ -16,5 +16,6 @@ namespace PharmaBook.ViewModel
         public List<ProductError> producterrlst { get; set; }
         public MasterInvoice masterInvoice { get; set; }
         public IEnumerable<ChildInvoice> childInvoice { get; set; }
+        public UserProfile userProfile { get; set; }
     }
 }

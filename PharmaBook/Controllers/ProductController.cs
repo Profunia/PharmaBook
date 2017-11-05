@@ -37,6 +37,7 @@ namespace PharmaBook.Controllers
         //    var model = _iProduct.GetAll(User.Identity.Name);
         //    return View(model);
         //}
+      
         [HttpGet]
         public IActionResult Create()
         {
@@ -52,7 +53,7 @@ namespace PharmaBook.Controllers
                 {
 
                     Product objMap = commonServices.MapVMtoProduct(obj);
-                    objMap.lastUpdated = DateTime.Now.ToString();                    
+                    objMap.lastUpdated = DateTime.Now.ToString();
                     objMap.isActive = true;
                     objMap.cusUserName = User.Identity.Name;
 
@@ -77,7 +78,7 @@ namespace PharmaBook.Controllers
                     _iPurchased.Add(purchasedHistory);
                     _iPurchased.Commit();
                     //return RedirectToAction("Index");
-                   
+
                 }
                 else
                 {
@@ -90,7 +91,7 @@ namespace PharmaBook.Controllers
 
                 return BadRequest(ep.Message);
             }
-            
+
             return Ok(msg);
         }
         [HttpGet]
@@ -105,15 +106,15 @@ namespace PharmaBook.Controllers
         {
             SalesViewModel obj = new SalesViewModel();
             if (file.Length > 0)
-            {              
+            {
                 string fileExtension = Path.GetExtension(file.FileName.Trim('"'));
                 if (fileExtension.Equals(".xlsx"))
                 {
                     //TODO
                     // File Upload
                     BulkFileUpload blk = new BulkFileUpload(_hostingEnvironment);
-                    string UnicFileName= await blk.fileUpload(file);                    
-                    string sWebRootFolder = _hostingEnvironment.WebRootPath;                 
+                    string UnicFileName = await blk.fileUpload(file);
+                    string sWebRootFolder = _hostingEnvironment.WebRootPath;
                     // Import 
                     FileInfo file1 = new FileInfo(Path.Combine(sWebRootFolder, UnicFileName));
                     using (ExcelPackage package = new ExcelPackage(file1))
@@ -123,46 +124,46 @@ namespace PharmaBook.Controllers
                         int rowCount = worksheet.Dimension.Rows;
                         int ColCount = worksheet.Dimension.Columns;
                         bool bHeaderRow = true;
-                        ProductViewModel productDetails = null;                        
-                        obj.successlst= new List<ProductViewModel>();
+                        ProductViewModel productDetails = null;
+                        obj.successlst = new List<ProductViewModel>();
                         obj.duplictlst = new List<Duplicatelist>();
                         obj.producterrlst = new List<ProductError>();
                         for (int row = 1; row <= rowCount; row++)
-                        {                            
-                            var productlst = _iProduct.GetAll(User.Identity.Name); 
+                        {
+                            var productlst = _iProduct.GetAll(User.Identity.Name);
                             string DplictrowData = string.Empty;
                             string rowData = string.Empty;
                             productDetails = new ProductViewModel();
                             ProductError producterr = new ProductError();
                             string medicine = string.Empty;
-                            string mfg= string.Empty;
+                            string mfg = string.Empty;
                             for (int col = 1; col <= ColCount; col++)
-                            {                               
+                            {
                                 if (bHeaderRow)
                                 {
                                     string HeaderTitle = Convert.ToString(worksheet.Cells[row, col].Value);
                                     columnName.Add(HeaderTitle);
                                 }
                                 else
-                                {                                    
+                                {
                                     string cName = columnName[col - 1];
                                     rowData = Convert.ToString(worksheet.Cells[row, col].Value);
                                     //DplictrowData = Convert.ToString(worksheet.Cells[row - 1, col].Value);
-                                    
+
                                     // assign excel data to product view model
                                     if (cName.Equals("MedicineName"))
                                     {
-                                        if (rowData != null && productlst.Any(x=>x.name== rowData) != true)
+                                        if (rowData != null && productlst.Any(x => x.name == rowData) != true)
                                         {
                                             productDetails.name = rowData;
                                         }
                                         else
                                         {
-                                            if(productlst.Any(x => x.name == rowData) == true)
-                                            {                                                
+                                            if (productlst.Any(x => x.name == rowData) == true)
+                                            {
                                                 medicine = rowData;
                                             }
-                                            if(productDetails.name==null)
+                                            if (productDetails.name == null)
                                             {
                                                 producterr.name = "Medicine name required";
                                             }
@@ -199,14 +200,14 @@ namespace PharmaBook.Controllers
                                     }
                                     else if (cName.Equals("Mfg"))
                                     {
-                                        if (rowData != null&& productlst.Any(x => x.companyName == rowData) != true)
+                                        if (rowData != null && productlst.Any(x => x.companyName == rowData) != true)
                                         {
                                             productDetails.companyName = rowData;
                                         }
                                         else
                                         {
                                             if (productlst.Any(x => x.companyName == rowData) == true)
-                                            {                                               
+                                            {
                                                 mfg = rowData;
                                             }
                                             if (productDetails.companyName == null)
@@ -245,7 +246,7 @@ namespace PharmaBook.Controllers
                                                 producterr.expDate = "expDate required";
                                             }
                                         }
-                                       
+
                                     }
                                     else if (cName.Equals("VendorID"))
                                     {
@@ -258,13 +259,13 @@ namespace PharmaBook.Controllers
                                     {
                                         productDetails.Remarks = rowData;
 
-                                    }                                  
+                                    }
 
                                 }
-                            }                            
+                            }
                             if (bHeaderRow == false)
                             {
-                                if(productDetails.name!=null&& productDetails.batchNo!=null&& productDetails.openingStock!=0&& productDetails.companyName!=null&& productDetails.MRP!=null&& productDetails.expDate!=null)
+                                if (productDetails.name != null && productDetails.batchNo != null && productDetails.openingStock != 0 && productDetails.companyName != null && productDetails.MRP != null && productDetails.expDate != null)
                                 {
                                     obj.successlst.Add(productDetails);
                                     var status = Create(productDetails);
@@ -274,13 +275,13 @@ namespace PharmaBook.Controllers
                                     Duplicatelist dplctobj = new Duplicatelist();
                                     dplctobj.name = medicine;
                                     dplctobj.companyName = mfg;
-                                    obj.duplictlst.Add(dplctobj);                             
+                                    obj.duplictlst.Add(dplctobj);
                                 }
-                                else if(producterr.name != null || producterr.batchNo != null || producterr.openingStock == null || producterr.companyName != null || producterr.MRP != null || producterr.expDate != null)
+                                else if (producterr.name != null || producterr.batchNo != null || producterr.openingStock == null || producterr.companyName != null || producterr.MRP != null || producterr.expDate != null)
                                 {
                                     obj.producterrlst.Add(producterr);
                                 }
-                                
+
                             }
                             bHeaderRow = false;
                         }
@@ -296,11 +297,11 @@ namespace PharmaBook.Controllers
 
         public IActionResult GetAllMedicine()
         {
-            string username = User.Identity.Name;         
+            string username = User.Identity.Name;
             var productlist = _iProduct.GetAll(username).OrderByDescending(x => x.Id).ToList();
-            List<ProductViewModel> lst = (List <ProductViewModel>) commonServices.MapProductListToVM(productlist);           
+            List<ProductViewModel> lst = (List<ProductViewModel>)commonServices.MapProductListToVM(productlist);
             //lst = Mapper.Map<IEnumerable<ProductViewModel>>(productlist);
-                               
+
             return Ok(lst);
         }
         public IActionResult GetMedicnById([FromHeader] int id)
@@ -314,7 +315,7 @@ namespace PharmaBook.Controllers
             string msg = string.Empty;
             try
             {
-                var medicn = _iProduct.GetById(prdvwmdl.Id);                
+                var medicn = _iProduct.GetById(prdvwmdl.Id);
                 medicn.batchNo = prdvwmdl.batchNo;
                 medicn.companyName = prdvwmdl.companyName;
                 medicn.expDate = commonServices.ConvertToDate(prdvwmdl.expDate);
@@ -326,7 +327,7 @@ namespace PharmaBook.Controllers
                 medicn.cusUserName = prdvwmdl.cusUserName;
                 medicn.vendorID = prdvwmdl.vendorID != null ? prdvwmdl.vendorID : 0;
                 medicn.lastUpdated = DateTime.Now.ToString();
-                medicn.isActive = true;                
+                medicn.isActive = true;
                 _iProduct.Commit();
                 msg = "Medicne Updated Successfulyy";
             }

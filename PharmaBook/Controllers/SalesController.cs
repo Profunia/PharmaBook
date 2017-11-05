@@ -21,6 +21,7 @@ namespace PharmaBook.Controllers
         private IChild _ichild;
         private IProduct _iProduct;
         private IPurchasedHistory _iPurchasedHistory;
+        private IProfileServices _iProfile;
         [HttpGet]
         public IActionResult InvInbox()
         {
@@ -32,12 +33,14 @@ namespace PharmaBook.Controllers
         public SalesController(Imaster master, 
             IChild child,
             IPurchasedHistory iPurchasedHistory,
+            IProfileServices iProfileServices,
             IProduct product)
         {
             _imaster = master;
             _ichild = child;
             _iProduct = product;
             _iPurchasedHistory = iPurchasedHistory;
+            _iProfile = iProfileServices;
         }
         // GET: /<controller>/
         public IActionResult Index()
@@ -52,6 +55,7 @@ namespace PharmaBook.Controllers
             var lst = Mapper.Map<IEnumerable<InvcChildVmdl>>(chldinvoice);
             slsvwmdl.invcchld = lst;
             slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mstrobj);
+            slsvwmdl.userProfile = _iProfile.GetByUserName(User.Identity.Name);
             return View(slsvwmdl);
         }
         public JsonResult AddMasterInvc([FromBody]SalesViewModel slsmodel)
