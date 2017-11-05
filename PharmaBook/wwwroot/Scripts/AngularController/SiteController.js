@@ -159,6 +159,16 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
         vendorID: '',
         Remarks:''
     }
+    //$scope.purchasedhistry = {
+    //    name: '',
+    //    batchno: '',
+    //    expdate: '',
+    //    mfg: '',
+    //    mrp: '',
+    //    qty: '',
+    //    purchaseddated: '',
+    //    vendrname:''
+    //}
     $scope.AddMedcin = function () {
 
         if ($scope.MediProdct.MedicineName && $scope.MediProdct.batchNo
@@ -270,6 +280,25 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
             $scope.successlst = false;
         }
     }
+    $scope.purchasedhistry = [];
+    $http.get('/Product/PurchsdHstryInbx/').then(function (res) {
+        $scope.purchasedhistry = res.data;        
+        for (var i = 0; i < $rootScope.VendorList.length; i++)
+        {
+            var vendorid = $rootScope.VendorList[i].id;
+            for (var ln=0; ln < $scope.purchasedhistry.length; ln++) {
+                if ($scope.purchasedhistry[ln].vendorID == vendorid) {
+                    $scope.purchasedhistry[ln].vendorname = $rootScope.VendorList[i].vendorName;
+                    $scope.purchasedhistry[ln].vendorcompany = $rootScope.VendorList[i].vendorCompnay;
+                    $scope.purchasedhistry[ln].vendoradres = $rootScope.VendorList[i].vendorAddress;
+                }
+            }
+            //$scope.purchasedhistry.name.push(value);
+        }
+        //$scope.purchasedhistry = res.data;        
+      
+    }, function (error) {
+    })
 })
 
 app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor) {

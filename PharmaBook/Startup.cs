@@ -67,6 +67,7 @@ namespace PharmaBook
                 config.CreateMap<InvcMstrVmdl, MasterInvoice>().ReverseMap();
                 config.CreateMap<InvcChildVmdl, ChildInvoice>().ReverseMap();
                 config.CreateMap<UserProfile, UserProfileVM>().ReverseMap();
+                config.CreateMap<PurchasedHistory, PurchasedHistoryVM>().ReverseMap();
             });
            
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
