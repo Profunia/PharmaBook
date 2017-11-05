@@ -24,12 +24,16 @@ namespace PharmaBook.Controllers
     {
         private IProduct _iProduct;
         private IPurchasedHistory _iPurchased;
+        private IVendorServices _iVendor;
         private readonly IHostingEnvironment _hostingEnvironment;
-        public ProductController(IHostingEnvironment hostingEnvironment, IProduct product, IPurchasedHistory ipurchasedHistory)
+        public ProductController(IHostingEnvironment hostingEnvironment,
+            IVendorServices ivendor,
+            IProduct product, IPurchasedHistory ipurchasedHistory)
         {
             _iProduct = product;
             _iPurchased = ipurchasedHistory;
             _hostingEnvironment = hostingEnvironment;
+            _iVendor = ivendor;
         }
         // GET: /<controller>/
         //public IActionResult Index()
@@ -356,11 +360,20 @@ namespace PharmaBook.Controllers
             }
             return Json(msg);
         }
-        public JsonResult PurchsdHstryInbx()
+        public IActionResult PurchsdHstryInbx()
         {
-            var inbxlst = _iPurchased.GetAll(User.Identity.Name);
-            var lst= Mapper.Map<IEnumerable<PurchasedHistoryVM>>(inbxlst);
-            return Json(lst);
+            try
+            {
+                var inbxlst = _iPurchased.GetAll(User.Identity.Name);
+                var vendors = _iVendor.GetAll(User.Identity.Name).ToList();
+                var lst = commonServices.MapPurchasedHistoryToVM(inbxlst, vendors);
+                //Mapper.Map<IEnumerable<PurchasedHistoryVM>>(inbxlst);
+                return Ok(lst);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }           
         }
     }
 }

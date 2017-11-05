@@ -132,7 +132,34 @@ app.controller('MyController', function ($scope, $http, loadvndor, $rootScope) {
     }, function (error) {
     })
 })
-app.controller('ProductController', function ($scope, $http, $location, $rootScope,loadvndor, $window) {
+app.controller('ProductController', function ($scope, $http, $location, $rootScope, loadvndor, $window) {
+    $scope.vendorDDL = '';
+    $scope.getSelectedVendor = function () {
+        if ($scope.vendorDDL !='') {
+            $scope.searchbox = $scope.vendorDDL;
+        }
+        else {
+            $scope.searchbox = '';            
+        }
+        console.log($scope.vendorDD);
+        console.log($scope.searchbox);
+    }
+
+    $scope.ItemNameMedicine = '';
+    $scope.medicineselect = function () {
+        console.log($scope.ItemNameMedicine);
+        if ($scope.ItemNameMedicine != '') {
+            $scope.searchbox = $scope.ItemNameMedicine;
+        }
+        else {
+            $scope.searchbox = '';
+           
+        }
+        console.log($scope.ItemNameMedicine);
+        console.log($scope.searchbox);
+    }
+
+
     $scope.isStefActive = false;
     $scope.stef = '';
     $scope.tablets = '';
@@ -298,18 +325,18 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
     $scope.purchasedhistry = [];
     $http.get('/Product/PurchsdHstryInbx/').then(function (res) {
         $scope.purchasedhistry = res.data;        
-        for (var i = 0; i < $rootScope.VendorList.length; i++)
-        {
-            var vendorid = $rootScope.VendorList[i].id;
-            for (var ln=0; ln < $scope.purchasedhistry.length; ln++) {
-                if ($scope.purchasedhistry[ln].vendorID == vendorid) {
-                    $scope.purchasedhistry[ln].vendorname = $rootScope.VendorList[i].vendorName;
-                    $scope.purchasedhistry[ln].vendorcompany = $rootScope.VendorList[i].vendorCompnay;
-                    $scope.purchasedhistry[ln].vendoradres = $rootScope.VendorList[i].vendorAddress;
-                }
-            }
-            //$scope.purchasedhistry.name.push(value);
-        }
+        //for (var i = 0; i < $rootScope.VendorList.length; i++)
+        //{
+        //    var vendorid = $rootScope.VendorList[i].id;
+        //    for (var ln=0; ln < $scope.purchasedhistry.length; ln++) {
+        //        if ($scope.purchasedhistry[ln].vendorID == vendorid) {
+        //            $scope.purchasedhistry[ln].vendorname = $rootScope.VendorList[i].vendorName;
+        //            $scope.purchasedhistry[ln].vendorcompany = $rootScope.VendorList[i].vendorCompnay;
+        //            $scope.purchasedhistry[ln].vendoradres = $rootScope.VendorList[i].vendorAddress;
+        //        }
+        //    }
+        //    //$scope.purchasedhistry.name.push(value);
+        //}
         //$scope.purchasedhistry = res.data;        
       
     }, function (error) {

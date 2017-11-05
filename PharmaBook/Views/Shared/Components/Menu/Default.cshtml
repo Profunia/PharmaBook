@@ -7,8 +7,14 @@
             <li><a asp-action="InvInbox" asp-controller="sales">Invoice Inbox</a></li>
         </ul>
     </li>
-    
-    <li><a asp-action="Create" asp-controller="Product"><i class="fa fa-file-archive-o"></i><span>Product</span></a></li> 
+    <li>
+        <a asp-action="Create" asp-controller="Product"><i class="fa fa-file-archive-o"></i><span>Product</span><span class="fa cfa fa-angle-right" style="float: right"></span></a>
+        <ul>
+            <li><a asp-action="Create" asp-controller="Product">Product</a></li>
+            <li><a asp-action="PurchasedHistory" asp-controller="Product">Product History</a></li>
+        </ul>
+    </li>   
+   
     <li>
         <a asp-action="Index" asp-controller="Purchased"><i class="fa fa-desktop"></i><span>Purchase</span><span class="fa cfa fa-angle-right" style="float: right"></span></a>
         <ul>

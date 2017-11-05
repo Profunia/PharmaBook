@@ -70,7 +70,7 @@ namespace PharmaBook.Services
 
         public static ProductViewModel MapProductToVM(Product x)
         {
-           ProductViewModel prd = new ProductViewModel();
+            ProductViewModel prd = new ProductViewModel();
             prd.batchNo = x.batchNo;
             prd.companyName = x.companyName;
             prd.expDate = x.expDate.ToString("dd/MM/yyyy");
@@ -80,7 +80,7 @@ namespace PharmaBook.Services
             prd.openingStock = x.openingStock;
             prd.lastUpdated = x.lastUpdated;
             prd.cusUserName = x.cusUserName;
-            
+
             prd.vendorID = x.vendorID != null ? x.vendorID : 0;
 
             return prd;
@@ -98,12 +98,12 @@ namespace PharmaBook.Services
             prd.openingStock = x.openingStock;
             prd.lastUpdated = x.lastUpdated;
             prd.cusUserName = x.cusUserName;
-            prd.vendorID = x.vendorID!=null ?  x.vendorID : 0;
+            prd.vendorID = x.vendorID != null ? x.vendorID : 0;
 
             return prd;
         }
 
-        public static IList<ProductViewModel> MapProductListToVM(IList<Product> products)
+        public static List<ProductViewModel> MapProductListToVM(List<Product> products)
         {
             List<ProductViewModel> pvm = new List<ProductViewModel>();
             ProductViewModel vm = null;
@@ -123,9 +123,41 @@ namespace PharmaBook.Services
                 vm.vendorID = x.vendorID;
                 pvm.Add(vm);
             });
-           return pvm;
+            return pvm;
         }
 
+        public static IEnumerable<PurchasedHistoryVM> MapPurchasedHistoryToVM(IEnumerable<PurchasedHistory> obj, IEnumerable<Vendor> vendorList)
+        {
+            List<PurchasedHistoryVM> vmList = new List<PurchasedHistoryVM>();
+            PurchasedHistoryVM vm = null;
+            Parallel.ForEach(obj, x =>
+            {
+                vm = new PurchasedHistoryVM();
+                vm.Id = x.Id;
+                vm.ProductID = x.ProductID;
+                vm.vendorID = x.vendorID;
+                var vendorInfo = vendorList.Where(z => z.Id == x.vendorID).FirstOrDefault();
+                if (vendorInfo != null)
+                {
+                    vm.vendorname = vendorInfo.vendorName;
+                    vm.vendorcompany = vendorInfo.vendorCompnay;
+                    vm.vendoradres = vendorInfo.vendorAddress;
+
+                }
+                vm.MRP = x.MRP;
+                vm.qty = x.qty;
+                vm.purchasedDated = x.purchasedDated.ToString("dd/MM/yyy");
+                vm.cusUserName = x.cusUserName;
+                vm.Name = x.Name;
+                vm.Mfg = x.Mfg;
+                vm.BatchNo = x.BatchNo;
+                string [] s= x.ExpDate.Split(' ');
+                vm.ExpDate = s[0];
+                vm.Remark = x.Remark;
+                vmList.Add(vm);
+            });
+            return vmList;
+        }
     }
 
     public class BulkFileUpload
