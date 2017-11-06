@@ -391,6 +391,7 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
             $scope.unitprice = price;
             $scope.totalprice = final;
             $scope.cartlists.push({
+                'Mfg': $scope.child.Mfg,
                 'PrdId': $scope.PrdId,
                 'Qty': $scope.Qty,
                 'ExpDt': $scope.child.ExpDt,
@@ -413,7 +414,15 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
     $scope.medicineselect = function () {
         var id = $scope.PrdId;
         $http.get('/Product/GetMedicnById/?id=' + id).then(function (res) {
-            $scope.child = { Description: res.data.companyName, BatchNo: res.data.batchNo, ExpDt: res.data.expDate, Amount: res.data.mrp };
+            console.log(res.data);
+            $scope.child = {
+                Mfg: res.data.companyName,
+                Description: res.data.name,
+                BatchNo: res.data.batchNo,
+                ExpDt: res.data.expDate,
+                Amount: res.data.mrp
+            };
+            console.log($scope.child);
         }, function (error) {
         })
     }

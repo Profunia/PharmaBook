@@ -31,13 +31,12 @@ Layout=null;
     </table>
     <table border="1px solid black" style="width:100%;margin-top:20px">
         <thead>
-        <th>Qntyty.</th>
-        <th>Description</th>
+        <th>Qty</th>
+        <th>Item</th>
         <th>Mfg</th>
         <th>Batch No.</th>
         <th>Exp. Date</th>
-        <th>Rs.</th>
-        <th>P.</th>
+        <th>Rs.</th>        
         </thead>
         <tbody>
             @{double total=0.0;}
@@ -45,11 +44,10 @@ Layout=null;
             <tr>
                 <td>@item.Qty</td>
                 <td>@item.Description</td>
-                <td>@item.Description</td>
+                <td>@item.Mfg</td>
                 <td>@item.BatchNo</td>
                 <td>@item.ExpDt</td>
-                <td>@item.Amount</td>
-                <td>@item.Description</td>
+                <td>@item.Amount</td>               
             </tr>
 
             total+=@item.Amount;

@@ -46,8 +46,8 @@
             </div>
             <div class="col-xs-6">
                 <div class="form-group">
-                    <label>Description <span style="color:red;"> * </span></label>
-                    <input class="form-control" required placeholder="Desciption" ng-model="child.Description">
+                    <label>Mfg <span style="color:red;"> * </span></label>
+                    <input class="form-control" required placeholder="Desciption" ng-model="child.Mfg">
                     <span asp-for="batchNo" style="color:red;"></span>
                 </div>
             </div>
@@ -103,8 +103,9 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Item</th>
                                     <th>Qty</th>
-                                    <th>Description</th>
+                                    <th>Mfg</th>
                                     <th>Batch No.#</th>
                                     <th>Exp Date</th>
                                     <th>MRP</th>
@@ -115,8 +116,9 @@
                             <tbody>
                                 <tr ng-repeat="item in cartlists|filter: searchbox">
                                     <td>{{$index+1}}</td>
-                                    <td>{{item.Qty}}</td>
                                     <td>{{item.Description}}</td>
+                                    <td>{{item.Qty}}</td>
+                                    <td>{{item.Mfg}}</td>
                                     <td>{{item.BatchNo}}</td>
                                     <td>{{item.ExpDt | date :  "dd-MM-y" }}</td>
                                     <td>{{unitprice|number:2}}</td>
