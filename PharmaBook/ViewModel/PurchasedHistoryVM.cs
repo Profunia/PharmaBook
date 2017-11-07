@@ -15,7 +15,7 @@ namespace PharmaBook.ViewModel
         public string vendoradres { get; set; }
         public string MRP { get; set; }
         public string qty { get; set; }
-        public DateTime purchasedDated { get; set; }
+        public string purchasedDated { get; set; }
         public string cusUserName { get; set; }
         public string Name { get; set; }
         public string Mfg { get; set; }

@@ -2,8 +2,9 @@
 @{
     ViewData["Title"] = "PurchasedHistory";
 }
-<div class="blankpage-main" ng-app="MyModuleA" ng-controller="ProductController">
-    <h2>Purchased History Inox</h2>
+<h2>Purchased History Inbox</h2>
+<div class="blankpage-main" ng-controller="ProductController">
+   
     <div class="row mt">
         <div class="col-md-12">
             <div class="content-panel">
@@ -11,8 +12,19 @@
                     <div class="col-xs-4">
                         <label>Total Medicine : {{purchasedhistry.length}}</label>
                     </div>
-                    <div class="col-xs-8 right">
-                        <input type="text" placeholder="Search Vendor" class="form-control" ng-model="searchbox" />
+                    <div class="col-xs-4">
+                        <select class="form-control" ng-model="vendorDDL" id="exampleSelect1" ng-change="getSelectedVendor()">
+                            <option value="">-- All vendor--</option>
+                            <option ng-repeat="item in VendorList" value="{{item.vendorName}}">{{item.vendorName}}</option>
+                        </select>                               
+                        </div>
+                    <div class="col-xs-4 right">
+                        <select class="form-control" placeholder="Medicine" ng-model="ItemNameMedicine"
+                                ng-change="medicineselect()">
+                            <option value="">-- All Medicine--</option>
+                            <option ng-repeat="m in ProductList" value="{{m.name}}">{{m.name}}</option>
+                        </select>
+
                     </div>
                 </div>
                 <div style="overflow: auto;height: 550px;">
@@ -25,11 +37,9 @@
                                 <th>Exp Date</th>
                                 <th>Mfg</th>
                                 <th>M.R.P</th>
-                                <th>Qty.</th>
-                                <th>purchased Date</th>
-                                <th>Vendor Name</th>
-                                <th>Vendor Address</th>
-                                <th>Vendor Company</th>
+                                <th>Qty</th>
+                                <th>Purchased Date</th>
+                                <th>Vendor</th>                               
                                 <th>remark  </th>
                             </tr>
                         </thead>
@@ -43,9 +53,9 @@
                                 <td>{{item.mrp}}</td>
                                 <td>{{item.qty}}</td>
                                 <td>{{item.purchasedDated}}</td>
-                                <td>{{item.vendorname}}</td>
-                                <td>{{item.vendoradres}}</td>
-                                <td>{{item.vendorcompany}}</td>
+                                <td>{{item.vendorname}} <br />
+                                {{item.vendoradres}} <br />
+                                {{item.vendorcompany}}</td>                              
                                 <td>{{item.remark}}</td>
                             </tr>
                         </tbody>

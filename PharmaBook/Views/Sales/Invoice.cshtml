@@ -6,8 +6,8 @@ Layout=null;
 @model SalesViewModel
 <div style="width: 21cm;min-height: 29.7cm;padding: 1cm;margin: 1cm auto;border: 1px #D3D3D3 solid;border-radius: 5px;background: white;box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);line-height:90%" ng-controller="SalesController">
 
-    <table border="1px solid black" style="width:100%;margin-top:20px">
-        <th align="left" style="border:none">No. : </th>
+    <table class="table" style="margin-top:20px">
+        <th align="left" style="border:none">No. : @Html.DisplayFor(x=>x.masterinvc.InvId)</th>
         <th align="center" style="border:none">Cash Memo/Prescription Register </th>
         <th align="right" style="border:none">D.L No.: (9982-S, 9983-SB)</th>
         <tr>
@@ -21,23 +21,22 @@ Layout=null;
             </table>
         </tr>
         <tr>
-            <table border="1px solid black" style="width:50%" align="">
-                <th style="border:none" align="left"><label>Student Name: </label><span ></span>&nbsp;<input type="text" asp-for="masterinvc.PatientName" readonly/></th>
-                <tr><th style="border:none" align="left"><label>Address:</label><input type="text" asp-for="masterinvc.PatientAdres" /></th></tr>
-                <tr><th style="border:none" align="left"><label>Dr.'s Name:</label><input type="text" asp-for="masterinvc.DrName" /></th></tr>
-                <tr><th style="border:none" align="left"><label>Regd. No.:</label><input type="text" asp-for="masterinvc.RegNo" /> </th></tr>
+            <table border="1px solid black" style="width:50%">
+                <th style="border:none" align="left"><label>Patient Name: </label>@Html.DisplayFor(x=>x.masterinvc.PatientName)</th>
+                <tr><th style="border:none" align="left"><label>Address:</label>@Html.DisplayFor(x => x.masterinvc.PatientAdres)</th></tr>
+                <tr><th style="border:none" align="left"><label>Dr.'s Name:</label>@Html.DisplayFor(x => x.masterinvc.DrName)</th></tr>
+                <tr><th style="border:none" align="left"><label>Regd. No.:</label>@Html.DisplayFor(x => x.masterinvc.RegNo)</th></tr>
             </table>
         </tr>
     </table>
     <table border="1px solid black" style="width:100%;margin-top:20px">
         <thead>
-        <th>Qntyty.</th>
-        <th>Description</th>
+        <th>Qty</th>
+        <th>Item</th>
         <th>Mfg</th>
         <th>Batch No.</th>
         <th>Exp. Date</th>
-        <th>Rs.</th>
-        <th>P.</th>
+        <th>Rs.</th>        
         </thead>
         <tbody>
             @{double total=0.0;}
@@ -45,11 +44,10 @@ Layout=null;
             <tr>
                 <td>@item.Qty</td>
                 <td>@item.Description</td>
-                <td>@item.Description</td>
+                <td>@item.Mfg</td>
                 <td>@item.BatchNo</td>
                 <td>@item.ExpDt</td>
-                <td>@item.Amount</td>
-                <td>@item.Description</td>
+                <td>@item.Amount</td>               
             </tr>
 
             total+=@item.Amount;
