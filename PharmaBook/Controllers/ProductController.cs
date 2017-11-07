@@ -162,7 +162,7 @@ namespace PharmaBook.Controllers
                                             {                                                
                                                 medicine = rowData;
                                             }
-                                            if(productDetails.name==null)
+                                            if(rowData == null)
                                             {
                                                 producterr.name = "Medicine name required";
                                             }
@@ -176,7 +176,7 @@ namespace PharmaBook.Controllers
                                         }
                                         else
                                         {
-                                            if (productDetails.batchNo == null)
+                                            if (rowData == null)
                                             {
                                                 producterr.batchNo = "BatchNo required";
                                             }
@@ -190,7 +190,7 @@ namespace PharmaBook.Controllers
                                         }
                                         else
                                         {
-                                            if (productDetails.openingStock == 0)
+                                            if (rowData == ""|| rowData==null)
                                             {
                                                 producterr.openingStock = "Stock required";
                                             }
@@ -209,7 +209,7 @@ namespace PharmaBook.Controllers
                                             {                                               
                                                 mfg = rowData;
                                             }
-                                            if (productDetails.companyName == null)
+                                            if (rowData == null)
                                             {
                                                 producterr.companyName = "Mfg required";
                                             }
@@ -223,7 +223,7 @@ namespace PharmaBook.Controllers
                                         }
                                         else
                                         {
-                                            if (productDetails.MRP == null)
+                                            if (rowData == null)
                                             {
                                                 producterr.MRP = "MRP required";
                                             }
@@ -233,14 +233,26 @@ namespace PharmaBook.Controllers
                                     {
                                         if (rowData != null)
                                         {
+                                            char[] c = new char[] { '/', '-' };
+                                            string[] dt = rowData.Split(c);
+                                            int month = Convert.ToInt32(dt[1]);
+                                            int days = Convert.ToInt32(dt[0]);
                                             if (!string.IsNullOrEmpty(rowData))
                                             {
-                                                productDetails.expDate = rowData;
+                                                int Mnthdays = System.DateTime.DaysInMonth(2001, month);
+                                                if (Mnthdays >= days)
+                                                {
+                                                    productDetails.expDate = rowData;
+                                                }
+                                                else
+                                                {
+                                                    producterr.expDate = "Day is exceeding the limit";
+                                                }
                                             }
                                         }
                                         else
                                         {
-                                            if (productDetails.expDate == null)
+                                            if (rowData == null)
                                             {
                                                 producterr.expDate = "expDate required";
                                             }
@@ -252,20 +264,59 @@ namespace PharmaBook.Controllers
                                         if (!string.IsNullOrEmpty(rowData))
                                             productDetails.vendorID = Convert.ToInt32(rowData);
                                         else
+                                        {
                                             productDetails.vendorID = 0;
+                                        }
                                     }
                                     else if (cName.Equals("Remark"))
                                     {
                                         productDetails.Remarks = rowData;
-
                                     }                                  
-
                                 }
                             }                            
                             if (bHeaderRow == false)
                             {
                                 if(productDetails.name!=null&& productDetails.batchNo!=null&& productDetails.openingStock!=0&& productDetails.companyName!=null&& productDetails.MRP!=null&& productDetails.expDate!=null)
+                                {                                    
+                                    obj.successlst.Add(productDetails);
+                                    var status = Create(productDetails);
+                                }
+                                else if(medicine != "" && mfg == "")
                                 {
+                                    if (productDetails.name == null)
+                                    {
+                                        productDetails.name = medicine;
+                                    }
+                                    if (productDetails.companyName == null)
+                                    {
+                                        productDetails.companyName = mfg;
+                                    }
+                                    obj.successlst.Add(productDetails);
+                                    var status = Create(productDetails);
+                                }
+                                else if(medicine == "" && mfg != "")
+                                {
+                                    if (productDetails.name == null)
+                                    {
+                                        productDetails.name = medicine;
+                                    }
+                                    if (productDetails.companyName == null)
+                                    {
+                                        productDetails.companyName = mfg;
+                                    }
+                                    obj.successlst.Add(productDetails);
+                                    var status = Create(productDetails);
+                                }
+                                else if (medicine != "" && mfg == "")
+                                {
+                                    if (productDetails.name == null)
+                                    {
+                                        productDetails.name = medicine;
+                                    }
+                                    if (productDetails.companyName == null)
+                                    {
+                                        productDetails.companyName = mfg;
+                                    }
                                     obj.successlst.Add(productDetails);
                                     var status = Create(productDetails);
                                 }
@@ -275,12 +326,11 @@ namespace PharmaBook.Controllers
                                     dplctobj.name = medicine;
                                     dplctobj.companyName = mfg;
                                     obj.duplictlst.Add(dplctobj);                             
-                                }
+                                }                                
                                 else if(producterr.name != null || producterr.batchNo != null || producterr.openingStock == null || producterr.companyName != null || producterr.MRP != null || producterr.expDate != null)
                                 {
                                     obj.producterrlst.Add(producterr);
-                                }
-                                
+                                }                                
                             }
                             bHeaderRow = false;
                         }
