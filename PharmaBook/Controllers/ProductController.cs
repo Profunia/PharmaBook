@@ -238,9 +238,21 @@ namespace PharmaBook.Controllers
                                     {
                                         if (rowData != null)
                                         {
+                                            char[] c = new char[] { '/', '-' };
+                                            string[] dt = rowData.Split(c);
+                                            int month = Convert.ToInt32(dt[1]);
+                                            int days = Convert.ToInt32(dt[0]);
                                             if (!string.IsNullOrEmpty(rowData))
                                             {
-                                                productDetails.expDate = rowData;
+                                                int Mnthdays = System.DateTime.DaysInMonth(2001, month);
+                                                if (Mnthdays >= days)
+                                                {
+                                                    productDetails.expDate = rowData;
+                                                }
+                                                else
+                                                {
+                                                    producterr.expDate = "Day is exceeding the limit";
+                                                }
                                             }
                                         }
                                         else
@@ -274,6 +286,32 @@ namespace PharmaBook.Controllers
                                     obj.successlst.Add(productDetails);
                                     var status = Create(productDetails);
                                 }
+                                else if (medicine != "" && mfg == "")
+                                {
+                                    if (productDetails.name == null)
+                                    {
+                                        productDetails.name = medicine;
+                                    }
+                                    if (productDetails.companyName == null)
+                                    {
+                                        productDetails.companyName = mfg;
+                                    }
+                                    obj.successlst.Add(productDetails);
+                                    var status = Create(productDetails);
+                                }
+                                else if (medicine == "" && mfg != "")
+                                {
+                                    if (productDetails.name == null)
+                                    {
+                                        productDetails.name = medicine;
+                                    }
+                                    if (productDetails.companyName == null)
+                                    {
+                                        productDetails.companyName = mfg;
+                                    }
+                                    obj.successlst.Add(productDetails);
+                                    var status = Create(productDetails);
+                                }                                
                                 else if (medicine != "" && mfg != "")
                                 {
                                     Duplicatelist dplctobj = new Duplicatelist();
@@ -284,8 +322,8 @@ namespace PharmaBook.Controllers
                                 else if (producterr.name != null || producterr.batchNo != null || producterr.openingStock == null || producterr.companyName != null || producterr.MRP != null || producterr.expDate != null)
                                 {
                                     obj.producterrlst.Add(producterr);
-                                }
-
+                                }                               
+                                
                             }
                             bHeaderRow = false;
                         }
