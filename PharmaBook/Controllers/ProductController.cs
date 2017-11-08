@@ -251,7 +251,7 @@ namespace PharmaBook.Controllers
                                                 }
                                                 else
                                                 {
-                                                    producterr.expDate = "Day is exceeding the limit";
+                                                    producterr.expDate = rowData + " Day is exceeding the limit";
                                                 }
                                             }
                                         }
