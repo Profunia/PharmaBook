@@ -6,6 +6,18 @@ using System.Threading.Tasks;
 
 namespace PharmaBook.ViewModel
 {
+    public class ChangePwdViewModel
+    {  
+        [DataType(DataType.Password), Required(ErrorMessage ="Old Password Required")]
+        public string oldPassword { get; set; }
+
+        [DataType(DataType.Password), Required(ErrorMessage ="New Password Required")]
+        public string newPassword { get; set; }
+
+        [DataType(DataType.Password), Compare("newPassword")]
+        public string confirmPassword { get; set; }
+    }
+
     public class RegisterViewModel
     {
         [Required, MaxLength(256)]
