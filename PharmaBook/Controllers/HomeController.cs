@@ -181,7 +181,12 @@ namespace PharmaBook.Controllers
             var modelVM = Mapper.Map<UserProfileVM>(model);
             return View(modelVM);
         }
-
+        public JsonResult CurUser()
+        {
+            var model = _iProfile.GetByUserName(User.Identity.Name);
+            var modelVM = Mapper.Map<UserProfileVM>(model);
+            return Json(modelVM);
+        }
         [HttpPost]
         public IActionResult Profile(UserProfileVM Obj)
         {

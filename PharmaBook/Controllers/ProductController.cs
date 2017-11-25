@@ -167,7 +167,7 @@ namespace PharmaBook.Controllers
                                             {
                                                 medicine = rowData;
                                             }
-                                            if (productDetails.name == null)
+                                            if (rowData == null)
                                             {
                                                 producterr.name = "Medicine name required";
                                             }
@@ -181,7 +181,7 @@ namespace PharmaBook.Controllers
                                         }
                                         else
                                         {
-                                            if (productDetails.batchNo == null)
+                                            if (rowData == null)
                                             {
                                                 producterr.batchNo = "BatchNo required";
                                             }
@@ -195,7 +195,7 @@ namespace PharmaBook.Controllers
                                         }
                                         else
                                         {
-                                            if (productDetails.openingStock == 0)
+                                            if (rowData == null)
                                             {
                                                 producterr.openingStock = "Stock required";
                                             }
@@ -214,7 +214,7 @@ namespace PharmaBook.Controllers
                                             {
                                                 mfg = rowData;
                                             }
-                                            if (productDetails.companyName == null)
+                                            if (rowData == null)
                                             {
                                                 producterr.companyName = "Mfg required";
                                             }
@@ -228,7 +228,7 @@ namespace PharmaBook.Controllers
                                         }
                                         else
                                         {
-                                            if (productDetails.MRP == null)
+                                            if (rowData == null)
                                             {
                                                 producterr.MRP = "MRP required";
                                             }
@@ -238,26 +238,46 @@ namespace PharmaBook.Controllers
                                     {
                                         if (rowData != null)
                                         {
+                                            int month =0;
+                                            int days =0;
+                                            //string yr = string.Empty;
                                             char[] c = new char[] { '/', '-' };
                                             string[] dt = rowData.Split(c);
-                                            int month = Convert.ToInt32(dt[1]);
-                                            int days = Convert.ToInt32(dt[0]);
-                                            if (!string.IsNullOrEmpty(rowData))
+                                            if (dt[0] != "")
                                             {
-                                                int Mnthdays = System.DateTime.DaysInMonth(2001, month);
-                                                if (Mnthdays >= days)
+                                                int chk = Convert.ToInt32(dt[1]);
+                                                if (chk > 12)
                                                 {
-                                                    productDetails.expDate = rowData;
+                                                    month = Convert.ToInt32(dt[0]);
+                                                    days = Convert.ToInt32(dt[1]);
                                                 }
                                                 else
                                                 {
-                                                    producterr.expDate = "Day is exceeding the limit";
+                                                    month = Convert.ToInt32(dt[1]);
+                                                    days = Convert.ToInt32(dt[0]);
                                                 }
+                                                if (!string.IsNullOrEmpty(rowData))
+                                                {
+                                                    int Mnthdays = System.DateTime.DaysInMonth(2001, month);
+                                                    if (Mnthdays >= days)
+                                                    {
+                                                        DateTime dt1 = Convert.ToDateTime(rowData);
+                                                        productDetails.expDate = dt1.ToString("dd/MM/yyyy");
+                                                    }
+                                                    else
+                                                    {
+                                                        producterr.expDate = "Day is exceeding the limit";
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                producterr.expDate = "Please insert correct Date";
                                             }
                                         }
                                         else
                                         {
-                                            if (productDetails.expDate == null)
+                                            if (rowData == null)
                                             {
                                                 producterr.expDate = "expDate required";
                                             }
@@ -286,7 +306,7 @@ namespace PharmaBook.Controllers
                                     obj.successlst.Add(productDetails);
                                     var status = Create(productDetails);
                                 }
-                                else if (medicine != "" && mfg == "")
+                                else if (medicine != "" && mfg == "" && productDetails.expDate != null)
                                 {
                                     if (productDetails.name == null)
                                     {
@@ -299,7 +319,7 @@ namespace PharmaBook.Controllers
                                     obj.successlst.Add(productDetails);
                                     var status = Create(productDetails);
                                 }
-                                else if (medicine == "" && mfg != "")
+                                else if (medicine == "" && mfg != "" && productDetails.expDate != null)
                                 {
                                     if (productDetails.name == null)
                                     {
