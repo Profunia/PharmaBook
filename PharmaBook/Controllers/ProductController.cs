@@ -55,9 +55,12 @@ namespace PharmaBook.Controllers
             {
                 if (ModelState.IsValid)
                 {
-
+                    var stockMRP = commonServices.getStockMRP((int)obj.stef, (int)obj.tabletsCapsule, obj.eachStefPrice);
+                    obj.MRP= stockMRP.MRP;
+                    obj.openingStock = stockMRP.openingStock;
                     Product objMap = commonServices.MapVMtoProduct(obj);
-                    objMap.lastUpdated = DateTime.Now.ToString();
+                    
+                    objMap.lastUpdated = DateTime.Now.ToString();                    
                     objMap.isActive = true;
                     objMap.cusUserName = User.Identity.Name;
 
@@ -70,6 +73,10 @@ namespace PharmaBook.Controllers
                     var pId = _iProduct.GetAll(User.Identity.Name).OrderByDescending(x => x.Id).FirstOrDefault().Id;
                     purchasedHistory.ProductID = pId;
                     purchasedHistory.vendorID = obj.vendorID; // Replace with Vendor ID
+                    purchasedHistory.stef = Convert.ToString(obj.stef);
+                    purchasedHistory.tabletsCapsule = Convert.ToString(obj.tabletsCapsule);
+                    purchasedHistory.eachStefPrice = Convert.ToString(obj.eachStefPrice);
+
                     purchasedHistory.MRP = obj.MRP;
                     purchasedHistory.qty = Convert.ToString(obj.openingStock);
                     purchasedHistory.purchasedDated = DateTime.Now;
@@ -366,11 +373,13 @@ namespace PharmaBook.Controllers
                 medicn.expDate = commonServices.ConvertToDate(prdvwmdl.expDate);
                 medicn.name = prdvwmdl.name;
                 medicn.batchNo = prdvwmdl.batchNo;
-                medicn.MRP = prdvwmdl.MRP;
-                medicn.openingStock = prdvwmdl.openingStock;
-                medicn.lastUpdated = prdvwmdl.lastUpdated;
-                medicn.cusUserName = prdvwmdl.cusUserName;
-                medicn.vendorID = prdvwmdl.vendorID != null ? prdvwmdl.vendorID : 0;
+                if (prdvwmdl.stef != null && prdvwmdl.tabletsCapsule != null && prdvwmdl.eachStefPrice != null)
+                {
+                    var stockOpen = commonServices.getStockMRP((int)prdvwmdl.stef, (int)prdvwmdl.tabletsCapsule, prdvwmdl.eachStefPrice);
+                    medicn.MRP = stockOpen.MRP;                    
+                    medicn.tabletsCapsule = prdvwmdl.tabletsCapsule;
+                    medicn.eachStefPrice = prdvwmdl.eachStefPrice;                   
+                }               
                 medicn.lastUpdated = DateTime.Now.ToString();
                 medicn.isActive = true;
                 _iProduct.Commit();

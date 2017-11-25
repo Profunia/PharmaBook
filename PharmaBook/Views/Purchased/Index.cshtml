@@ -73,11 +73,11 @@
         <table class="table table-striped table-advance table-hover">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Product ID</th>
+                    <th>#</th>                    
                     <th>Name</th>
                     <th>Mfg</th>
-                    <th>Qty</th>
+                    <th>Stef</th>
+                    <th>Tablets/Capsule</th>
                     <th>Remark</th> 
                     <th></th>
                 </tr>
@@ -86,11 +86,11 @@
                 <tr ng-repeat="item in childPO.cpoList">
                     <td>
                         {{$index + 1}}
-                    </td>
-                    <td>{{item.productID}} </td>
+                    </td>                    
                     <td>{{item.productName}}</td>
                     <td>{{item.mfg}}</td>
-                    <td>{{item.qty}}</td>
+                    <td>{{item.stef}}</td>
+                    <td>{{item.tabletsCapsule}}</td>
                     <td>{{item.remarks}}</td>
                     <td> <a href="" ng-click="DeletePurchasedItem(item)"><span style="color:red;"> X </span></a> </td>
                 </tr>
@@ -124,9 +124,10 @@
 
                         <th>Name</th>
                         <th>Mfg</th>
-                        <th>Qty</th>
+                        <th>Stef</th>
                         <th>Batch No.</th>
-                        <th>MRP</th>
+                        <th>Stef Price</th>
+                        <th>Tablets/Capsule</th>
                         <th>Exp Date</th>
                         <th>Remark</th>
 
@@ -140,9 +141,10 @@
 
                         <td>{{item.Name}}</td>
                         <td>{{item.Mfg}}</td>
-                        <td><input type="number" min="1" ng-model="item.Qty"  class="form-control" placeholder="Qty" /></td>
+                        <td><input type="number" min="1" ng-model="item.stef"  class="form-control" placeholder="Stef" /></td>
                         <td><input type="text" ng-model="item.BatchNo" class="form-control" placeholder="batch No" /></td>
-                        <td><input type="text" ng-model="item.MRP" class="form-control" placeholder="MRP" /></td>
+                        <td><input type="text" ng-model="item.eachStefPrice" class="form-control" placeholder="Each Stef Price" /></td>
+                        <td><input type="text" ng-model="item.tabletsCapsule" class="form-control" placeholder="Tablets/Capsule" /></td>
                         <td><input type="text" ng-model="item.ExpDate" class="form-control" placeholder="Exp Date" /></td>
                         <td><input type="text" ng-model="item.Remark" class="form-control" placeholder="Remarks" /></td>
 

@@ -9,6 +9,9 @@ namespace PharmaBook.Entities
         public int? vendorID { get; set; }
         public string MRP { get; set; }
         public string qty { get; set; }
+        public string stef { get; set; }
+        public string tabletsCapsule { get; set; }
+        public string eachStefPrice { get; set; }
         public DateTime purchasedDated { get; set; }
         public string cusUserName { get; set; }
         public string Name { get; set; }
