@@ -10,7 +10,7 @@
 
         <div class="row">
             <div class="col-xs-6">
-                <span>Total PO Created:</span> <strong> {{masterPo.length}}</strong> <br/>
+                <span>Total PO:</span> <strong> {{filtered.length}}</strong> <br/>
                 
                
             </div>
@@ -36,7 +36,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="item in masterPo| filter:inboxfiler">
+                <tr ng-repeat="item in filtered = (masterPo | filter: inboxfiler)">
                     <td>
                         {{$index + 1}}
                         
