@@ -62,7 +62,7 @@ namespace PharmaBook.Controllers
                     co = new ChildPO();
                     co.ProdID = Convert.ToInt32(item.ProdID);
                     co.masterPOid = masterPoID;
-                    co.Qty = Convert.ToInt32(item.Qty);
+                    co.stef = Convert.ToInt32(item.stef);
                     co.Remarks = item.Remarks;
                     _iChildPO.Add(co);
                     _iChildPO.Commit();
@@ -123,7 +123,11 @@ namespace PharmaBook.Controllers
                         var productInfo = _iProduct.GetById(cItem.ProdID);
                         cpo.ProductName = productInfo.name;
                         cpo.Mfg = productInfo.companyName;
+                        cpo.stef = (int)cItem.stef;
+                        cpo.tabletsCapsule =(int) productInfo.tabletsCapsule;
+                        cpo.eachStefPrice = (double)productInfo.eachStefPrice;
                         cpo.Remarks = cItem.Remarks;
+                        
                         cpo.Qty = cItem.Qty;
                         cpo.BatchNo = productInfo.batchNo;
                         cpo.MRP = productInfo.MRP;
@@ -174,10 +178,15 @@ namespace PharmaBook.Controllers
             {
                 foreach (var item in obj)
                 {
+                    
+                    var stockMRP = commonServices.getStockMRP((int)item.stef, (int)item.tabletsCapsule, item.eachStefPrice);
                     var product = _iProduct.GetById(item.ProductID);
-                    product.openingStock += item.Qty;
+                    product.openingStock += stockMRP.openingStock;
                     product.batchNo = item.BatchNo;
-                    product.MRP = item.MRP;
+                    product.MRP = stockMRP.MRP;
+                    product.stef = item.stef;
+                    product.tabletsCapsule = item.tabletsCapsule;
+                    product.eachStefPrice = item.eachStefPrice;
                     product.expDate = commonServices.ConvertToDate(item.ExpDate);
                     product.lastUpdated = DateTime.Now.ToString();
                     product.vendorID = item.vendorID;
@@ -190,7 +199,10 @@ namespace PharmaBook.Controllers
                     purchasedHis.ProductID = item.ProductID;
                     purchasedHis.cusUserName = User.Identity.Name;
                     purchasedHis.purchasedDated = DateTime.Now;
-                    purchasedHis.qty = Convert.ToString(item.Qty);
+                    //purchasedHis.qty = Convert.ToString(item.Qty);
+                    purchasedHis.stef = Convert.ToString(item.stef);
+                    purchasedHis.tabletsCapsule = Convert.ToString(item.tabletsCapsule);
+                    purchasedHis.eachStefPrice = Convert.ToString(item.eachStefPrice);
                     purchasedHis.vendorID = item.vendorID;
                     purchasedHis.BatchNo = item.BatchNo;
                     purchasedHis.ExpDate = item.ExpDate.ToString();

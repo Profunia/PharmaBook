@@ -68,6 +68,15 @@ namespace PharmaBook.Services
                 return "N/A";
         }
 
+        public static ProductViewModel getStockMRP(int stef, int tabletsCapsule, double? eachStefPrice)
+        {
+            ProductViewModel pm = new ProductViewModel();
+            pm.openingStock = stef * tabletsCapsule;
+            var unitPrice = eachStefPrice * stef;
+            var a = Convert.ToDecimal((unitPrice / pm.openingStock));
+            pm.MRP = Convert.ToString(a);
+            return pm;
+        }
         public static ProductViewModel MapProductToVM(Product x)
         {
             ProductViewModel prd = new ProductViewModel();
@@ -77,6 +86,9 @@ namespace PharmaBook.Services
             prd.name = x.name;
             prd.batchNo = x.batchNo;
             prd.MRP = x.MRP;
+            prd.stef = x.stef;
+            prd.tabletsCapsule = x.tabletsCapsule;
+            prd.eachStefPrice = x.eachStefPrice;
             prd.openingStock = x.openingStock;
             prd.lastUpdated = x.lastUpdated;
             prd.cusUserName = x.cusUserName;
@@ -96,6 +108,9 @@ namespace PharmaBook.Services
             prd.batchNo = x.batchNo;
             prd.MRP = x.MRP;
             prd.openingStock = x.openingStock;
+            prd.stef = x.stef;
+            prd.tabletsCapsule = x.tabletsCapsule;
+            prd.eachStefPrice = x.eachStefPrice;
             prd.lastUpdated = x.lastUpdated;
             prd.cusUserName = x.cusUserName;
             prd.vendorID = x.vendorID != null ? x.vendorID : 0;
@@ -118,6 +133,9 @@ namespace PharmaBook.Services
                 vm.batchNo = x.batchNo;
                 vm.MRP = x.MRP;
                 vm.openingStock = x.openingStock;
+                vm.tabletsCapsule = x.tabletsCapsule;
+                vm.eachStefPrice = x.eachStefPrice;
+                vm.stef = x.stef;
                 vm.lastUpdated = x.lastUpdated;
                 vm.cusUserName = x.cusUserName;
                 vm.vendorID = x.vendorID;
@@ -150,6 +168,9 @@ namespace PharmaBook.Services
                 vm.cusUserName = x.cusUserName;
                 vm.Name = x.Name;
                 vm.Mfg = x.Mfg;
+                vm.tabletsCapsule =commonServices.ConvertToInt(x.tabletsCapsule);
+                vm.eachStefPrice = Convert.ToDouble(x.eachStefPrice);
+                vm.stef = commonServices.ConvertToInt(x.stef);
                 vm.BatchNo = x.BatchNo;
                 string [] s= x.ExpDate.Split(' ');
                 vm.ExpDate = s[0];

@@ -58,7 +58,7 @@ namespace PharmaBook.Controllers
             slsvwmdl.userProfile = _iProfile.GetByUserName(User.Identity.Name);
             return View(slsvwmdl);
         }
-        public JsonResult AddMasterInvc([FromBody]SalesViewModel slsmodel)
+        public IActionResult AddMasterInvc([FromBody]SalesClientViewModel slsmodel)
         {
             string msg = string.Empty;
             try
@@ -80,11 +80,11 @@ namespace PharmaBook.Controllers
                     _ichild.Commit();
                 }
             }
-            catch
+            catch(Exception er)
             {
-
+                return BadRequest(er.Message);
             }
-            return Json(msg);
+            return Ok(msg);
         }
         public JsonResult GetInvoice([FromHeader] int id)
         {

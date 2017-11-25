@@ -4,7 +4,7 @@ using PharmaBook.Entities;
 using PharmaBook.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-
+using System.Security.Claims;
 namespace PharmaBook.Controllers
 {
     public class AccountController : Controller
@@ -17,20 +17,37 @@ namespace PharmaBook.Controllers
             _singInManager = singInManager;
 
         }
-
+      
         [HttpGet]
-        public IActionResult changePassword()
+        public IActionResult ChangePassword()
         {
             return View();
         }
-        //[HttpPost, ValidateAntiForgeryToken]
-        //public async Task<IActionResult> changePassword(changePassword cp)
-        //{
-        //    //var change=await _singInManager.PasswordSignInAsync
-        //    // ApplicationUser user = await _singInManager.FindByIdAsync(usermodel.Id);
-        //    //IdentityUser user = _singInManager.FindByNameAsync(obj.UserName).Result;
-        //    return View();
-        //}
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePwdViewModel usermodel)
+        {
+            if (ModelState.IsValid)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = await _userManager.FindByIdAsync(userId);
+                var result = await _userManager.ChangePasswordAsync(user, usermodel.oldPassword, usermodel.newPassword);
+                if (result.Succeeded)
+                {
+                    TempData["msg"] = "Password has been successfully changed";
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Sorry!! not able to update password.");
+                }
+                
+               
+            }
+            else
+            {
+                ModelState.AddModelError("", "New & Confirm password not matched.");
+            }
+            return View();
+        }
 
         [HttpGet]
         public IActionResult Login()

@@ -6,7 +6,7 @@ app.factory('loadvndor', ['$http', '$rootScope', function ($http, $rootScope) {
     var fac = {};
     fac.getvndr = function () {
         $http.get('/Vendor/GetAllVendor').then(function (res) {
-            $rootScope.VendorList = res.data;
+            $rootScope.VendorList = res.data;            
         }, function (error) {
         }
         )
@@ -21,8 +21,7 @@ app.factory('loadvndor', ['$http', '$rootScope', function ($http, $rootScope) {
 
     fac.getVendorbyID = function (id) {
         $http.get('/Vendor/GetVendorByID/' + id).then(function (res) {
-            $rootScope.selectedVendor = res.data;
-
+            $rootScope.selectedVendor = res.data;            
         }, function (error) {
         }
         )
@@ -37,6 +36,7 @@ app.controller('MyController', function ($scope, $http, loadvndor, $rootScope) {
     //$scope.cClass = true;
     $scope.isPreview = false;
     $scope.Item = {
+        
         Name: '',
         Address: '',
         Mobile: '',
@@ -157,52 +157,14 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
         }
         console.log($scope.ItemNameMedicine);
         console.log($scope.searchbox);
-    }   
-    $scope.curuser = {
-        clinicname: '',
-        email: '',
-        dlno: '',
-        mobile: '',
-        address:''
     }
-    function setuser()
-    {        
-        $http.get('/Home/CurUser/').then(function (res) {
-            var user = res.data;            
-            $scope.curuser.clinicname = user.name;
-            $scope.curuser.email = user.email;
-            $scope.curuser.dlno = user.dlNo;
-            $scope.curuser.mobile = user.mobile;
-            $scope.curuser.address = user.address1 + ' ' + user.address2;
-        }, function (error) {
-        }
-        )       
-    }
+
+
     $scope.isStefActive = false;
     $scope.stef = '';
     $scope.tablets = '';
     $scope.StefPrice = '';
-    $scope.getStockMRP = function () {
-        if ($scope.StefPrice) {
-            if ($scope.stef && $scope.tablets) {
-                $scope.MediProdct.openingStock = $scope.stef * $scope.tablets;
-                var unitPrice = $scope.StefPrice * $scope.stef;
-                console.log(unitPrice)
-                $scope.MediProdct.MRP = unitPrice / $scope.MediProdct.openingStock;
-                $scope.isStefActive = true;
-                $scope.MediProdct.Remarks = "Stef " + $scope.stef + " x tablets/capsule " + $scope.tablets + " & each stef Price " + $scope.StefPrice;  
-            }
-        }
-        else {
-            $scope.isStefActive = false;
-            $scope.stef = '';
-            $scope.tablets = '';
-            $scope.StefPrice = '';
-            $scope.MediProdct.Remarks = '';
-            $scope.MediProdct.MRP = '';
-            $scope.MediProdct.openingStock = '';
-        }
-    }
+
     loadvndor.getvndr();
     loadvndor.getprdct();
     $scope.divhide1 = false;
@@ -219,21 +181,32 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
         vendorID: '',
         Remarks:''
     }
+    //$scope.purchasedhistry = {
+    //    name: '',
+    //    batchno: '',
+    //    expdate: '',
+    //    mfg: '',
+    //    mrp: '',
+    //    qty: '',
+    //    purchaseddated: '',
+    //    vendrname:''
+    //}
     $scope.AddMedcin = function () {
 
         if ($scope.MediProdct.MedicineName && $scope.MediProdct.batchNo
-            && $scope.MediProdct.openingStock && $scope.MediProdct.CompanyName
-            && $scope.MediProdct.ExpDt && $scope.MediProdct.MRP) {
+            && $scope.tablets && $scope.MediProdct.CompanyName
+            && $scope.MediProdct.ExpDt && $scope.stef && $scope.StefPrice) {
             $rootScope.isLoadingScreenActive = true;
             var obj = {
                 'name': $scope.MediProdct.MedicineName,
-                'batchNo': $scope.MediProdct.batchNo,
-                'openingStock': $scope.MediProdct.openingStock,
+                'batchNo': $scope.MediProdct.batchNo,               
                 'expDate': $scope.MediProdct.ExpDt,
-                'companyName': $scope.MediProdct.CompanyName,
-                'MRP': $scope.MediProdct.MRP,
+                'companyName': $scope.MediProdct.CompanyName,                
                 'vendorID': $scope.MediProdct.vendorID,
-                'Remarks': $scope.MediProdct.Remarks
+                'Remarks': $scope.MediProdct.Remarks,
+                'stef': $scope.stef,
+                'tabletsCapsule': $scope.tablets,
+                'eachStefPrice': $scope.StefPrice
             };
             console.log(obj);
             $http({
@@ -267,8 +240,9 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
             'batchNo': item.batchNo,
             'expDate': item.expDate,
             'companyName': item.companyName,
-            'MRP': item.mrp,
-            'openingStock': item.openingStock,
+            'stef': item.stef,
+            'tabletsCapsule': item.tabletsCapsule,
+            'eachStefPrice': item.eachStefPrice,            
             'vendorID': item.vendorID,
             'cusUserName': item.cusUserName
         };
@@ -352,9 +326,9 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
 })
 
 app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor) {
-    var final = 0;
     var total = 0;
     function initialSetup() {
+        $scope.medicineName = 'Name';
         $scope.isPreview=false;
         final = 0;
         total = 0;
@@ -379,7 +353,8 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
             Mrg: '',
             BatchNo: '',
             ExpDt: '',
-            Amount: ''
+            Amount: '',
+            Qty: ''
         }
     }
     initialSetup();
@@ -390,19 +365,23 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
     }
    
     $scope.AddChildInvc = function () {
-        var qty = $scope.Qty
         $scope.ErrMsg = '';
-        if ($scope.PrdId && $scope.Qty  && $scope.child.Description) {
-            var price = $scope.child.Amount
-            total = (qty * price);
+        if ($scope.child.Qty  && $scope.child.Description) {
+            var price = $scope.child.Amount;
+            var qty = $scope.child.Qty;
+          //  console.log("amount" + $scope.child.Amount);
+          //  console.log(qty + price);
+          // var  total = ($scope.child.Qty * $scope.child.Amount);
+            var total = (qty * price);
             final += total;
-            $scope.unitprice = price;
+            $scope.unitprice = total;
             $scope.totalprice = final;
             $scope.cartlists.push({
                 'Mfg': $scope.child.Mfg,
                 'PrdId': $scope.PrdId,
-                'Qty': $scope.Qty,
+                'Qty': $scope.child.Qty,
                 'ExpDt': $scope.child.ExpDt,
+                'unitprice': price,
                 'Amount': total,
                 'Description': $scope.child.Description,
                 'BatchNo': $scope.child.BatchNo
@@ -412,6 +391,7 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
         else {
             $scope.ErrMsg = "please fill required fields";
         }
+        
     }
     $scope.DelCrtIitem = function (index) {
         total = $scope.child.Amount;
@@ -419,10 +399,11 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
         $scope.totalprice = final;
         $scope.cartlists.splice(index, 1);
     }
-    $scope.medicineselect = function () {
-        var id = $scope.PrdId;
-        $http.get('/Product/GetMedicnById/?id=' + id).then(function (res) {
+    $scope.medicineselect = function (item) {       
+        $http.get('/Product/GetMedicnById/?id=' + item.id).then(function (res) {
             console.log(res.data);
+            $scope.PrdId = item.id;
+            $scope.medicineName = res.data.name;
             $scope.child = {
                 Mfg: res.data.companyName,
                 Description: res.data.name,
@@ -432,7 +413,8 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
             };
             console.log($scope.child);
         }, function (error) {
-        })
+            })
+        
     }
 
     $scope.SaveInvc = function () {
@@ -501,35 +483,45 @@ app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootS
             $scope.isPreview = !$scope.isPreview;
         }
     }
-   
+    $scope.isChecked = function (item) {
+        for (var i = $scope.PreCreatePO.length - 1; i >= 0; i--) {
+            if ($scope.PreCreatePO[i].ProdID == item.id) {
+                return true;
+                break;
+            }
+        }
+        return false;
+    }
+
     $scope.PreCreatePO = [];
-    $scope.toggleItemIndex = function ($event, index) {
+    $scope.toggleItemIndex = function ($event, item) {
         $event.stopPropagation();
-        var ProdList = $filter('orderBy')($rootScope.ProductList, 'openingStock');       
+      //  var ProdList = $filter('orderBy')($rootScope.ProductList, 'openingStock');    
+        
         
         if ($event.target.checked) {
-            
-            var temp = ProdList[index];            
-            var CreateObj = {
-                productIndex: index,
+            console.log(item);
+            var temp = item;            
+            var CreateObj = {                
                 ProdID: temp.id,
                 AvlStock: temp.openingStock,
                 MedicineName: temp.name,
-                Mfg: temp.companyName,
-                Qty: '',
+                Mfg: temp.companyName,                
                 VendorID: $scope.vendorID,
-                Remarks: ''
+                Remarks: '',
+                stef: item.stef,
+                tabletsCapsule: item.tabletsCapsule
             }
             $scope.PreCreatePO.push(CreateObj)
         }
         else {
             for (var i = $scope.PreCreatePO.length - 1; i >= 0; i--) {
-                if ($scope.PreCreatePO[i].productIndex == index) {
+                if ($scope.PreCreatePO[i].ProdID == item.id) {
                     $scope.PreCreatePO.splice(i, 1);
                 }
             }
            
-        }                
+        }  
     }
 
     $scope.isVendorSelected = false;
@@ -543,11 +535,15 @@ app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootS
         $scope.errEntry = "";
         $scope.isReadyToCallAPI = false;       
         for (var i = 0; i < $scope.PreCreatePO.length; i++) {           
-            if ($scope.PreCreatePO[i].Qty)
+            if ($scope.PreCreatePO[i].stef)
+            {
                 $scope.isReadyToCallAPI = true;
+              
+            }
             else {
-                $scope.errEntry = "please provide Qty.";
+                $scope.errEntry = "please provide Stef.";
                 $scope.isReadyToCallAPI = false;
+                return false;
             }
         }
 
@@ -608,11 +604,12 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
                 ProductID: $scope.childPO.cpoList[i].productID,
                 Name: $scope.childPO.cpoList[i].productName,
                 Mfg: $scope.childPO.cpoList[i].mfg,
-                Qty: $scope.childPO.cpoList[i].qty,
+                stef: $scope.childPO.cpoList[i].stef,
+                tabletsCapsule: $scope.childPO.cpoList[i].tabletsCapsule,
+                eachStefPrice: $scope.childPO.cpoList[i].eachStefPrice,
                 vendorID: $scope.childPO.vendorID,
                 masterPOid: $scope.childPO.masterPOid,
-                BatchNo: $scope.childPO.cpoList[i].batchNo,
-                MRP: $scope.childPO.cpoList[i].mrp,
+                BatchNo: $scope.childPO.cpoList[i].batchNo,                
                 ExpDate: $scope.childPO.cpoList[i].expDate,
                 Remark: $scope.childPO.cpoList[i].remarks
             }
@@ -620,7 +617,7 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
         }
        // $scope.Prepurchased = $scope.childPO;
         $scope.purchasedEntryView = true;    
-
+        console.log($scope.Prepurchased);
 
     }
     $scope.DeletePurchasedItem = function (val) {  
@@ -718,22 +715,26 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
         Name: '',
         Mfg: '',        
         BatchNo: '',
-        ExpDt: '',
-        Mrp: '',
-        Qty: '',
-        Remarks:''
+        ExpDt: '',       
+        Remarks: '',
+        stef: '',
+        tabletsCapsule: '',
+        eachStefPrice:''
+
     }
     $scope.cartlists = [];
     $scope.AddChildInvc = function () {        
         var qty = $scope.Qty
-        if ($scope.child.Qty && $scope.child.Mfg && $scope.child.BatchNo && $scope.child.ExpDt && $scope.child.Mrp) {
+        if ($scope.child.stef && $scope.child.Mfg && $scope.child.BatchNo &&
+            $scope.child.eachStefPrice && $scope.child.tabletsCapsule && $scope.child.ExpDt && $scope.child.Mrp) {
             $scope.err = "";
             $scope.cartlists.push({
                 'PrdId': $scope.PrdId,
                 'Name': $scope.child.Name,
-                'Qty': $scope.child.Qty,
-                'ExpDt': $scope.child.ExpDt,
-                'Mrp': $scope.child.Mrp,
+                'stef': $scope.child.stef,
+                'tabletsCapsule': $scope.child.tabletsCapsule,
+                'eachStefPrice': $scope.child.eachStefPrice,
+                'ExpDt': $scope.child.ExpDt,                
                 'Mfg': $scope.child.Mfg,
                 'BatchNo': $scope.child.BatchNo,
                 'Remarks': $scope.child.Remarks
@@ -750,7 +751,7 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
     $scope.medicineselect = function () {
         var id = $scope.PrdId;
         $http.get('/Product/GetMedicnById/?id=' + id).then(function (res) {
-          
+            console.log(res.data);
             $scope.child = {
                 Name:res.data.name,
                 Mfg: res.data.companyName,
@@ -758,7 +759,10 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
                 BatchNo: res.data.batchNo,
                 ExpDt: res.data.expDate,
                 Amount: res.data.mrp,
-                AvlStock: res.data.openingStock
+                AvlStock: res.data.openingStock,
+                stef: res.data.stef,
+                tabletsCapsule: res.data.tabletsCapsule,
+                eachStefPrice: res.data.eachStefPrice
             };
         }, function (error) {
         })
@@ -779,12 +783,13 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
             var model = {
                 ProductID: $scope.cartlists[i].PrdId,
                 Name: $scope.cartlists[i].Name,
-                Mfg: $scope.cartlists[i].Mfg,
-                Qty: $scope.cartlists[i].Qty,
+                Mfg: $scope.cartlists[i].Mfg,              
                 vendorID: $scope.vendorID,
                 //masterPOid: $scope.childPO.masterPOid,
-                BatchNo: $scope.cartlists[i].BatchNo,
-                MRP: $scope.cartlists[i].Mrp,
+                stef: $scope.cartlists[i].stef,
+                tabletsCapsule: $scope.cartlists[i].tabletsCapsule,
+                eachStefPrice: $scope.cartlists[i].eachStefPrice,
+                BatchNo: $scope.cartlists[i].BatchNo,               
                 ExpDate: $scope.cartlists[i].ExpDt,
                 Remark: $scope.cartlists[i].Remarks
             }
@@ -839,7 +844,7 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
     })
 
     $scope.childDetails = function (val) {
-   
+        console.log(val);
         $scope.Mastinv = val;
         $scope.isPreview = true;
     }

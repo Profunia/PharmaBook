@@ -65,6 +65,7 @@
                         <thead>
                             <tr>
                                 <th>#</th>
+                                <th>Vendor ID</th>
                                 <th><i class="fa fa-bullhorn"></i> Name</th>
                                 <th class="hidden-phone"><i class="fa fa-question-circle"></i> Address</th>
                                 <th><i class="fa fa-bookmark"></i> Mobile</th>
@@ -75,6 +76,7 @@
                         <tbody>
                             <tr ng-repeat="item in VendorList|filter: searchbox">
                                 <td>{{$index+1}}</td>
+                                <td>{{item.id}}</td>
                                 <td><span ng-hide="cClass==item.id">{{item.vendorName }}</span><input type="text" ng-model="item.vendorName" ng-show="cClass==item.id" /></td>
                                 <td class="hidden-phone"><span ng-hide="cClass==item.id">{{item.vendorAddress}}</span><input type="text" ng-model="item.vendorAddress" ng-show="cClass==item.id" /></td>
                                 <td><span ng-hide="cClass==item.id">{{item.vendorMobile}}</span><input type="text" ng-model="item.vendorMobile" ng-show="cClass==item.id" /></td>

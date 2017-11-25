@@ -18,6 +18,9 @@ namespace PharmaBook.ViewModel
         public string MRP { get; set; }     
         [Required(ErrorMessage = "Please provide opening Stock")]
         public int openingStock { get; set; }
+        public int? stef { get; set; }
+        public int? tabletsCapsule { get; set; }
+        public double? eachStefPrice { get; set; }
         public string lastUpdated { get; set; }
         public string cusUserName { get; set; }
         public int? vendorID { get; set; }

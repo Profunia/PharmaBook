@@ -1,6 +1,12 @@
-﻿<h2>Create Purchased Order</h2>
+﻿<style>
+    .highlight {
+        background-color: yellow !important;
+    }
+</style>
 
-<div  ng-controller="PurchasedController">
+<h2>Create Purchased Order</h2>
+
+<div ng-controller="PurchasedController">
     <div id="CreatePo" ng-show="!isPreview && !isSucessDB">
         <div class="blankpage-main">
             <div class="row">
@@ -11,11 +17,7 @@
                         <select class="form-control" id="exampleSelect1"
                                 ng-options="s.id as s.vendorName for s in VendorList"
                                 ng-model="vendorID" ng-change="getSelectedVendor()"></select>
-                        <br />
-                        <span style="color:red;">
-                            {{vendorErrMsg}}<br />
-                            {{poErrMsg}}
-                        </span>
+
                     </div>
                 </div>
                 <div class="col-xs-6" ng-show="isVendorSelected">
@@ -37,11 +39,14 @@
                     <label>Total Medicine : <strong> {{ProductList.length}}</strong> </label><br />
                     <label>You have selected Medicine for PO : <strong>{{PreCreatePO.length}}</strong></label>
                     <button class="btn btn-primary" style="float:right;" ng-click="previewPO();"> Preview PO</button>
+                    <br />
+                    <span style="color:red;">
+                        {{vendorErrMsg}}<br />
+                        {{poErrMsg}}
+                    </span>
                 </div>
                 <div class="col-xs-6">
                     <input type="text" placeholder="search" ng-model="search" class="form-control" />
-                    
-                    
                 </div>
             </div>
 
@@ -56,10 +61,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="item in ProductList|orderBy:'openingStock' | filter:search">
+                    <tr ng-repeat="item in ProductList|orderBy:'openingStock' | filter:search" ng-class="isChecked(item)==true ? 'highlight' : ''">
                         <td>
-                            <input type="checkbox" value="{{item.id}}" ng-checked="item.selected"
-                                   ng-click="toggleItemIndex($event, $index)" />
+                            <input type="checkbox" value="{{item.id}}" ng-checked="isChecked(item)"
+                                   ng-click="toggleItemIndex($event, item)" />
                         </td>
                         <td>{{item.name }}</td>
                         <td>{{item.companyName}}</td>
@@ -81,16 +86,16 @@
             <hr />
 
             <div class="row" ng-show="isVendorSelected">
-                
-                    <p>
-                        Selected vendor details : <br />
-                        Vendor ID:  <strong>{{vendorID}}</strong><br />
-                        Name : <strong> {{selectedVendor.vendorName }}</strong>,
-                        From : <strong> {{selectedVendor.vendorCompnay}}</strong>, <br/>
-                        Address : <strong> {{selectedVendor.vendorAddress}}</strong>
-                        Contact : <strong> {{selectedVendor.vendorMobile}}</strong>
-                    </p>
-                
+
+                <p>
+                    Selected vendor details : <br />
+                    Vendor ID:  <strong>{{vendorID}}</strong><br />
+                    Name : <strong> {{selectedVendor.vendorName }}</strong>,
+                    From : <strong> {{selectedVendor.vendorCompnay}}</strong>, <br />
+                    Address : <strong> {{selectedVendor.vendorAddress}}</strong>
+                    Contact : <strong> {{selectedVendor.vendorMobile}}</strong>
+                </p>
+
             </div>
             <hr />
             <span ng-if="!isReadyToCallAPI" style="color:red;">
@@ -103,7 +108,8 @@
                         <th>Medicine Name</th>
                         <th>Mfg</th>
                         <th>Avl Stock</th>
-                        <th>Qty <span style="color:red;">*</span> </th>
+                        <th>Stef <span style="color:red;">*</span> </th>
+                        <th>Tablets/Capsule</th>
                         <th>Remark</th>
                     </tr>
                 </thead>
@@ -112,14 +118,15 @@
                         <td>
                             {{$index + 1}}
                         </td>
-                        <td>{{item.MedicineName }}</td>                        
+                        <td>{{item.MedicineName }}</td>
                         <td>{{item.Mfg}}</td>
                         <td>{{item.AvlStock}}</td>
                         <td>
-                            <input type="number" min="1" class="form-control" ng-model="item.Qty" />
+                            <input type="number" min="1" class="form-control" required ng-model="item.stef" />
                         </td>
+                        <td>{{item.tabletsCapsule}}</td>
                         <td>
-                            <input type="text"  class="form-control" ng-model="item.Remarks" />
+                            <input type="text" class="form-control" ng-model="item.Remarks" />
                         </td>
                     </tr>
                 </tbody>
@@ -132,14 +139,14 @@
                 </button>
             </div>
 
-            </div>
         </div>
+    </div>
     <div ng-show="isSucessDB">
         <div class="blankpage-main">
             <div class="row alert alert-success" ng-show="isSucessDB">
                 <strong>Success!</strong> Purschsed order has been successfully created!!
                 <br /><br /> <hr />
-                <a class="btn btn-primary" asp-action="Index" asp-controller="Purchased"> 
+                <a class="btn btn-primary" asp-action="Index" asp-controller="Purchased">
                     << Purchsed Inbox
                 </a>
             </div>
@@ -147,5 +154,5 @@
                 <strong>Error!</strong> Due to some reasone, purchased not able to created!! please try again.
             </div>
         </div>
-     </div>
+    </div>
 </div>

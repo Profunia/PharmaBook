@@ -66,15 +66,15 @@
         <div class="row" ng-show="!isPreview">
             <div class="col-xs-3">
                 <div class="form-group">
-                    <label>Qty <span style="color:red;"> * </span></label>
-                    <input required class="form-control" type="number" min="1" placeholder="Qty" ng-model="child.Qty">
+                    <label>Stef <span style="color:red;"> * </span></label>
+                    <input required class="form-control" type="number" min="1" placeholder="Stef" ng-model="child.stef">
                     <span asp-for="name" style="color:red;"></span>
                 </div>
             </div>
             <div class="col-xs-3">
                 <div class="form-group">
-                    <label>MRP</label> <span style="color:red;"> *</span>
-                    <input required class="form-control" placeholder="MRP" ng-model="child.Mrp">
+                    <label>Stef Price</label> <span style="color:red;"> *</span>
+                    <input required class="form-control" placeholder="Stef Price " ng-model="child.eachStefPrice">
                 </div>
             </div>
             <div class="col-xs-3">
@@ -96,6 +96,12 @@
             <span style="color:red;">
                 {{err}}
             </span>
+            <div class="col-xs-3">
+                <div class="form-group">
+                    <label>Tablets/Capsule </label>
+                    <input type="text" placeholder="Remarks" class="form-control" ng-model="child.tabletsCapsule" />
+                </div>
+            </div>
             <div class="col-xs-4">
                 <div class="form-group">
                     <label>Remarks </label>
@@ -126,11 +132,12 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
-                                    <th>Qty</th>
+                                    <th>Stef</th>
                                     <th>Mfg</th>
                                     <th>Batch No.#</th>
                                     <th>Exp Date</th>
-                                    <th>MRP</th>
+                                    <th>Stef Price</th>
+                                    <th>Tablets</th>
                                     <th>Remarks</th>
                                     <th ng-show="!isPreview"> Action</th>
                                 </tr>
@@ -139,11 +146,12 @@
                                 <tr ng-repeat="item in cartlists">
                                     <td>{{$index+1}}</td>
                                     <td>{{item.Name}}</td>
-                                    <td>{{item.Qty}}</td>
+                                    <td>{{item.stef}}</td>
                                     <td>{{item.Mfg}}</td>
                                     <td>{{item.BatchNo}}</td>
                                     <td>{{item.ExpDt | date :  "dd-MM-y" }}</td>
-                                    <td>{{item.Mrp}}</td>
+                                    <td>{{item.eachStefPrice}}</td>
+                                    <td>{{item.tabletsCapsule}}</td>
                                     <td>{{item.Remarks}}</td>
                                     
                                     <td ng-show="!isPreview">

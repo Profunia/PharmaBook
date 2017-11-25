@@ -18,4 +18,9 @@ namespace PharmaBook.ViewModel
         public IEnumerable<ChildInvoice> childInvoice { get; set; }
         public UserProfile userProfile { get; set; }
     }
+    public class SalesClientViewModel
+    {
+        public List<InvcChildVmdl>  childinvc { get; set; }
+        public InvcMstrVmdl masterinvc { get; set; }
+    }
 }

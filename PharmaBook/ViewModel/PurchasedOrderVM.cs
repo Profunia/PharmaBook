@@ -7,7 +7,7 @@ namespace PharmaBook.ViewModel
     {
         public string VendorID { get; set; }
         public string ProdID { get; set; }
-        public string Qty { get; set; }
+        public string stef { get; set; }
         public string Remarks { get; set; }
         public List<MPO> mpoList { get; set; }
         public List<CPO> cpoList { get; set; }
@@ -34,6 +34,9 @@ namespace PharmaBook.ViewModel
         public string ProductName { get; set; }
         public int masterPOid { get; set; }
         public string Mfg { get; set; }
+        public int stef { get; set; }
+        public int tabletsCapsule { get; set; }
+        public double eachStefPrice { get; set; }
         public string Remarks { get; set; }
         public int Qty { get; set; }
         public string BatchNo { get; set; }
@@ -50,6 +53,9 @@ namespace PharmaBook.ViewModel
         public string Name { get; set; }
         public string Mfg { get; set; }
         public int Qty { get; set; }
+        public int stef { get; set; }
+        public int tabletsCapsule { get; set; }
+        public double eachStefPrice { get; set; }
         public string BatchNo { get; set; }
         public string MRP { get; set; }
         public string ExpDate { get; set; }
