@@ -316,9 +316,9 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
 })
 
 app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor) {
-    var final = 0;
     var total = 0;
     function initialSetup() {
+        $scope.medicineName = 'Name';
         $scope.isPreview=false;
         final = 0;
         total = 0;
@@ -343,7 +343,8 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
             Mrg: '',
             BatchNo: '',
             ExpDt: '',
-            Amount: ''
+            Amount: '',
+            Qty: ''
         }
     }
     initialSetup();
@@ -354,19 +355,23 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
     }
    
     $scope.AddChildInvc = function () {
-        var qty = $scope.Qty
         $scope.ErrMsg = '';
-        if ($scope.PrdId && $scope.Qty  && $scope.child.Description) {
-            var price = $scope.child.Amount
-            total = (qty * price);
+        if ($scope.child.Qty  && $scope.child.Description) {
+            var price = $scope.child.Amount;
+            var qty = $scope.child.Qty;
+          //  console.log("amount" + $scope.child.Amount);
+          //  console.log(qty + price);
+          // var  total = ($scope.child.Qty * $scope.child.Amount);
+            var total = (qty * price);
             final += total;
-            $scope.unitprice = price;
+            $scope.unitprice = total;
             $scope.totalprice = final;
             $scope.cartlists.push({
                 'Mfg': $scope.child.Mfg,
                 'PrdId': $scope.PrdId,
-                'Qty': $scope.Qty,
+                'Qty': $scope.child.Qty,
                 'ExpDt': $scope.child.ExpDt,
+                'unitprice': price,
                 'Amount': total,
                 'Description': $scope.child.Description,
                 'BatchNo': $scope.child.BatchNo
@@ -376,6 +381,7 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
         else {
             $scope.ErrMsg = "please fill required fields";
         }
+        
     }
     $scope.DelCrtIitem = function (index) {
         total = $scope.child.Amount;
@@ -383,10 +389,11 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
         $scope.totalprice = final;
         $scope.cartlists.splice(index, 1);
     }
-    $scope.medicineselect = function () {
-        var id = $scope.PrdId;
-        $http.get('/Product/GetMedicnById/?id=' + id).then(function (res) {
+    $scope.medicineselect = function (item) {       
+        $http.get('/Product/GetMedicnById/?id=' + item.id).then(function (res) {
             console.log(res.data);
+            $scope.PrdId = item.id;
+            $scope.medicineName = res.data.name;
             $scope.child = {
                 Mfg: res.data.companyName,
                 Description: res.data.name,
@@ -396,7 +403,8 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
             };
             console.log($scope.child);
         }, function (error) {
-        })
+            })
+        
     }
 
     $scope.SaveInvc = function () {

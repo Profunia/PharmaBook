@@ -11,6 +11,7 @@
                 </div>
             </div>*@
         <div class="row mt">
+           
             <div class="col-xs-6">
                 <div class="form-group">
                     <label>Patient Name <span style="color:red;"> </span></label>
@@ -39,8 +40,37 @@
         <div class="row">
             <div class="col-xs-6">
                 <div class="form-group">
-                    <label>Medicine <span style="color:red;"> * </span></label>
-                    <select class="form-control" required placeholder="Medicine" ng-model="PrdId" ng-options="s.id as s.name for s in ProductList" ng-change="medicineselect()"></select>
+                    @*<label>Medicine <span style="color:red;"> * </span></label>*@
+
+
+                    <div class="dropdown dropdown-scroll" ng-app="app">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                           Medicine - {{medicineName}} <span style="color:red;">*</span> <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                            <li role="presentation">
+                                <div class="input-group input-group-sm search-control">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </span>
+                                    <input type="text" class="form-control" placeholder="Filter" ng-model="filter"></input>
+                                </div>
+                            </li>
+                            <li role="presentation" ng-repeat='item in ProductList | filter:filter' ng-click="medicineselect(item)">
+                                <a href="">{{item.name}} </a> 
+                            </li>
+                        </ul>
+                    </div>
+
+
+
+
+                    @*<select class="form-control" required placeholder="Medicine" ng-model="PrdId" ng-change="medicineselect()">
+
+                            <option ng-repeat="s in ProductList" value="{{s.id}}">{{s.name}}</option>
+                        </select>*@
+                    @*<select class="form-control" required placeholder="Medicine" ng-model="PrdId"
+                        ng-options="s.id as s.name for s in ProductList" ng-change="medicineselect()"></select>*@
                     <span asp-for="batchNo" style="color:red;"></span>
                 </div>
             </div>
@@ -56,7 +86,7 @@
             <div class="col-xs-2">
                 <div class="form-group">
                     <label>Qty <span style="color:red;"> * </span></label>
-                    <input required type="number" min="1" class="form-control" placeholder="Qty" ng-model="Qty">
+                    <input required type="number" min="1" class="form-control" placeholder="Qty" ng-model="child.Qty">
                     <span asp-for="name" style="color:red;"></span>
                 </div>
             </div>
@@ -97,7 +127,7 @@
     <div class="blankpage-main" ng-if="!isCreatedInvoice">
         <div class="row mt">
             <div class="col-md-12">
-                <div class="content-panel">                 
+                <div class="content-panel">
                     <div style="overflow: auto;height: 350px;">
                         <table class="table table-striped table-advance table-hover">
                             <thead>
@@ -121,7 +151,7 @@
                                     <td>{{item.Mfg}}</td>
                                     <td>{{item.BatchNo}}</td>
                                     <td>{{item.ExpDt | date :  "dd-MM-y" }}</td>
-                                    <td>{{unitprice|number:2}}</td>
+                                    <td>{{item.unitprice|number:2}}</td>
                                     <td>{{item.Amount|number:2}}</td>
                                     <td>
                                         <button class="btn btn-danger btn-xs" ng-click="DelCrtIitem($index)"><i class="fa fa-trash-o"></i> Delete</button>
@@ -152,13 +182,22 @@
         <br />
         <div class="row">
             <div class="col-xs-6">
-                <button class="btn btn-primary" style="float:left" ng-click="PrintInvoice()">Print Invoice</button> 
+                <button class="btn btn-primary" style="float:left" ng-click="PrintInvoice()">Print Invoice</button>
                 <!-- TODO Add invoice print link-->
             </div>
             <div class="col-xs-6">
                 <button class="btn btn-primary"
-                  style="float:right" ng-click="switchToInvoicePage()"> << Create New Invoice</button>
+                        style="float:right" ng-click="switchToInvoicePage()">
+                    << Create New Invoice
+                </button>
             </div>
         </div>
     </div>
 </div>
+@section Scripts{
+    <script>
+        $('.dropdown-menu').find('input').click(function (e) {
+            e.stopPropagation();
+        });
+    </script>
+}
