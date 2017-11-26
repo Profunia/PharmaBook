@@ -6,8 +6,7 @@ namespace PharmaBook.Services
 {
     public interface IPurchasedHistory
     {
-        void Add(PurchasedHistory prd);
-        void Delete(PurchasedHistory prd);
+        void Add(PurchasedHistory prd);      
         void Commit();
         IEnumerable<PurchasedHistory> GetAll(string userName);
         PurchasedHistory GetById(int Id);
@@ -27,11 +26,6 @@ namespace PharmaBook.Services
         public void Commit()
         {
             _context.SaveChanges();
-        }
-
-        public void Delete(PurchasedHistory prd)
-        {
-            _context.Remove(prd);
         }
 
         public IEnumerable<PurchasedHistory> GetAll(string userName)

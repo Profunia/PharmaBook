@@ -6,9 +6,7 @@ namespace PharmaBook.Services
 {
     public interface IProduct
     {
-        void Add(Product prd);
-        void Delete(Product prd);
-        void Update(Product prd);
+        void Add(Product prd);       
         void Commit();
         IEnumerable<Product> GetAll(string userName);
         Product GetById(int Id);
@@ -30,11 +28,6 @@ namespace PharmaBook.Services
             _context.SaveChanges();
         }
 
-        public void Delete(Product prd)
-        {
-            _context.Remove(prd);
-        }
-
         public IEnumerable<Product> GetAll(string userName)
         {
             return _context.products.Where(x => x.cusUserName.Equals(userName)).OrderByDescending(x=>x.Id).ToList();
@@ -43,11 +36,6 @@ namespace PharmaBook.Services
         public Product GetById(int Id)
         {
             return _context.products.FirstOrDefault(x => x.Id == Id);
-        }
-
-        public void Update(Product prd)
-        {
-             _context.Entry(prd).State = EntityState.Modified;
         }
     }
 }

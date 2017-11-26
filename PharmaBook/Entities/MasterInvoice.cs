@@ -15,5 +15,6 @@ namespace PharmaBook.Entities
         public string RegNo { get; set; }
         public DateTime InvCrtdate { get; set; }
         public string UserName { get; set; }
+        public bool isActive { get; set; }
     }
 }

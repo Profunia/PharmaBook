@@ -59,9 +59,7 @@ namespace PharmaBook.Controllers
                 if (ModelState.IsValid)
                 {
                     var create =_iVendorServices.GetById(obj.Id);
-                    Mapper.Map(obj, create);                   
-
-                    _iVendorServices.Update(create);
+                    Mapper.Map(obj, create);
                     _iVendorServices.Commit();                   
                     msg = "You have Updated Vendor Details successfully !!.";
                 }
@@ -77,7 +75,7 @@ namespace PharmaBook.Controllers
             var lst = (object)null;
             try
             {
-                var vendorlist = _iVendorServices.GetAll(User.Identity.Name);
+                var vendorlist = _iVendorServices.GetAll(User.Identity.Name).Where(x=>x.isActive==true).ToList();
                 //lst = vendorlist;
                 lst = Mapper.Map<IEnumerable<VendorDtl>>(vendorlist);
             }
@@ -87,21 +85,21 @@ namespace PharmaBook.Controllers
             }
             return Json(lst);
         }
-        public JsonResult VendorDlt([FromHeader]int id)
+        public IActionResult VendorDlt([FromHeader]int id)
         {
             string msg = string.Empty;
             try
             {
                 var vndrdlt = _iVendorServices.GetById(id);
-                _iVendorServices.Delete(vndrdlt);
+                vndrdlt.isActive = false;
                 _iVendorServices.Commit();
-                msg = "You have successfulyy Deleted vendor "+vndrdlt.vendorName;
+                msg = "You have successfully Deleted vendor "+vndrdlt.vendorName;
             }
             catch(Exception e)
             {
-                msg = e.Message;
+                return BadRequest(e.Message);
             }
-            return Json(msg);
+            return Ok(msg);
         }
     }
 }

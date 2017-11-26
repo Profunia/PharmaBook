@@ -68,6 +68,7 @@ namespace PharmaBook.Controllers
                 var msterinvoice = slsmodel.masterinvc;
                 MasterInvoice obj = Mapper.Map<MasterInvoice>(msterinvoice);
                 obj.InvCrtdate = DateTime.Now;
+                obj.isActive = true;
                 obj.InvId = commonServices.getDynamicId();
                 _imaster.Add(obj);
                 _imaster.Commit();

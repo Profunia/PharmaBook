@@ -85,11 +85,18 @@ namespace PharmaBook.Controllers
                 graphModelVM graph = null;
                 foreach (var item in InvList.OrderByDescending(x => x.Total).Take(10))
                 {
-                    graph = new graphModelVM();
-                    var prod = _iProduct.GetById(item.PID);
-                    graph.Name = prod.name + ", " + prod.companyName;
-                    graph.Value = item.Total;
-                    gList.Add(graph);
+                    try
+                    {
+                        graph = new graphModelVM();
+                        var prod = _iProduct.GetById(item.PID);
+                        graph.Name = prod.name + ", " + prod.companyName;
+                        graph.Value = item.Total;
+                        gList.Add(graph);
+                    }
+                    catch
+                    {
+
+                    }
 
                 }
                 return Ok(gList);
@@ -130,12 +137,22 @@ namespace PharmaBook.Controllers
                 {
                     try
                     {
+                        bool isAddToGraph = true;
                         graph = new graphModelVM();
                         int vendorId = Convert.ToInt32(item.VID);
                         if (vendorId == 0)
                         {
-                            graph.Name = "Self";
-                            graph.Value = item.Total;
+                            var b = gList.Where(x => x.Name.Equals("Self"));
+                            if (b.Count()==0)
+                            {
+                                graph.Name = "Self";
+                                graph.Value = item.Total;
+                            }
+                            else
+                            {
+                                b.FirstOrDefault().Value += item.Total;
+                                isAddToGraph = false;
+                            }
                         }
                         else
                         {
@@ -143,22 +160,25 @@ namespace PharmaBook.Controllers
                             graph.Name = vInfo.vendorName + ", " + vInfo.vendorCompnay;
                             graph.Value = item.Total;
                         }
-                        gList.Add(graph);
+                        if (isAddToGraph)
+                        {
+                            gList.Add(graph);
+                        }
                     }
-                    catch (Exception e)
+                    catch
                     {
-                        return BadRequest(e.Message);
-                       
+
                     }
+                    
 
                 }
 
                 return Ok(gList);
             }
-            catch
+            catch (Exception e)
             {
+                return BadRequest(e.Message);
 
-                return BadRequest();
             }
         }
 
