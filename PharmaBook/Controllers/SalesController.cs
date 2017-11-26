@@ -68,6 +68,7 @@ namespace PharmaBook.Controllers
                 var msterinvoice = slsmodel.masterinvc;
                 MasterInvoice obj = Mapper.Map<MasterInvoice>(msterinvoice);
                 obj.InvCrtdate = DateTime.Now;
+                obj.isActive = true;
                 obj.InvId = commonServices.getDynamicId();
                 _imaster.Add(obj);
                 _imaster.Commit();
@@ -159,9 +160,13 @@ namespace PharmaBook.Controllers
                     _ichild.Commit();
 
                     // Update Stock
-                    var product = _iProduct.GetById(item.prodID);
-                    product.openingStock = product.openingStock + item.qty;
-                    _iProduct.Commit();
+                    try
+                    {
+                        var product = _iProduct.GetById(item.prodID);
+                        product.openingStock = product.openingStock + item.qty;
+                        _iProduct.Commit();
+                    }
+                    catch { }
 
                     // Update Purchased History
                     PurchasedHistory ph = new PurchasedHistory();
@@ -191,5 +196,64 @@ namespace PharmaBook.Controllers
             }
         }
 
+        public IActionResult SalesResport()
+        {
+
+
+            return View();
+        }
+
+        public IActionResult GridRecords()
+        {
+            try
+            {
+                Dictionary<string, object> dList = new Dictionary<string, object>();
+
+                var InvList = _imaster.GetAll(User.Identity.Name).Where(x => x.UserName != null).ToList();
+
+                var MonthlyResult = (from m in InvList
+                                     join c in _ichild.GetAll() on m.Id equals c.MasterInvID
+                                     select new { c.Amount, m.InvCrtdate, m.Id } into x
+                                     group x by new { date = new DateTime(x.InvCrtdate.Year, x.InvCrtdate.Month, 1) } into g
+                                     select new
+                                     {
+                                         inv_date = g.Key.date,
+                                         totalInv= g.Count(),
+                                         amount = g.Sum(x => x.Amount)
+                                     }).ToList();
+
+                var DailyResult = (from m in InvList
+                                   join c in _ichild.GetAll() on m.Id equals c.MasterInvID
+                                   select new { c.Amount, m.InvCrtdate } into x
+                                   group x by new { date = x.InvCrtdate.Date } into g
+                                   select new
+                                   {
+                                       inv_date = g.Key.date,
+                                       totalInv = g.Count(),
+                                       amount = g.Sum(x => x.Amount)
+                                   }).ToList();
+
+                var YearlyResult = (from m in InvList
+                                    join c in _ichild.GetAll() on m.Id equals c.MasterInvID
+                                    select new { c.Amount, m.InvCrtdate } into x
+                                    group x by new { date = x.InvCrtdate.Year } into g
+                                    select new
+                                    {
+                                        inv_date = g.Key.date,
+                                        totalInv = g.Count(),
+                                        amount = g.Sum(x => x.Amount)
+                                    }).ToList();
+
+                dList.Add("MonthlyResult", MonthlyResult);
+                dList.Add("DailyResult", DailyResult);
+                dList.Add("YearlyResult", YearlyResult);
+                return Ok(dList);
+            }
+            catch (Exception ep)
+            {
+
+                return BadRequest(ep.Message);
+            }
+        }
     }
 }

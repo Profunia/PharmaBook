@@ -9,9 +9,7 @@ namespace PharmaBook.Services
 {
     public interface Imaster
     {
-        void Add(MasterInvoice mstinvc);
-        void Delete(MasterInvoice mstinvc);
-        void Update(MasterInvoice mstinvc);
+        void Add(MasterInvoice mstinvc);      
         void Commit();
         MasterInvoice getlastproduct();
         IEnumerable<MasterInvoice> GetAll(string userName);
@@ -32,12 +30,7 @@ namespace PharmaBook.Services
         public void Commit()
         {
             _context.SaveChanges();
-        }
-
-        public void Delete(MasterInvoice mstinvc)
-        {
-            _context.Remove(mstinvc);
-        }
+        }        
 
         public IEnumerable<MasterInvoice> GetAll(string userName)
         {
@@ -48,10 +41,7 @@ namespace PharmaBook.Services
         {
              return _context.InvMaster.FirstOrDefault(x => x.Id == Id);
         }        
-        public void Update(MasterInvoice mstinvc)
-        {
-            _context.Entry(mstinvc).State = EntityState.Modified;
-        }
+       
         MasterInvoice Imaster.getlastproduct()
         {
             return _context.InvMaster.ToList().LastOrDefault();

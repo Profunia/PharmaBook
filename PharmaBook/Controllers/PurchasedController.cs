@@ -190,7 +190,7 @@ namespace PharmaBook.Controllers
                     product.expDate = commonServices.ConvertToDate(item.ExpDate);
                     product.lastUpdated = DateTime.Now.ToString();
                     product.vendorID = item.vendorID;
-                    _iProduct.Update(product);
+                   // update product
                     _iProduct.Commit();
 
                     // product feature update
@@ -218,8 +218,7 @@ namespace PharmaBook.Controllers
                 {
                     // update purchased order closed 
                     var po = _iMasterPo.GetById(obj.FirstOrDefault().MasterPOid);
-                    po.isActive = false;
-                    _iMasterPo.Update(po);
+                    po.isActive = false;                    
                     _iMasterPo.Commit();
                 }
             }

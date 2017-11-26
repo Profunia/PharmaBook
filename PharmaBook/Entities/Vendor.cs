@@ -8,6 +8,6 @@
         public string vendorMobile { get; set; }
         public string vendorCompnay { get; set; }
         public string cusUserName { get; set; }
-
+        public bool isActive { get; set; }
     }
 }

@@ -8,9 +8,7 @@ namespace PharmaBook.Services
 {
     public interface IChild
     {
-        void Add(ChildInvoice chldinvc);
-        void Delete(ChildInvoice chldinvc);
-        void Update(ChildInvoice chldinvc);
+        void Add(ChildInvoice chldinvc);     
         ChildInvoice getlastproduct();
         void Commit();
         IEnumerable<ChildInvoice> GetAll();
@@ -34,11 +32,6 @@ namespace PharmaBook.Services
             _context.SaveChanges();
         }
 
-        public void Delete(ChildInvoice chldinvc)
-        {
-            _context.Remove(chldinvc);
-        }
-
         public IEnumerable<ChildInvoice> GetAll()
         {
             return _context.InvChild.OrderByDescending(x => x.Id).ToList();
@@ -46,11 +39,6 @@ namespace PharmaBook.Services
         public ChildInvoice getlastproduct()
         {
             return _context.InvChild.ToList().LastOrDefault();
-        }
-
-        public void Update(ChildInvoice chldinvc)
-        {
-            throw new NotImplementedException();
         }
 
         IEnumerable<ChildInvoice> IChild.GetById(int id)

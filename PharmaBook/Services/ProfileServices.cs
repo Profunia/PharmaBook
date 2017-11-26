@@ -9,8 +9,7 @@ namespace PharmaBook.Services
 {
     public interface IProfileServices
     {
-        void Add(UserProfile profile);        
-        //void Update(UserProfile profile);       
+        void Add(UserProfile profile);
         void Commit();
         IEnumerable<UserProfile> GetAll(string userName);
         UserProfile GetById(int Id);
@@ -50,10 +49,6 @@ namespace PharmaBook.Services
             return _context.UserProfile.OrderByDescending(x => x.Id).ToList();
         }
 
-        //public void Update(UserProfile profile)
-        //{
-        //    _context.Entry(profile).State = EntityState.Modified;
-        //}
         public UserProfile GetByUserName(string userName)
         {
             return _context.UserProfile.FirstOrDefault(x => x.userName.Equals(userName));

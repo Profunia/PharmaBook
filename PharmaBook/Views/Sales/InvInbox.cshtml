@@ -1,22 +1,4 @@
-﻿
-<script type="text/javascript">
-    function printDiv(divName,id) {
-        $('.btn').hide();
-        var colcnt = ($("#" + id).find('tr')[0].cells.length) - 1;
-        var printContents = document.getElementById(divName).innerHTML;
-        var newLbl = $("#" + divName + ",#" + id + " tr").find("input:text,th:last,td:eq(" + colcnt + ")").remove().end().html();
-        var printWindow = window.open('', '', 'height=400,width=800');
-        printWindow.document.write('<html><head><title style=""></title>');
-        printWindow.document.write('</head><body>');
-        printWindow.document.write(newLbl);
-            printWindow.document.write('</body></html>');
-            printWindow.document.close();
-            printWindow.print();
-            location.reload();
-    }
-</script>
-
-<h2>Invoice Inbox</h2>
+﻿<h2>Invoice Inbox</h2>
 <div ng-controller="InvoiceInboxController">
     <div class="blankpage-main" ng-show="!isPreview">
         
@@ -31,54 +13,37 @@
             </div>
         </div>
         <hr />
-        <div id="invrpt1">
-            <input type="button" onclick="printDiv('invrpt1','tbl1')" class="btn btn-primary" value="print record" id="prntbtn" />
-            <div ng-show="hide">
-                <h1 style="text-align:center;line-height:.5px;">{{curuser.clinicname}}</h1>
-                <h3 style="text-align:center;line-height:5px;font-weight:normal">{{curuser.address}}</h3>
-                <h3 style="text-align:center;line-height:5px;font-weight:normal">{{curuser.email}}|{{curuser.mobile}}</h3>
-                <h3 style="text-align:center;line-height:5px;font-weight:normal">{{curuser.dlno}}</h3>
-                <table style="width:100%">
-                    <tr>
-                        <td style="float:left">@DateTime.Now.ToString("dd/MM/yyyy")</td>
-                        <td><h2 style="text-align:center;line-height:10px">Invoice Inbox</h2></td>
-                        <td style="float:right">adsdsdsd</td>
-                    </tr>
-                </table>                
-                <hr />
-            </div>
-            <table class="table table-striped table-advance table-hover" rules="rows" id="tbl1" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th style="text-align:center">InvId</th>
-                        <th style="text-align:center">Patient</th>
-                        <th style="text-align:center">Doctor</th>
-                        <th style="text-align:center">Created Date</th>
-                        <th style="text-align:center">No of Medicine</th>
-                        <th style="text-align:center">Billing Amt</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="item in InvList| filter:search">
-                        <td>
-                            {{$index + 1}}
+        <table class="table table-striped table-advance table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>InvId</th>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Created Date</th>
+                    <th>No of Medicine</th>
+                    <th>Billing Amt</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in InvList| filter:search">
+                    <td>
+                        {{$index + 1}}
 
-                        </td>
-                        <td style="text-align:center">{{item.invId}}</td>
-                        <td style="text-align:center">
-                            {{item.patient }}<br /> {{item.paddress}}
-                        </td>
-                        <td style="text-align:center">{{item.docName}} <br />{{item.docRegi}}</td>
-                        <td style="text-align:center">{{item.createdDate}}</td>
-                        <td style="text-align:center">{{item.noOfMedicine}}</td>
-                        <td style="text-align:center">Rs. {{item.billingAmount}}</td>
-                        <td><a ng-click="childDetails(item);" style="cursor:pointer;">View details</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                    </td>
+                    <td>{{item.invId}}</td>
+                    <td>
+                        {{item.patient }}<br /> {{item.paddress}}                       
+                    </td>
+                    <td>{{item.docName}} <br/>{{item.docRegi}}</td>
+                    <td>{{item.createdDate | date :'dd/MM/yyyy'}}</td>
+                    <td>{{item.noOfMedicine}}</td>
+                    <td>Rs. {{item.billingAmount}}</td>
+                    <td><a ng-click="childDetails(item);" style="cursor:pointer;">View details</a></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <div class="blankpage-main" ng-show="isPreview">   
@@ -129,7 +94,7 @@
                  <td>{{item.qty}}</td>
                  <td>{{item.batchNo}}</td>
                  <td>{{item.mrp | number :2}}</td>
-                 <td>{{item.expDate}}</td>
+                 <td>{{item.expDate | date :'dd/MM/yyyy'}}</td>
              </tr>
          </tbody>
      </table>
@@ -162,7 +127,7 @@
                         <td><input type="number" ng-model="item.qty" class="form-control col-xs-2" /></td>
                         <td>{{item.batchNo}}</td>
                         <td>{{item.mrp | number : 2}}</td>
-                        <td>{{item.expDate}}</td>
+                        <td>{{item.expDate | date :'dd/MM/yyyy'}}</td>
                         <td>
                             <input type="text" ng-model="item.remarks" placeholder="Remarks" class="form-control"/>
                         </td>
@@ -175,7 +140,7 @@
                 Submit
             </button>
         </div>
-        <div ng-show="isSucessDB">
+        <div ng-show="isSucessDB && isPreview">
             <div class="row alert alert-success">
              <label>Success!! </label>   Medicine has been successfully Return!!
                 <hr />

@@ -10,9 +10,7 @@ namespace PharmaBook.Services
     public interface IVendorServices
     {
         IEnumerable<Vendor> GetAll(string userName);
-        Vendor GetById(int id);
-        void Update(Vendor vndr);
-        void Delete(Vendor vndrdlt);
+        Vendor GetById(int id);      
         void Add(Vendor obj);
         void Commit();
     }
@@ -34,11 +32,6 @@ namespace PharmaBook.Services
             _context.SaveChanges();
         }
 
-        public void Delete(Vendor vndrdlt)
-        {
-            _context.Remove(vndrdlt);
-        }
-
         public IEnumerable<Vendor> GetAll(string userName)
         {
             return _context.vendors.Where(x=>x.cusUserName.Equals(userName) 
@@ -48,11 +41,6 @@ namespace PharmaBook.Services
         public Vendor GetById(int id)
         {
             return _context.vendors.FirstOrDefault(x => x.Id == id);
-        }
-
-        public void Update(Vendor vndr)
-        {
-            _context.Entry(vndr).State = EntityState.Modified;
         }
     }
 }

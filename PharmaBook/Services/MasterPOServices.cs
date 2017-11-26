@@ -7,9 +7,7 @@ namespace PharmaBook.Services
 {
     public interface IMasterPOServices
     {
-            void Add(MasterPO prd);
-            void Delete(MasterPO prd);
-            void Update(MasterPO prd);
+            void Add(MasterPO prd);           
             void Commit();
             IEnumerable<MasterPO> GetAll(string userName);
             MasterPO GetById(int Id);        
@@ -31,12 +29,7 @@ namespace PharmaBook.Services
         {
             _context.SaveChanges();
         }
-
-        public void Delete(MasterPO prd)
-        {
-            _context.Remove(prd);
-        }
-
+        
         public IEnumerable<MasterPO> GetAll(string userName)
         {
             return _context.MasterPO.Where(x => x.userName.Equals(userName)).ToList();
@@ -45,11 +38,6 @@ namespace PharmaBook.Services
         public MasterPO GetById(int Id)
         {
             return _context.MasterPO.Find(Id);
-        }
-
-        public void Update(MasterPO prd)
-        {
-            _context.Entry(prd).State = EntityState.Modified;
         }
     }
 }

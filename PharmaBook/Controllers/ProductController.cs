@@ -370,7 +370,7 @@ namespace PharmaBook.Controllers
         public IActionResult GetAllMedicine()
         {
             string username = User.Identity.Name;
-            var productlist = _iProduct.GetAll(username).OrderByDescending(x => x.Id).ToList();
+            var productlist = _iProduct.GetAll(username).Where(x=>x.isActive==true).OrderByDescending(x => x.Id).ToList();
             List<ProductViewModel> lst = (List<ProductViewModel>)commonServices.MapProductListToVM(productlist);
             //lst = Mapper.Map<IEnumerable<ProductViewModel>>(productlist);
 
@@ -417,7 +417,7 @@ namespace PharmaBook.Controllers
             try
             {
                 var dltmedicn = _iProduct.GetById(id);
-                _iProduct.Delete(dltmedicn);
+                dltmedicn.isActive = false;
                 _iProduct.Commit();
                 msg = "Medicine has been deleted Succesfully .!!";
             }
