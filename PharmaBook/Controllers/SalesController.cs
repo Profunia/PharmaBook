@@ -160,9 +160,13 @@ namespace PharmaBook.Controllers
                     _ichild.Commit();
 
                     // Update Stock
-                    var product = _iProduct.GetById(item.prodID);
-                    product.openingStock = product.openingStock + item.qty;
-                    _iProduct.Commit();
+                    try
+                    {
+                        var product = _iProduct.GetById(item.prodID);
+                        product.openingStock = product.openingStock + item.qty;
+                        _iProduct.Commit();
+                    }
+                    catch { }
 
                     // Update Purchased History
                     PurchasedHistory ph = new PurchasedHistory();

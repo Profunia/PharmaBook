@@ -37,7 +37,7 @@
                         {{item.patient }}<br /> {{item.paddress}}                       
                     </td>
                     <td>{{item.docName}} <br/>{{item.docRegi}}</td>
-                    <td>{{item.createdDate}}</td>
+                    <td>{{item.createdDate | date :'dd/MM/yyyy'}}</td>
                     <td>{{item.noOfMedicine}}</td>
                     <td>Rs. {{item.billingAmount}}</td>
                     <td><a ng-click="childDetails(item);" style="cursor:pointer;">View details</a></td>
@@ -94,7 +94,7 @@
                  <td>{{item.qty}}</td>
                  <td>{{item.batchNo}}</td>
                  <td>{{item.mrp | number :2}}</td>
-                 <td>{{item.expDate}}</td>
+                 <td>{{item.expDate | date :'dd/MM/yyyy'}}</td>
              </tr>
          </tbody>
      </table>
@@ -127,7 +127,7 @@
                         <td><input type="number" ng-model="item.qty" class="form-control col-xs-2" /></td>
                         <td>{{item.batchNo}}</td>
                         <td>{{item.mrp | number : 2}}</td>
-                        <td>{{item.expDate}}</td>
+                        <td>{{item.expDate | date :'dd/MM/yyyy'}}</td>
                         <td>
                             <input type="text" ng-model="item.remarks" placeholder="Remarks" class="form-control"/>
                         </td>
@@ -140,7 +140,7 @@
                 Submit
             </button>
         </div>
-        <div ng-show="isSucessDB">
+        <div ng-show="isSucessDB && isPreview">
             <div class="row alert alert-success">
              <label>Success!! </label>   Medicine has been successfully Return!!
                 <hr />
