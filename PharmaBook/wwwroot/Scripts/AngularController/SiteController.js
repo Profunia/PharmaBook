@@ -882,3 +882,51 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
 app.controller('DashboardController', function ($rootScope) {
     $rootScope.isLoadingScreenActive = false;
 });
+
+app.controller('SalesResportController', function ($scope, $http, loadvndor, $rootScope, $filter) {
+    $scope.InvList = [];
+    $scope.GridData = []
+    $scope.FilterType = '';
+    $scope.onInboxFiler = function (val) {
+        $scope.GridData = [];
+        if (val == 'Monthly') {
+            $scope.GridData = $scope.InvList.MonthlyResult;
+            $scope.FilterType = 'm';
+        }
+        else if (val == 'Yearly') {
+            $scope.GridData = $scope.InvList.YearlyResult;
+            $scope.FilterType = 'y';
+        }
+        else {
+            $scope.GridData = $scope.InvList.DailyResult;
+            $scope.FilterType = 'd';
+        }
+        
+    }
+    $scope.getTotal = function () {
+        var total = 0;
+        for (var i = 0; i < $scope.GridData.length; i++) {
+            var amount = $scope.GridData[i].amount;
+            total += amount;
+        }
+        return total;
+    }
+    $scope.getTotalInv = function () {
+        var grosstotalInv = 0;
+        for (var i = 0; i < $scope.GridData.length; i++) {
+            var totalInv = $scope.GridData[i].totalInv;
+            grosstotalInv += totalInv;
+        }
+        return grosstotalInv;
+    }
+    $rootScope.isLoadingScreenActive = true
+    $http.get('/Sales/GridRecords').then(function (res) {
+        $scope.InvList = res.data;
+        console.log($scope.InvList)
+        $scope.onInboxFiler('');
+        $rootScope.isLoadingScreenActive = false;
+    }, function (error) {
+        $rootScope.isLoadingScreenActive = false;
+})
+
+});
