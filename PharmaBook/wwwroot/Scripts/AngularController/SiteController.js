@@ -930,3 +930,28 @@ app.controller('SalesResportController', function ($scope, $http, loadvndor, $ro
 })
 
 });
+
+app.controller('TotalExpMedicineController', function ($scope, $http, loadvndor, $rootScope, $filter) {
+    $rootScope.isLoadingScreenActive = true
+    $http.get('/Home/getTotalExpMedicine').then(function (res) {
+        $scope.InvList = res.data;
+        console.log($scope.InvList)
+     
+        $rootScope.isLoadingScreenActive = false;
+    }, function (error) {
+        $rootScope.isLoadingScreenActive = false;
+    })
+
+});
+app.controller('OutOfStockMedicineController', function ($scope, $http, loadvndor, $rootScope, $filter) {
+    $rootScope.isLoadingScreenActive = true
+    $http.get('/Home/getOutOfStockMedicine').then(function (res) {
+        $scope.InvList = res.data;
+        console.log($scope.InvList)
+        
+        $rootScope.isLoadingScreenActive = false;
+    }, function (error) {
+        $rootScope.isLoadingScreenActive = false;
+    })
+
+});

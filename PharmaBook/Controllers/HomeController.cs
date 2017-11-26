@@ -41,11 +41,12 @@ namespace PharmaBook.Controllers
 
         public IActionResult Index()
         {
-            DateTime dt = DateTime.Now.AddMonths(3);
+            DateTime StartDt = DateTime.Now.AddMonths(3);
+            DateTime Enddt = DateTime.Now;            
             var Products = _iProduct.GetAll(User.Identity.Name);
-            var ProductExp = Products.Where(x => x.expDate >= dt && x.expDate <= dt).ToList();
+            var ProductExp = Products.Where(x => x.expDate >= Enddt && x.expDate <= StartDt ).ToList();
 
-            ViewBag.outOfStock = Products.Where(x => x.openingStock <= 10).Count();
+            ViewBag.outOfStock = Products.Where(x => x.openingStock <= 5).Count();
             ViewBag.TotalExpMedicine = ProductExp.Count();
 
             ViewBag.OpenedPO = _iMasterPo.GetAll(User.Identity.Name).Where(x => x.isActive == true).Count();
@@ -214,6 +215,49 @@ namespace PharmaBook.Controllers
             TempData["msg"] = "Successfully updated";
             var laste= _iProfile.GetByUserName(User.Identity.Name);
             return RedirectToAction("Profile");
+        }
+
+        public IActionResult OutOfStockMedicine()
+        {
+            return View();
+        }
+
+        public IActionResult getOutOfStockMedicine()
+        {
+            try
+            {             
+                var Products = _iProduct.GetAll(User.Identity.Name);
+                var ProductExp = Products.Where(x => x.openingStock <= 5).ToList();
+                return Ok(ProductExp.OrderBy(x=>x.openingStock));
+
+            }
+            catch (Exception ep)
+            {
+
+                return BadRequest(ep.Message);
+            }
+        }
+        public IActionResult TotalExpMedicine()
+        {            
+
+            return View();
+        }
+
+        public IActionResult getTotalExpMedicine()
+        {
+            try
+            {
+                DateTime StartDt = DateTime.Now.AddMonths(3);
+                DateTime Enddt = DateTime.Now;                
+                var Products = _iProduct.GetAll(User.Identity.Name);
+                var ProductExp = Products.Where(x => x.expDate >= Enddt && x.expDate <= StartDt).ToList();
+                return Ok(ProductExp.OrderByDescending(x=>x.openingStock));
+            }
+            catch (Exception ep)
+            {
+
+                return BadRequest(ep.Message);
+            }
         }
     }
 }
