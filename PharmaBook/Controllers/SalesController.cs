@@ -47,7 +47,7 @@ namespace PharmaBook.Controllers
         {
             return View();
         }
-        public IActionResult Invoice()
+        public IActionResult Invoice(int? invcid)
         {
             SalesViewModel slsvwmdl = new SalesViewModel();
             MasterInvoice mstrobj = _imaster.getlastproduct();

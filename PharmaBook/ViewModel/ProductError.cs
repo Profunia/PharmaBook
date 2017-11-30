@@ -12,7 +12,9 @@ namespace PharmaBook.ViewModel
         public string batchNo { get; set; }        
         public string expDate { get; set; }
         public string companyName { get; set; }
-        public string MRP { get; set; }       
+        public string stef { get; set; }
+        public string nooftablet { get; set; }
+        public string eachstefprice { get; set; }
         public string openingStock { get; set; }
         public string lastUpdated { get; set; }
         public string cusUserName { get; set; }       

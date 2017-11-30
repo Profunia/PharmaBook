@@ -322,7 +322,30 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
         //$scope.purchasedhistry = res.data;        
       
     }, function (error) {
-    })
+        })
+    //------------------Set Vendor For Report Printing----------------------
+    $scope.curuser = {
+        clinicname: '',
+        Title:'',
+        email: '',
+        dlno: '',
+        mobile: '',
+        address: ''
+    }
+    function setuser() {
+        $http.get('/Home/CurUser/').then(function (res) {
+            var user = res.data;
+            $scope.curuser.clinicname = user.name;
+            $scope.curuser.Title = user.subTitle;
+            $scope.curuser.email = user.email;
+            $scope.curuser.dlno = user.dlNo;
+            $scope.curuser.mobile = user.mobile;
+            $scope.curuser.address = user.address1 + ' ' + user.address2;
+        }, function (error) {
+        }
+        )
+    }
+//-----------------------------------XX----------------------------------
 })
 
 app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor) {
@@ -681,6 +704,7 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
  //------------------Set Vendor For Report Printing----------------------
     $scope.curuser = {
         clinicname: '',
+        Title:'',
         email: '',
         dlno: '',
         mobile: '',
@@ -690,6 +714,7 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
         $http.get('/Home/CurUser/').then(function (res) {
             var user = res.data;
             $scope.curuser.clinicname = user.name;
+            $scope.curuser.Title = user.subTitle;
             $scope.curuser.email = user.email;
             $scope.curuser.dlno = user.dlNo;
             $scope.curuser.mobile = user.mobile;
@@ -910,6 +935,7 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
     //------------------Set Vendor For Report Printing----------------------
     $scope.curuser = {
         clinicname: '',
+        Title:'',
         email: '',
         dlno: '',
         mobile: '',
@@ -919,6 +945,7 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
         $http.get('/Home/CurUser/').then(function (res) {
             var user = res.data;
             $scope.curuser.clinicname = user.name;
+            $scope.curuser.Title = user.subTitle;
             $scope.curuser.email = user.email;
             $scope.curuser.dlno = user.dlNo;
             $scope.curuser.mobile = user.mobile;
@@ -983,6 +1010,7 @@ app.controller('SalesResportController', function ($scope, $http, loadvndor, $ro
 });
 
 app.controller('TotalExpMedicineController', function ($scope, $http, loadvndor, $rootScope, $filter) {
+    setuser();
     $rootScope.isLoadingScreenActive = true
     $http.get('/Home/getTotalExpMedicine').then(function (res) {
         $scope.InvList = res.data;
@@ -992,9 +1020,32 @@ app.controller('TotalExpMedicineController', function ($scope, $http, loadvndor,
     }, function (error) {
         $rootScope.isLoadingScreenActive = false;
     })
-
+    //------------------Set Vendor For Report Printing----------------------
+    $scope.curuser = {
+        clinicname: '',
+        Title:'',
+        email: '',
+        dlno: '',
+        mobile: '',
+        address: ''
+    }
+    function setuser() {
+        $http.get('/Home/CurUser/').then(function (res) {
+            var user = res.data;
+            $scope.curuser.clinicname = user.name;
+            $scope.curuser.Title = user.subTitle
+            $scope.curuser.email = user.email;
+            $scope.curuser.dlno = user.dlNo;
+            $scope.curuser.mobile = user.mobile;
+            $scope.curuser.address = user.address1 + ' ' + user.address2;
+        }, function (error) {
+        }
+        )
+    }
+//-----------------------------------XX----------------------------------
 });
 app.controller('OutOfStockMedicineController', function ($scope, $http, loadvndor, $rootScope, $filter) {
+    setuser();
     $rootScope.isLoadingScreenActive = true
     $http.get('/Home/getOutOfStockMedicine').then(function (res) {
         $scope.InvList = res.data;
@@ -1004,5 +1055,27 @@ app.controller('OutOfStockMedicineController', function ($scope, $http, loadvndo
     }, function (error) {
         $rootScope.isLoadingScreenActive = false;
     })
-
+    //------------------Set Vendor For Report Printing----------------------
+    $scope.curuser = {
+        clinicname: '',
+        Title:'',
+        email: '',
+        dlno: '',
+        mobile: '',
+        address: ''
+    }
+    function setuser() {
+        $http.get('/Home/CurUser/').then(function (res) {
+            var user = res.data;
+            $scope.curuser.clinicname = user.name;
+            $scope.curuser.Title = user.subTitle;
+            $scope.curuser.email = user.email;
+            $scope.curuser.dlno = user.dlNo;
+            $scope.curuser.mobile = user.mobile;
+            $scope.curuser.address = user.address1 + ' ' + user.address2;
+        }, function (error) {
+        }
+        )
+    }
+//-----------------------------------XX----------------------------------
 });

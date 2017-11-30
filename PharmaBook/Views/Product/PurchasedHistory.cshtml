@@ -2,6 +2,22 @@
 @{
     ViewData["Title"] = "PurchasedHistory";
 }
+<script type="text/javascript">
+    function printDiv(divName, id) {
+        $('.btn').hide();
+        var colcnt = ($("#" + id).find('tr')[0].cells.length) - 1;
+        var printContents = document.getElementById(divName).innerHTML;
+        //var newLbl = $("#" + divName + ",#" + id + " tr").find("input:text,th:last,td:eq(" + colcnt + ")").remove().end().html();
+        var printWindow = window.open('', '', 'height=400,width=800');
+        printWindow.document.write('<html><head><title style=""></title>');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(printContents);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+        location.reload();
+    }
+</script>
 <h2>Purchased History Inbox</h2>
 <div class="blankpage-main" ng-controller="ProductController">
    
@@ -10,6 +26,7 @@
             <div class="content-panel">
                 <div class="row">
                     <div class="col-xs-4">
+                        <input type="button" onclick="printDiv('purchsdinbx','tbl1')" class="btn btn-primary" value="print record" id="prntbtn" />
                         <label>Total Medicine : {{filtered.length}}</label>
                     </div>
                     <div class="col-xs-4">
@@ -27,32 +44,41 @@
 
                     </div>
                 </div>
-                <div style="overflow: auto;height: 750px;">
-                    <table class="table table-striped table-advance table-hover">
+                <div style="overflow: auto;height: 750px;" id="purchsdinbx">
+                    <div ng-show="hide">
+                        <h1 style="text-align:center;line-height:5px;">{{curuser.clinicname}}</h1>
+                        <h3 style="text-align:center;line-height:.25px;font-weight:normal">{{curuser.Title}}</h3>
+                        <h3 style="text-align:center;line-height:5px;font-weight:normal">{{curuser.address}}</h3>
+                        <h3 style="text-align:center;line-height:15px;font-weight:normal">Email: {{curuser.email}} | Mobile: {{curuser.mobile}}</h3>
+                        <h3 style="text-align:center;line-height:.5px;font-weight:normal">{{curuser.dlno}}</h3>
+                        <h2 style="text-align:center">Purchased History Inbox</h2>
+                        <hr />
+                    </div>
+                    <table class="table table-striped table-advance table-hover" rules="rows" style="width:100%" id="tbl1">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Medicine Name</th>
-                                <th>Batch No</th>
-                                <th>Exp Date</th>
-                                <th>Mfg</th>
-                                <th>Stef MRP</th>
-                                <th>Tablets/Capsule</th>                             
-                                <th>Purchased Date</th>
-                                <th>Vendor</th>                               
-                                <th>remark  </th>
+                                <th style="text-align:center">Medicine Name</th>
+                                <th style="text-align:center">Batch No</th>
+                                <th style="text-align:center">Exp Date</th>
+                                <th style="text-align:center">Mfg</th>
+                                <th style="text-align:center">Stef MRP</th>
+                                <th style="text-align:center">Tablets/Capsule</th>                             
+                                <th style="text-align:center">Purchased Date</th>
+                                <th style="text-align:center">Vendor</th>                               
+                                <th style="text-align:center">remark  </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr ng-repeat="item in filtered = (purchasedhistry | filter: searchbox)" ng-init="vndrlst=VendorList[0].vendorName">
                                 <td>{{$index+1}}</td>
                                 <td>{{item.name}}</td>
-                                <td>{{item.batchNo}}</td>
-                                <td>{{item.expDate}}</td>
+                                <td style="text-align:center">{{item.batchNo}}</td>
+                                <td style="text-align:center">{{item.expDate}}</td>
                                 <td>{{item.mfg}}</td>
-                                <td>{{item.eachStefPrice }}</td>
-                                <td>{{item.tabletsCapsule}}</td>                               
-                                <td>{{item.purchasedDated}}</td>
+                                <td style="text-align:center">{{item.eachStefPrice }}</td>
+                                <td style="text-align:center">{{item.tabletsCapsule}}</td>                               
+                                <td style="text-align:center">{{item.purchasedDated}}</td>
                                 <td>{{item.vendorname}} <br />
                                 {{item.vendoradres}} <br />
                                 {{item.vendorcompany}}</td>                              
