@@ -13,10 +13,10 @@ Layout=null;
         <tr>
             <table border="1px solid black" style="width:50%" align="left">
                 <tbody>
-                <th style="border:none" align="left"><label>LIFE CARE PHARMACY</label></th>
-                <tr><th style="border:none" align="left"><label>Chemist & Dragist</label></th></tr>
-                <tr><th style="border:none" align="left"><label>Beldanga New Hospital Para,Hatpara</label></th></tr>
-                <tr><th style="border:none" align="left"><label>p.o - Beldanga, Dist. Murshidabad</label></th></tr>
+                <th style="border:none" align="left"><label>@Html.DisplayFor(x=>x.userProfile.Name)</label></th>
+                <tr><th style="border:none" align="left"><label>@Html.DisplayFor(x => x.userProfile.subTitle)</label></th></tr>
+                <tr><th style="border:none" align="left"><label>@Html.DisplayFor(x => x.userProfile.Address1)</label></th></tr>
+                <tr><th style="border:none" align="left"><label>@Html.DisplayFor(x => x.userProfile.Address2)</label></th></tr>
                 </tbody>
             </table>
         </tr>
