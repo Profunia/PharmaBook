@@ -5,24 +5,33 @@ app.factory('loadvndor', ['$http', '$rootScope', function ($http, $rootScope) {
     $rootScope.UserName = '';
     var fac = {};
     fac.getvndr = function () {
+        $rootScope.isLoadingScreenActive = true;
         $http.get('/Vendor/GetAllVendor').then(function (res) {
-            $rootScope.VendorList = res.data;            
+            $rootScope.VendorList = res.data;    
+            $rootScope.isLoadingScreenActive = false;
         }, function (error) {
+            $rootScope.isLoadingScreenActive = false;
         }
         )
     }
     fac.getprdct = function () {
+        $rootScope.isLoadingScreenActive = true;
         $http.get('/Product/GetAllMedicine').then(function (res) {
-            $rootScope.ProductList = res.data;            
+            $rootScope.ProductList = res.data; 
+            $rootScope.isLoadingScreenActive = false;
         }, function (error) {
+            $rootScope.isLoadingScreenActive = false;
         }       
         )
     }
 
     fac.getVendorbyID = function (id) {
+        $rootScope.isLoadingScreenActive = true;
         $http.get('/Vendor/GetVendorByID/' + id).then(function (res) {
-            $rootScope.selectedVendor = res.data;            
+            $rootScope.selectedVendor = res.data;   
+            $rootScope.isLoadingScreenActive = false;
         }, function (error) {
+            $rootScope.isLoadingScreenActive = false;
         }
         )
     };   
@@ -45,14 +54,18 @@ app.controller('MyController', function ($scope, $http, loadvndor, $rootScope) {
     }
     debugger
     $scope.AddValues = function () {
+        if (!$scope.Item.Name || !$scope.Item.Mobile || !$scope.Item.Address) {
+            $scope.errMsg = "Please provide required fields";
+            return false;
+        }
         $rootScope.isLoadingScreenActive = true
         var obj = {
             'vendorName': $scope.Item.Name,
             'vendorAddress': $scope.Item.Address,
             'vendorMobile': $scope.Item.Mobile,
-            'vendorCompnay': $scope.Item.Company,
-            'cusUserName': $scope.Item.UserName
+            'vendorCompnay': $scope.Item.Company           
         };
+
         $http({
             method: 'post',
             url: "/Vendor/VendorCreate",

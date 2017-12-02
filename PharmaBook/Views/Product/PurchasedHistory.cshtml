@@ -4,18 +4,18 @@
 }
 <script type="text/javascript">
     function printDiv(divName, id) {
-        $('.btn').hide();
+       // $('.btn').hide();
         var colcnt = ($("#" + id).find('tr')[0].cells.length) - 1;
         var printContents = document.getElementById(divName).innerHTML;
         //var newLbl = $("#" + divName + ",#" + id + " tr").find("input:text,th:last,td:eq(" + colcnt + ")").remove().end().html();
-        var printWindow = window.open('', '', 'height=400,width=800');
+        var printWindow = window.open('', '', 'height=400');
         printWindow.document.write('<html><head><title style=""></title>');
         printWindow.document.write('</head><body>');
         printWindow.document.write(printContents);
         printWindow.document.write('</body></html>');
         printWindow.document.close();
         printWindow.print();
-        location.reload();
+       // location.reload();
     }
 </script>
 <h2>Purchased History Inbox</h2>
@@ -25,8 +25,8 @@
         <div class="col-md-12">
             <div class="content-panel">
                 <div class="row">
-                    <div class="col-xs-4">
-                        <input type="button" onclick="printDiv('purchsdinbx','tbl1')" class="btn btn-primary" value="print record" id="prntbtn" />
+                    <div class="col-xs-3">
+                       
                         <label>Total Medicine : {{filtered.length}}</label>
                     </div>
                     <div class="col-xs-4">
@@ -43,6 +43,11 @@
                         </select>
 
                     </div>
+                    <div class="col-xs-1">
+                        <button type="button" style="float:right" class="btn btn-default btn-sm"  id="prntbtn" onclick="printDiv('purchsdinbx','tbl1')">
+                            <span class="glyphicon glyphicon-print"></span> Print
+                        </button>
+                    </div>
                 </div>
                 <div style="overflow: auto;height: 750px;" id="purchsdinbx">
                     <div ng-show="hide">
@@ -50,7 +55,7 @@
                         <h3 style="text-align:center;line-height:.25px;font-weight:normal">{{curuser.Title}}</h3>
                         <h3 style="text-align:center;line-height:5px;font-weight:normal">{{curuser.address}}</h3>
                         <h3 style="text-align:center;line-height:15px;font-weight:normal">Email: {{curuser.email}} | Mobile: {{curuser.mobile}}</h3>
-                        <h3 style="text-align:center;line-height:.5px;font-weight:normal">{{curuser.dlno}}</h3>
+                        <h3 style="text-align:center;line-height:.5px;font-weight:normal">DL No# {{curuser.dlno}}</h3>
                         <h2 style="text-align:center">Purchased History Inbox</h2>
                         <hr />
                     </div>
@@ -63,7 +68,7 @@
                                 <th style="text-align:center">Exp Date</th>
                                 <th style="text-align:center">Mfg</th>
                                 <th style="text-align:center">Stef MRP</th>
-                                <th style="text-align:center">Tablets/Capsule</th>                             
+                                @*<th style="text-align:center">Tablets/Capsule</th>*@                             
                                 <th style="text-align:center">Purchased Date</th>
                                 <th style="text-align:center">Vendor</th>                               
                                 <th style="text-align:center">remark  </th>
@@ -77,11 +82,11 @@
                                 <td style="text-align:center">{{item.expDate}}</td>
                                 <td>{{item.mfg}}</td>
                                 <td style="text-align:center">{{item.eachStefPrice }}</td>
-                                <td style="text-align:center">{{item.tabletsCapsule}}</td>                               
+                                @*<td style="text-align:center">{{item.tabletsCapsule}}</td>*@                               
                                 <td style="text-align:center">{{item.purchasedDated}}</td>
                                 <td>{{item.vendorname}} <br />
-                                {{item.vendoradres}} <br />
-                                {{item.vendorcompany}}</td>                              
+                                {{item.vendorcompany}} 
+                                </td>                              
                                 <td>{{item.remark}}</td>
                             </tr>
                         </tbody>
