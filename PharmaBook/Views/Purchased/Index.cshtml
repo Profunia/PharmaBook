@@ -38,7 +38,12 @@
                 <label class="radio-inline"><input type="radio" name="optradio" checked ng-click="onInboxFiler('Open')" >Open</label>
                 <label class="radio-inline"><input type="radio" name="optradio" ng-click="onInboxFiler('Closed')">Closed</label>
                 <label class="radio-inline"><input type="radio" name="optradio" ng-click="onInboxFiler('All')">All</label>
-                <input type="button" onclick="printDiv('Open','tbl1')" class="btn btn-primary" value="print record" id="prntbtn" style="float:right" />
+               
+            </div>
+            <div class="col-xs-2">
+                <button type="button" style="float:right" class="btn btn-default btn-sm" onclick="printDiv('Open','tbl1')">
+                    <span class="glyphicon glyphicon-print"></span> Print
+                </button>               
             </div>
         </div>
         <div id="Open">
