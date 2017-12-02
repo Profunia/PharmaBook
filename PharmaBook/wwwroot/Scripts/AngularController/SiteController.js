@@ -484,7 +484,8 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
         })
     }
     $scope.PrintInvoice = function () {
-        window.location="/Sales/Invoice";
+        window.open("/Sales/Invoice", "_blank");
+       // window.location="/Sales/Invoice";
     }
 })
 
