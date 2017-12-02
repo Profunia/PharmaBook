@@ -72,8 +72,9 @@ namespace PharmaBook.Controllers
                     msg = "You have Updated Vendor Details successfully !!.";
                 }
             }
-            catch (Exception e)
-            {
+
+            catch (Exception e) {             
+
                 msg = e.Message;
             }
             return Json(msg);

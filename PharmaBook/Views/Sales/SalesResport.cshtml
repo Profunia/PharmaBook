@@ -52,9 +52,14 @@
             <h3 style="text-align:center;line-height:.5px;font-weight:normal">DL No# {{curuser.dlno}}</h3>
             <h2 style="text-align:center">Sales Report Inbox</h2>
             <hr />
-            <h3 style="text-align:left;line-height:.5px;font-weight:normal"><span>Total Billing Amount:</span> <strong> Rs {{getTotal() | number : 2}}</strong></h3>
+            <span>Total Billing Amount:</span> <strong> Rs {{getTotal() | number : 2}}</strong>
+            <span style="float:right">
+                <label class="radio-inline"><input type="radio" name="optradio" checked ng-click="onInboxFiler('Daily')">Daily</label>
+                <label class="radio-inline"><input type="radio" name="optradio" ng-click="onInboxFiler('Monthly')">Monthly</label>
+                <label class="radio-inline"><input type="radio" name="optradio" ng-click="onInboxFiler('Yearly')">Yearly</label>
+            </span>
             <hr />
-            <h3 style="text-align:left;line-height:.5px;font-weight:normal"><span>Total Invoice:</span> <strong> {{getTotalInv()}}</strong></h3>
+            <span>Total Invoice:</span> <strong> {{getTotalInv()}}</strong>
             <hr />
         </div>
 
