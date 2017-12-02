@@ -7,12 +7,12 @@
       //  $('.btn').hide();
         var colcnt = ($("#" + id).find('tr')[0].cells.length)-1;
         var printContents = document.getElementById(divName).innerHTML;
-        var newLbl = $("#" + divName + ",#" + id + " tr").find("input:text,th:last,td:eq("+colcnt+")").remove().end().html();
+        var newLbl = $("#" + divName + ",#" + id + " tr").find("input:text,th:last,td:eq(" + colcnt + ")").hide().end().html();
         var printWindow = window.open('', '', 'height=400');
         printWindow.document.write('<html><head><title style=""></title>');
         printWindow.document.write('</head><body>');
         if (id == 'tbl3') {
-            printWindow.document.write(printContents);
+            printWindow.document.write(newLbl);
         }
         else {
             printWindow.document.write(newLbl);
@@ -20,6 +20,7 @@
             printWindow.document.write('</body></html>');
             printWindow.document.close();
             printWindow.print();
+            $("#" + id + " tr").find("input:text,th:last,td:eq(" + colcnt + ")").show()
         //    location.reload();
     }
 </script>
@@ -113,8 +114,10 @@
                 <h3 style="text-align:center;line-height:.25px;font-weight:normal">{{curuser.Title}}</h3>
                 <h3 style="text-align:center;line-height:5px;font-weight:normal">{{curuser.address}}</h3>
                 <h3 style="text-align:center;line-height:15px;font-weight:normal">Email: {{curuser.email}} | Mobile: {{curuser.mobile}}</h3>
-                <h3 style="text-align:center;line-height:.5px;font-weight:normal">{{curuser.dlno}}</h3>
+                <h3 style="text-align:center;line-height:.5px;font-weight:normal">DL No# {{curuser.dlno}}</h3>
                 <h2 style="text-align:center">Purchased Order Details</h2>
+                <hr />
+                <h3 style="text-align:left;line-height:.5px;font-weight:normal">Vendor Details: {{childPO.vendorName }}, {{childPO.vendorCompany}}, {{childPO.vendorAddress}}, {{childPO.vendorContact}}</h3>
                 <hr />
             </div>
             <table class="table table-striped table-advance table-hover" rules="rows" style="width:100%" id="tbl2">
