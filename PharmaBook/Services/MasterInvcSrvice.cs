@@ -11,7 +11,7 @@ namespace PharmaBook.Services
     {
         void Add(MasterInvoice mstinvc);      
         void Commit();
-        MasterInvoice getlastproduct();
+        MasterInvoice getlastproduct(string userName);
         IEnumerable<MasterInvoice> GetAll(string userName);
         MasterInvoice GetById(int Id);
     }
@@ -42,9 +42,9 @@ namespace PharmaBook.Services
              return _context.InvMaster.FirstOrDefault(x => x.Id == Id);
         }        
        
-        MasterInvoice Imaster.getlastproduct()
+        MasterInvoice Imaster.getlastproduct(string userName)
         {
-            return _context.InvMaster.ToList().LastOrDefault();
+            return _context.InvMaster.Where(x=>x.UserName.Equals(userName)).ToList().LastOrDefault();
         }
     }
 }

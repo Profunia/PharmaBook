@@ -227,3 +227,12 @@
     </div>
 </div>
 
+@section Scripts{
+    <script>
+        $('#menu').load('click', 'li', function () {
+            $('#menu li.active').removeClass('active');
+            console.log("#menu-purchase");
+            $('#menu-purchase').addClass('active');
+        });
+    </script>
+}

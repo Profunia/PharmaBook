@@ -37,7 +37,7 @@
 
         </div>
         <div class="col-xs-2">
-            <button type="button" style="float:right" class="btn btn-default btn-sm" onclick="printDiv('slsdiv','tbl1')" id="prntbtn">
+            <button type="button" style="float:right" class="btn btn-primary btn-sm" onclick="printDiv('slsdiv','tbl1')" id="prntbtn">
                 <span class="glyphicon glyphicon-print"></span> Print
             </button>
         </div>
@@ -89,3 +89,12 @@
     </div>
 </div>
 
+@section Scripts{
+    <script>
+        $('#menu').load('click', 'li', function () {
+            $('#menu li.active').removeClass('active');
+            console.log("#menu-SalesResport");
+            $('#menu-SalesResport').addClass('active');
+        });
+    </script>
+}

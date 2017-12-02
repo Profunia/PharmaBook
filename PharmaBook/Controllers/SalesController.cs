@@ -50,7 +50,7 @@ namespace PharmaBook.Controllers
         public IActionResult Invoice(int? invcid)
         {
             SalesViewModel slsvwmdl = new SalesViewModel();
-            if (invcid != null || invcid != 0)
+            if ( invcid != null)
             {
                 int id = Convert.ToInt32(invcid);
                 var mtrobj = _imaster.GetAll(User.Identity.Name).Where(x => x.Id == id).FirstOrDefault();
@@ -61,7 +61,7 @@ namespace PharmaBook.Controllers
             }
             else
             {
-                MasterInvoice mstrobj = _imaster.getlastproduct();
+                MasterInvoice mstrobj = _imaster.getlastproduct(User.Identity.Name);
                 var chldinvoice = _ichild.GetById(mstrobj.Id);
                 var lst = Mapper.Map<IEnumerable<InvcChildVmdl>>(chldinvoice);
                 slsvwmdl.invcchld = lst;
@@ -84,7 +84,7 @@ namespace PharmaBook.Controllers
                 obj.InvId = commonServices.getDynamicId();
                 _imaster.Add(obj);
                 _imaster.Commit();
-                MasterInvoice mstrobj = _imaster.getlastproduct();
+                MasterInvoice mstrobj = _imaster.getlastproduct(User.Identity.Name);
                 foreach (var i in childinvoice)
                 {
                     ChildInvoice chldinvc = Mapper.Map<ChildInvoice>(i);
@@ -102,7 +102,7 @@ namespace PharmaBook.Controllers
         public JsonResult GetInvoice([FromHeader] int id)
         {
             SalesViewModel slsvwmdl = new SalesViewModel();
-            MasterInvoice mstrobj = _imaster.getlastproduct();
+            MasterInvoice mstrobj = _imaster.getlastproduct(User.Identity.Name);
             var chldinvoice = _ichild.GetAll();
             var lst = Mapper.Map<IEnumerable<InvcChildVmdl>>(chldinvoice);
             slsvwmdl.invcchld = lst;
