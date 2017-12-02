@@ -8,9 +8,11 @@ using PharmaBook.Services;
 using PharmaBook.ViewModel;
 using PharmaBook.Entities;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PharmaBook.Controllers
 {
+    [Authorize]
     public class VendorController : Controller
     {
         private readonly IHostingEnvironment _hostingEnvironment;

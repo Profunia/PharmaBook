@@ -4,6 +4,7 @@
 
 <div ng-controller="DashboardController">
     <!--market updates updates-->
+  
     <div class="market-updates">
         <a href="/Purchased">
             <div class="col-md-4 market-update-gd">
@@ -53,7 +54,19 @@
     </div>
     <!--market updates end here-->
     <br />
-    <div class="row">
+   
+        @if (TempData["accErr"] != null)
+        { <div class="row">
+              <div class="blankpage-main">
+                  <span class="alert alert-warning">@TempData["accErr"]</span>
+                  </div>
+                  <br />
+              </div>
+        }
+    
+
+    <div class="row">     
+           
         <div class="col-xs-6">
             <div class="blankpage-main">
                 <div id="topmedicinechart"></div>

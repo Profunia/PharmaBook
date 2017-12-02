@@ -7,9 +7,11 @@ using PharmaBook.Services;
 using AutoMapper;
 using PharmaBook.ViewModel;
 using PharmaBook.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PharmaBook.Controllers
 {
+    [Authorize]
     public class PurchasedController : Controller
     {
         private IMasterPOServices _iMasterPo;

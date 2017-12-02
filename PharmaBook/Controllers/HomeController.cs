@@ -41,6 +41,28 @@ namespace PharmaBook.Controllers
 
         public IActionResult Index()
         {
+            var userProfile = _iProfile.GetByUserName(User.Identity.Name);
+            if (userProfile.IsActive == false)
+            {
+                TempData["err"] = "Account has been locked. Please contact to Administrator";
+                return RedirectToAction("login", "Account");
+            }
+            else if (userProfile.AccountExpDt <= DateTime.Now)
+            {
+                TempData["err"] = "Account has been expired. Please contact to Administrator";
+                return RedirectToAction("login", "Account");
+
+            }
+            else
+            {
+                int d = (userProfile.AccountExpDt - DateTime.Now).Days; 
+                    if (d < 45)
+                    {
+                        TempData["accErr"] = "Account has been expire next " + d + " day. Please contact to Administrator";
+                    }
+            }
+
+
             DateTime StartDt = DateTime.Now.AddMonths(3);
             DateTime Enddt = DateTime.Now;            
             var Products = _iProduct.GetAll(User.Identity.Name);
