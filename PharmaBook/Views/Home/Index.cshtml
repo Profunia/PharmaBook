@@ -83,6 +83,13 @@
 
 @section Scripts{
 <script src="~/Scripts/dashboard.js"></script>
+    <script>
+        $('#menu').load('click', 'li', function () {
+            $('#menu li.active').removeClass('active');
+            console.log("#menu-home");
+            $('#menu-home').addClass('active');
+        });        
+    </script>
 }
 
 

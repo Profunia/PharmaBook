@@ -4,18 +4,18 @@
 }
 <script type="text/javascript">
     function printDiv(divName, id) {
-        $('.btn').hide();
+      //  $('.btn').hide();
         var colcnt = ($("#" + id).find('tr')[0].cells.length) - 1;
         var printContents = document.getElementById(divName).innerHTML;
         var newLbl = $("#" + divName + ",#" + id + " tr").find("input:text,th:last,td:eq(" + colcnt + ")").remove().end().html();
-        var printWindow = window.open('', '', 'height=400,width=800');
+        var printWindow = window.open('', '', 'height=400');
         printWindow.document.write('<html><head><title style=""></title>');
         printWindow.document.write('</head><body>');        
         printWindow.document.write(newLbl);        
         printWindow.document.write('</body></html>');
         printWindow.document.close();
         printWindow.print();
-        location.reload();
+      //  location.reload();
     } 
 </script>
 <div ng-controller="ProductController">
@@ -94,7 +94,12 @@
                     <div class="row">
                         <div class="col-xs-4">
                             <a href="" class="btn btn-primary" ng-click="bcktoinbx('inbox')">Create New Medicine</a>
-                            <input type="button" onclick="printDiv('pdinbx','tbl1')" class="btn btn-primary" value="print record" id="prntbtn"/>
+                            <button type="button" style="float:right" class="btn btn-primary btn-sm" id="prntbtn"
+                                    onclick="printDiv('pdinbx','tbl1')">
+                                <span class="glyphicon glyphicon-print"></span> Print
+                            </button> 
+
+                            
                             <br />
                             <label>Total Medicine : {{ProductList.length}}</label>
                         </div>
@@ -155,4 +160,12 @@
 </div>
    
 
-
+@section Scripts{
+    <script>
+        $('#menu').load('click', 'li', function () {
+            $('#menu li.active').removeClass('active');
+            console.log("#menu-Medicine");
+            $('#menu-Medicine').addClass('active');
+        });
+    </script>
+}

@@ -196,3 +196,12 @@
         </div>
   
 
+@section Scripts{
+    <script>
+        $('#menu').load('click', 'li', function () {
+            $('#menu li.active').removeClass('active');
+            console.log("#menu-inv");
+            $('#menu-inv').addClass('active');
+        });
+    </script>
+}

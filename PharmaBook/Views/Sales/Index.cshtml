@@ -199,5 +199,13 @@
         $('.dropdown-menu').find('input').click(function (e) {
             e.stopPropagation();
         });
-    </script>
+        $('#menu').load('click', 'li', function () {
+            $('#menu li.active').removeClass('active');
+            console.log("#menu-inv");
+            $('#menu-inv').addClass('active');
+        });
+    </script>  
+
 }
+
+

@@ -209,7 +209,15 @@
 
 
 
-
+@section Scripts{
+    <script>
+        $('#menu').load('click', 'li', function () {
+            $('#menu li.active').removeClass('active');
+            console.log("#menu-Medicine");
+            $('#menu-Medicine').addClass('active');
+        });
+    </script>
+}
                      
 
 
