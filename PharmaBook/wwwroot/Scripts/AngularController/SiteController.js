@@ -489,8 +489,31 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
 })
 
 app.controller('StockController', function ($scope, $http, loadvndor, $rootScope) {
-
+    setuser()
     loadvndor.getprdct();
+    //------------------Set Vendor For Report Printing----------------------
+    $scope.curuser = {
+        clinicname: '',
+        Title: '',
+        email: '',
+        dlno: '',
+        mobile: '',
+        address: ''
+    }
+    function setuser() {
+        $http.get('/Home/CurUser/').then(function (res) {
+            var user = res.data;
+            $scope.curuser.clinicname = user.name;
+            $scope.curuser.Title = user.subTitle;
+            $scope.curuser.email = user.email;
+            $scope.curuser.dlno = user.dlNo;
+            $scope.curuser.mobile = user.mobile;
+            $scope.curuser.address = user.address1 + ' ' + user.address2;
+        }, function (error) {
+        }
+        )
+    }
+//-----------------------------------XX----------------------------------
 
 });
 
