@@ -29,7 +29,7 @@ namespace PharmaBook.Controllers
             var selectedVendor = _iVendorServices.GetById(id);
             return Json(selectedVendor);
         }
-        public JsonResult VendorCreate([FromBody]VendorDtl obj)
+        public IActionResult VendorCreate([FromBody]VendorDtl obj)
         {
             string msg = string.Empty;
             try
@@ -37,19 +37,24 @@ namespace PharmaBook.Controllers
                 if(ModelState.IsValid)
                 {
                     obj.cusUserName = User.Identity.Name;
-                    var create = Mapper.Map<Vendor>(obj);                   
-
+                    
+                    var create = Mapper.Map<Vendor>(obj);
+                    create.isActive = true;
                     _iVendorServices.Add(create);
                     _iVendorServices.Commit();
                     TempData["msg"] = "You have added vendor successfully !!.";
                      msg= "Vendor Added Successfully";
                 }
+                else
+                {
+                    return BadRequest("model validation fail");
+                }
             }
             catch(Exception e)
             {
-                msg = e.Message;
+               return BadRequest(e.Message);
             }
-            return Json(msg);
+            return Ok(msg);
         }
         public JsonResult UpdtVendor([FromBody]VendorDtl obj)
         {
