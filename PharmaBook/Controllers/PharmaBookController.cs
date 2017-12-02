@@ -10,6 +10,7 @@ using AutoMapper;
 
 namespace PharmaBook.Controllers
 {
+    [Authorize]
     public class PharmaBookController : Controller
     {
         private SignInManager<User> _singInManager;
@@ -21,12 +22,16 @@ namespace PharmaBook.Controllers
         {
             _userManager = userManager;
             _singInManager = singInManager;
-            _iProfileServices = iPro;
-
+            _iProfileServices = iPro;            
 
         }
         public IActionResult Admin()
         {
+            if (!User.Identity.Name.Equals("admin@admin.com"))
+            {
+                return RedirectToAction("login", "account");
+            }
+
             var users = _iProfileServices.GetAllforAdmin();
             return View(users);
         }
@@ -34,12 +39,20 @@ namespace PharmaBook.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            
+            if (!User.Identity.Name.Equals("admin@admin.com"))
+            {
+                return RedirectToAction("login", "account");
+            }
             return View();
         }
 
         public IActionResult EditUser(int id)
         {
+            if (!User.Identity.Name.Equals("admin@admin.com"))
+            {
+                return RedirectToAction("login", "account");
+            }
+
             var model = _iProfileServices.GetById(id);
             var VM = Mapper.Map<UserProfileVM>(model);
             return View(VM);
@@ -47,6 +60,11 @@ namespace PharmaBook.Controllers
         [HttpPost]
         public IActionResult EditUser(UserProfileVM model, int id)
         {
+            if (!User.Identity.Name.Equals("admin@admin.com"))
+            {
+                return RedirectToAction("login", "account");
+            }
+
             UserProfile medicn = _iProfileServices.GetById(id);
              Mapper.Map(model, medicn);
 
@@ -61,6 +79,11 @@ namespace PharmaBook.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(UserProfileVM model)
         {
+            if (!User.Identity.Name.Equals("admin@admin.com"))
+            {
+                return RedirectToAction("login", "account");
+            }
+
             if (ModelState.IsValid)
             {
                 var user = new User { UserName = model.userName };
@@ -76,7 +99,7 @@ namespace PharmaBook.Controllers
                     UserProfile objMap = Mapper.Map<UserProfile>(model);
                     _iProfileServices.Add(objMap);
                     _iProfileServices.Commit();
-                    TempData["msg"] = "Successfullt Created";
+                    TempData["msg"] = "Successfully Created";
 
 
                     return RedirectToAction("Admin");

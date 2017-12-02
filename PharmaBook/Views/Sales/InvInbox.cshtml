@@ -97,9 +97,10 @@
             <div class="blankpage-main" ng-show="isPreview">
                 <div ng-show="!returnPreview">
                     <div class="row">
-                        <a ng-href="@Url.Action("Invoice", "Sales")?invcid={{Mastinv.id}} " class="btn btn-primary" target="_blank">Print Invoice</a>
+                        <a ng-href="@Url.Action("Invoice","Sales")/?invcid={{Mastinv.id}}" class="btn btn-default btn-sm" target="_blank">
+                            <span class="glyphicon glyphicon-print"></span> Print Invoice</a>
                         <button class="btn btn-primary" style="float:right;" ng-click="onReturn();">
-                            Return Medicine
+                            Return Medicine >>
                         </button>
                         <span style="color:red; padding-left:100px;">
                             {{returnItemRequired}}

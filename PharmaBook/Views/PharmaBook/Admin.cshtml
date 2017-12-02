@@ -12,8 +12,11 @@
 </head>
 @model IList<UserProfile>
 <body>
-    <div class="container">
-        <a href="/PharmaBook/Register">Registration</a>
+    <div class="container"><hr />
+        <a href="/PharmaBook/Register" class="btn btn-primary">Registration</a>
+        <span style="float:right;">
+            <a href="/" class="btn btn-primary"><< Home</a>
+        </span>
      <br />
         <h3>
             @if(TempData["msg"]!=null){
@@ -21,7 +24,29 @@
         }
         </h3>
         <hr />
-         <h3>Total Member : @Model.Count() </h3>
+    <div class="row">
+        <div class="col-xs-2">
+            <h4>Total Member : @Model.Count() </h4>
+        </div>
+        <div class="col-xs-3">
+           <h4> Active Member : @Model.Where(x => x.IsActive == true).Count()</h4>
+        </div>
+        <div class="col-xs-2">
+            <h4>InActive Member : @Model.Where(x => x.IsActive == false).Count()</h4>
+        </div>
+        <div class="col-xs-2">
+          <h4> Account Expired : @Model.Where(x => x.AccountExpDt >= DateTime.Now).Count()</h4>
+        </div>
+        <div class="col-xs-3">
+            @{ 
+                DateTime start = DateTime.Now.AddMonths(2);
+                DateTime end = DateTime.Now;
+                int count= Model.Where(x => x.AccountExpDt >= end && x.AccountExpDt <= start).Count();
+            }
+            <h4> Next 2 month Expiry : @count</h4>
+        </div>
+    </div>
+        
        <table class="table">
            <thead>
                <tr>
@@ -35,7 +60,7 @@
                </tr>
            </thead>
            <tbody>
-              @foreach(var item in Model){
+              @foreach (var item in Model){
                <tr>
                    <td>@item.userName</td>
                    <td>@item.Name</td>
@@ -49,12 +74,12 @@
                        }
                        else
                        {
-                           str = "<span style='color:red;'>De-Active</span>";
+                           str = "<span style='color:red;'>In-Active</span>";
                        }
                    }
                    @Html.Raw(str)</td>
                    <td>@item.lastLogin</td>
-                   <td>@item.AccountExpDt</td>
+                   <td>@item.AccountExpDt.ToString("dd/MM/yyyy")</td>
                    <td><a href="/PharmaBook/EditUser/@(item.Id)">Edit</a></td>
                </tr>
                        }
