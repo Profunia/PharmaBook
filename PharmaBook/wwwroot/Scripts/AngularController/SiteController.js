@@ -598,14 +598,16 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
     setuser();
     $scope.masterPo = [];
     $scope.childPoView = false;
+    
     function getPurchasedInbox()
     {
+        $rootScope.isLoadingScreenActive = true;
         $http.get('/Purchased/InboxPO').then(function (res) {
         
             $scope.masterPo = res.data.masterPo;
-
+            $rootScope.isLoadingScreenActive = false;
         }, function (error) {
-
+            $rootScope.isLoadingScreenActive = false;
         })
 
     }
