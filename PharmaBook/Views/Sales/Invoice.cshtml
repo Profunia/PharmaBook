@@ -3,48 +3,60 @@
     ViewData["Title"] = "Invoice";
 Layout=null;
 }
+<link href="~/css/bootstrap.css" rel="stylesheet" />
 @model SalesViewModel
-<div style="width: 21cm;min-height: 29.7cm;padding: 1cm;margin: 1cm auto;border: 1px #D3D3D3 solid;border-radius: 5px;background: white;box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);line-height:90%" ng-controller="SalesController">
+<div style="width: 23cm;min-height: 29.7cm;padding: 1cm;margin: 1cm auto;border: 1px #D3D3D3 solid;border-radius: 5px;background: white;box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);line-height:90%" ng-controller="SalesController">
+    <div class="row" style="margin-top:20px;">
+        <div class="col-xs-3">
+            Inv No. : @Html.DisplayFor(x => x.masterinvc.InvId)
+        </div>
+        <div class="col-xs-5">
+            <center>  <strong>Cash Memo/Prescription Register</strong> </center>
+        </div>
+        <div class="col-xs-4">
+           <span style="float:right"> D.L No.# @Html.DisplayFor(x => x.userProfile.DLNo)</span>
+        </div> 
+        <br/>
+        <hr />
+    </div>
 
-    <table class="table" style="margin-top:20px">
-        <th align="left" style="border:none">No. : @Html.DisplayFor(x=>x.masterinvc.InvId)</th>
-        <th align="center" style="border:none">Cash Memo/Prescription Register </th>
-        <th align="right" style="border:none">D.L No.: (9982-S, 9983-SB)</th>
-        <tr>
-            <table border="1px solid black" style="width:50%" align="left">
-                <tbody>
-                <th style="border:none" align="left"><label>@Html.DisplayFor(x=>x.userProfile.Name)</label></th>
-                <tr><th style="border:none" align="left"><label>@Html.DisplayFor(x => x.userProfile.subTitle)</label></th></tr>
-                <tr><th style="border:none" align="left"><label>@Html.DisplayFor(x => x.userProfile.Address1)</label></th></tr>
-                <tr><th style="border:none" align="left"><label>@Html.DisplayFor(x => x.userProfile.Address2)</label></th></tr>
-                </tbody>
-            </table>
-        </tr>
-        <tr>
-            <table border="1px solid black" style="width:50%">
-                <th style="border:none" align="left"><label>Patient Name: </label>@Html.DisplayFor(x=>x.masterinvc.PatientName)</th>
-                <tr><th style="border:none" align="left"><label>Address:</label>@Html.DisplayFor(x => x.masterinvc.PatientAdres)</th></tr>
-                <tr><th style="border:none" align="left"><label>Dr.'s Name:</label>@Html.DisplayFor(x => x.masterinvc.DrName)</th></tr>
-                <tr><th style="border:none" align="left"><label>Regd. No.:</label>@Html.DisplayFor(x => x.masterinvc.RegNo)</th></tr>
-            </table>
-        </tr>
-    </table>
-    <table border="1px solid black" style="width:100%;margin-top:20px">
+    <div class="row">
+        <div class="col-xs-6">
+            <span style="font-size: 30px;">@Html.DisplayFor(x => x.userProfile.Name)</span> <br/>
+            <span style="line-height: 3">@Html.DisplayFor(x => x.userProfile.subTitle)</span><br/>
+            <span>@Html.DisplayFor(x => x.userProfile.Address1)</span> <br />
+            <span style="line-height: 2;">@Html.DisplayFor(x => x.userProfile.Address2)</span>
+        </div>
+        <div class="col-xs-6">
+            <label>Patient Name: </label> @Html.DisplayFor(x => x.masterinvc.PatientName) <br/>
+            <span>Address:</span> @Html.DisplayFor(x => x.masterinvc.PatientAdres) <br/>
+            <label style="line-height: 3;">Dr.'s Name:</label> @Html.DisplayFor(x => x.masterinvc.DrName) <br/>
+            <span style="line-height: 0;">Regd. No.:</span> @Html.DisplayFor(x => x.masterinvc.RegNo)
+        </div>
+        <hr />
+    </div>
+    <br />
+    <hr/>
+
+    <label>Medicine Details : </label>
+    <table class="table">
         <thead>
-        <th>Qty</th>
-        <th>Item</th>
-        <th>Mfg</th>
-        <th>Batch No.</th>
-        <th>Exp. Date</th>
-        <th>Rs.</th>        
+            <tr>
+                <th>Qty</th>
+                <th>Item</th>
+                <th>Mfg</th>
+                <th>Batch No.</th>
+                <th>Exp. Date</th>
+                <th>Rs.</th>
+            </tr>
         </thead>
         <tbody>
             @{double total=0.0;}
            @foreach(var item in Model.invcchld) {
             <tr>
                 <td>@item.Qty</td>
-                <td>@item.Description</td>
-                <td>@item.Mfg</td>
+                <td><span>@item.Description</span></td>
+                <td><span>@item.Mfg</span></td>
                 <td>@item.BatchNo</td>
                 <td>@item.ExpDt</td>
                 <td>@item.Amount</td>               
@@ -52,23 +64,25 @@ Layout=null;
 
             total+=@item.Amount;
             }
+           
+            <tr>
+                <th colspan="5"> <span style="float:right;">Total</span> </th>
+                <th>@total</th>
+            </tr>
         </tbody>
     </table>
-    <table border="1px solid black" style="width:50%" align="Right">
-    <thead>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th>Total</th>
-        <th>@total</th>
-        <th></th>
-        </thead>
-    </table><br /><br /><br />
-    <p>Date: @DateTime.Now<p>
-        <table style="width:100%;margin-top:20px">
-            <th align="left">N.B. :Please get your medicine checked by your doctor before youse. </th>
-            <th align="right">Signature</th>
-        </table>
+
+    <div>
+        <div class="col-xs-9">
+            <span>
+                Date: @DateTime.Now
+            </span><br/>
+
+            <span style="line-height: 2;"> N.B. :Please get your medicine checked by your doctor before youse.</span>
+        </div>
+        <div class="col-xs-3">
+            <span style="float:right; padding-top: 25px;"> Signature</span>
+        </div>
+    </div>
 </div>
 
