@@ -862,12 +862,12 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
     setuser();
     $scope.InvList = [];
     $scope.isPreview = false;
-    
+    $rootScope.isLoadingScreenActive = true;
     $http.get('/Sales/GetAllInvoice').then(function (res) {
         $scope.InvList = res.data;
-       
+        $rootScope.isLoadingScreenActive = false;
     }, function (error) {
-     
+        $rootScope.isLoadingScreenActive = false;
     })
 
     $scope.childDetails = function (val) {

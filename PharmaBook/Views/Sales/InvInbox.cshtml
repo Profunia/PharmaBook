@@ -1,18 +1,18 @@
 ﻿
 <script type="text/javascript">
     function printDiv(divName,id) {
-        $('.btn').hide();
+      //  $('.btn').hide();
         var colcnt = ($("#" + id).find('tr')[0].cells.length) - 1;
         var printContents = document.getElementById(divName).innerHTML;
         var newLbl = $("#" + divName + ",#" + id + " tr").find("input:text,th:last,td:eq(" + colcnt + ")").remove().end().html();
-        var printWindow = window.open('', '', 'height=400,width=800');
+        var printWindow = window.open('', '', 'height=400');
         printWindow.document.write('<html><head><title style=""></title>');
         printWindow.document.write('</head><body>');
         printWindow.document.write(newLbl);
             printWindow.document.write('</body></html>');
             printWindow.document.close();
             printWindow.print();
-            location.reload();
+          //  location.reload();
     }
 </script>
    
@@ -21,14 +21,20 @@
             <div class="blankpage-main" ng-show="!isPreview">
 
                 <div class="row">
-                    <div class="col-xs-6">
-                        <input type="button" onclick="printDiv('invcinbx','tbl1')" class="btn btn-primary" value="print record" id="prntbtn"/>
+                    <div class="col-xs-4">                        
                         <span>Total Invoice:</span> <strong> {{InvList.length}}</strong> <br />
                     </div>
                     <div class="col-xs-6">
-                        <label>Filter : </label>
-                        <input type="text" placeholder="search" ng-model="search" class="form-control" />
+                        <div class="form-group">                            
+                            <input type="text" placeholder="search" ng-model="search" class="form-control" />
+                        </div>
+                       
 
+                    </div>
+                    <div class="col-xs-2">
+                        <button type="button" style="float:right" class="btn btn-default btn-sm" onclick="printDiv('invcinbx','tbl1')" id="prntbtn">
+                            <span class="glyphicon glyphicon-print"></span> Print
+                        </button>
                     </div>
                 </div>
                 <hr />
@@ -38,7 +44,7 @@
                         <h3 style="text-align:center;line-height:.25px;font-weight:normal">{{curuser.Title}}</h3>
                         <h3 style="text-align:center;line-height:5px;font-weight:normal">{{curuser.address}}</h3>
                         <h3 style="text-align:center;line-height:15px;font-weight:normal">Email: {{curuser.email}} | Mobile: {{curuser.mobile}}</h3>
-                        <h3 style="text-align:center;line-height:.5px;font-weight:normal">{{curuser.dlno}}</h3>
+                        <h3 style="text-align:center;line-height:.5px;font-weight:normal">DL No# {{curuser.dlno}}</h3>
                         <h2 style="text-align:center">Invoice Inbox</h2>
                         <hr />
                     </div>
