@@ -24,7 +24,17 @@
 <body>
     <!-- main-content -->
     <h1>Welcome to PharmaBook</h1>
+    <div class="row" style="background-color:white">
+        @if (TempData["err"] != null)
+            {
+           
+            <span style="color:red">@TempData["err"]</span>
+            
+        }
+    </div>
+
     <div class="main-content-agileits">
+        
         <!-- left-content -->
         <div class="left-text-w3ls">
             <h3>Software Features</h3>

@@ -33,7 +33,7 @@
 
                     </div>
                     <div class="col-xs-2">
-                        <button type="button" style="float:right" class="btn btn-default btn-sm" onclick="printDiv('invcinbx','tbl1')" id="prntbtn">
+                        <button type="button" style="float:right" class="btn btn-primary btn-sm" onclick="printDiv('invcinbx','tbl1')" id="prntbtn">
                             <span class="glyphicon glyphicon-print"></span> Print
                         </button>
                     </div>
@@ -97,7 +97,7 @@
             <div class="blankpage-main" ng-show="isPreview">
                 <div ng-show="!returnPreview">
                     <div class="row">
-                        <a ng-href="@Url.Action("Invoice","Sales")/?invcid={{Mastinv.id}}" class="btn btn-default btn-sm" target="_blank">
+                        <a ng-href="@Url.Action("Invoice","Sales")/?invcid={{Mastinv.id}}" class="btn btn-primary btn-sm" target="_blank">
                             <span class="glyphicon glyphicon-print"></span> Print Invoice</a>
                         <button class="btn btn-primary" style="float:right;" ng-click="onReturn();">
                             Return Medicine >>
