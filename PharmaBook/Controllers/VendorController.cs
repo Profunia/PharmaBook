@@ -67,6 +67,7 @@ namespace PharmaBook.Controllers
                 {
                     var create =_iVendorServices.GetById(obj.Id);
                     Mapper.Map(obj, create);
+                    create.isActive = true;
                     _iVendorServices.Commit();                   
                     msg = "You have Updated Vendor Details successfully !!.";
                 }
