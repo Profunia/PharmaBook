@@ -173,7 +173,7 @@ namespace PharmaBook.Controllers
                                             {
                                                 medicine = rowData;
                                             }
-                                            if (rowData == null)
+                                            if (rowData == null || rowData == "")
                                             {
                                                 producterr.name = "Medicine name required";
                                             }
@@ -187,7 +187,7 @@ namespace PharmaBook.Controllers
                                         }
                                         else
                                         {
-                                            if (rowData == null)
+                                            if (rowData == null || rowData == "")
                                             {
                                                 producterr.batchNo = "BatchNo required";
                                             }
@@ -205,7 +205,7 @@ namespace PharmaBook.Controllers
                                             {
                                                 mfg = rowData;
                                             }
-                                            if (rowData == null)
+                                            if (rowData == null || rowData == "")
                                             {
                                                 producterr.companyName = "Mfg required";
                                             }
@@ -217,10 +217,10 @@ namespace PharmaBook.Controllers
                                         {
                                             int month =0;
                                             int days =0;
-                                            int yr = 0;
+                                            string yr = string.Empty;
                                             char[] c = new char[] { '/', '-' };
                                             string[] dt = rowData.Split(c);
-                                            if (dt[0] != "")
+                                            if (dt.Length == 3 && dt[0] != ""&& dt[1] != ""&& dt[2] != "")
                                             {
                                                 int chk = Convert.ToInt32(dt[1]); 
                                                 if (chk > 12)
@@ -229,7 +229,7 @@ namespace PharmaBook.Controllers
                                                     int cnt = chk2.ToString().Length;
                                                     if (cnt >= 3)
                                                     {
-                                                        yr = Convert.ToInt32(dt[0]);
+                                                        yr = Convert.ToString(dt[0]);                                                        
                                                         days = Convert.ToInt32(dt[1]);
                                                         month = Convert.ToInt32(dt[2]);
                                                     }
@@ -237,21 +237,23 @@ namespace PharmaBook.Controllers
                                                     {
                                                         month = Convert.ToInt32(dt[0]);
                                                         days = Convert.ToInt32(dt[1]);
-                                                        yr = Convert.ToInt32(dt[2]);
+                                                        yr = Convert.ToString(dt[2]);
                                                     }
                                                 }
                                                 else
                                                 {
                                                     month = Convert.ToInt32(dt[1]);
                                                     days = Convert.ToInt32(dt[0]);
-                                                    yr = Convert.ToInt32(dt[2]);
+                                                    yr = Convert.ToString(dt[2]);
                                                 }
                                                 if (!string.IsNullOrEmpty(rowData))
                                                 {
                                                     int Mnthdays = System.DateTime.DaysInMonth(2001, month);
                                                     if (Mnthdays >= days)
                                                     {
-                                                        string dt2 = yr+"/"+ month+ "/" + days;
+                                                        char[] chr = new char[] { ' '};
+                                                        string[] yr2 = yr.Split(chr);                                                        
+                                                        string dt2 = yr2[0]+"/"+ month+ "/" + days;
                                                         DateTime dt1 = Convert.ToDateTime(dt2);
                                                         productDetails.expDate = dt1.ToString("dd/MM/yyyy");
                                                     }
@@ -268,7 +270,7 @@ namespace PharmaBook.Controllers
                                         }
                                         else
                                         {
-                                            if (rowData == null)
+                                            if (rowData == null || rowData == "")
                                             {
                                                 producterr.expDate = "expDate required";
                                             }
@@ -295,7 +297,7 @@ namespace PharmaBook.Controllers
                                         }
                                         else
                                         {
-                                            if (rowData == null)
+                                            if (rowData == null || rowData == "")
                                             {
                                                 producterr.stef = "Stef required";
                                             }
@@ -309,7 +311,7 @@ namespace PharmaBook.Controllers
                                         }
                                         else
                                         {
-                                            if (rowData == null)
+                                            if (rowData == null || rowData == "")
                                             {
                                                 producterr.nooftablet = "No Of Tablets required";
                                             }
@@ -320,13 +322,13 @@ namespace PharmaBook.Controllers
                                     {
                                         if (!string.IsNullOrEmpty(rowData))
                                         {
-                                            productDetails.eachStefPrice = Convert.ToInt32(rowData);
+                                            productDetails.eachStefPrice = Convert.ToDouble(rowData);
                                         }
                                         else
                                         {
-                                            if (rowData == null)
+                                            if (rowData == null || rowData=="")
                                             {
-                                                producterr.openingStock = "Price Per Stef required";
+                                                producterr.eachstefprice = "Price Per Stef required";
                                             }
                                         }
 
