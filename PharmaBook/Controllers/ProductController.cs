@@ -55,6 +55,7 @@ namespace PharmaBook.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    Product chk = _iProduct.GetAll(User.Identity.Name).Where(x => x.name == obj.name && x.companyName == obj.companyName).FirstOrDefault();
                     var stockMRP = commonServices.getStockMRP((int)obj.stef, (int)obj.tabletsCapsule, obj.eachStefPrice);
                     obj.MRP= stockMRP.MRP;
                     obj.openingStock = stockMRP.openingStock;
@@ -63,9 +64,24 @@ namespace PharmaBook.Controllers
                     objMap.lastUpdated = DateTime.Now.ToString();                    
                     objMap.isActive = true;
                     objMap.cusUserName = User.Identity.Name;
-
-                    _iProduct.Add(objMap);
-                    _iProduct.Commit();
+                    if (chk != null)
+                    {
+                        var prd = _iProduct.GetById(chk.Id);
+                        if (prd.isActive == false)
+                        {
+                            prd.MRP = stockMRP.MRP;
+                            prd.openingStock = stockMRP.openingStock;
+                            prd.lastUpdated = DateTime.Now.ToString();
+                            prd.isActive = true;
+                            _iProduct.Commit();
+                        }
+                    }
+                    if (chk == null)
+                    {
+                        _iProduct.Add(objMap);
+                        _iProduct.Commit();
+                    }
+                    
                     msg = obj.name + " medicine has been successfully added!!";
 
                     // update product histry table
@@ -339,9 +355,9 @@ namespace PharmaBook.Controllers
                             if (bHeaderRow == false)
                             {
                                 if (productDetails.name != null && productDetails.batchNo != null  && productDetails.companyName != null && productDetails.stef != 0 && productDetails.eachStefPrice != null && productDetails.tabletsCapsule != null)
-                                {
-                                    obj.successlst.Add(productDetails);
+                                {                                    
                                     var status = Create(productDetails);
+                                    obj.successlst.Add(productDetails);
                                 }
                                 else if (medicine != "" && mfg == "" && productDetails.expDate != null)
                                 {
@@ -371,10 +387,21 @@ namespace PharmaBook.Controllers
                                 }                                
                                 else if (medicine != "" && mfg != "")
                                 {
-                                    Duplicatelist dplctobj = new Duplicatelist();
-                                    dplctobj.name = medicine;
-                                    dplctobj.companyName = mfg;
-                                    obj.duplictlst.Add(dplctobj);
+                                    var prodct = _iProduct.GetAll(User.Identity.Name).Where(x => x.name == medicine && x.companyName == mfg).FirstOrDefault(); ;
+                                    if (prodct.isActive == false)
+                                    {
+                                        productDetails.name = medicine;
+                                        productDetails.companyName = mfg;
+                                        var status = Create(productDetails);
+                                        obj.successlst.Add(productDetails);
+                                    }
+                                    else
+                                    {
+                                        Duplicatelist dplctobj = new Duplicatelist();
+                                        dplctobj.name = medicine;
+                                        dplctobj.companyName = mfg;
+                                        obj.duplictlst.Add(dplctobj);
+                                    }
                                 }
                                 else if (producterr.name != null || producterr.batchNo != null || producterr.openingStock == null || producterr.companyName != null || producterr.expDate != null || producterr.stef != null || producterr.nooftablet != null || producterr.eachstefprice != null)
                                 {

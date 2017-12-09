@@ -445,7 +445,8 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
                 Description: res.data.name,
                 BatchNo: res.data.batchNo,
                 ExpDt: res.data.expDate,
-                Amount: res.data.mrp
+                Amount: res.data.mrp,
+                Availstk: res.data.openingStock
             };
             console.log($scope.child);
         }, function (error) {
@@ -486,6 +487,15 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
     $scope.PrintInvoice = function () {
         window.open("/Sales/Invoice", "_blank");
        // window.location="/Sales/Invoice";
+    }   
+    $scope.qtychk = function (qty,avlstk) {
+        if (qty > avlstk) {
+            confirm("Given quantity is greater than available quantity")
+        }
+        if (qty == 0)
+        {
+            alert("Given quantity is not Available")
+        }
     }
 })
 
@@ -515,7 +525,6 @@ app.controller('StockController', function ($scope, $http, loadvndor, $rootScope
         )
     }
 //-----------------------------------XX----------------------------------
-
 });
 
 app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootScope, $filter) {
@@ -731,13 +740,22 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
     $scope.onInboxFiler = function (val) {
         if (val == "Open") {
             $scope.inboxfiler = "Open";
+            $('#chk1').attr('checked', true);
+            $('#chk2').attr('checked', false);
+            $('#chk3').attr('checked', false); 
         }
         else if (val == "Closed")
         {
             $scope.inboxfiler = "Closed";
+            $('#chk1').attr('checked', false);
+            $('#chk2').attr('checked', true);
+            $('#chk3').attr('checked', false); 
         }
         else {
             $scope.inboxfiler = '';
+            $('#chk1').attr('checked', false);
+            $('#chk2').attr('checked', false);
+            $('#chk3').attr('checked', true); 
         }
     }
  //------------------Set Vendor For Report Printing----------------------
@@ -831,6 +849,7 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
         }, function (error) {
         })
     }
+    
     $scope.DelCrtIitem = function (index) {      
         $scope.cartlists.splice(index, 1);
     }
@@ -896,7 +915,7 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
 });
 
 app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $rootScope, $filter) {    
-    setuser();
+    setuser();    
     $scope.InvList = [];
     $scope.isPreview = false;
     $rootScope.isLoadingScreenActive = true;
@@ -906,7 +925,6 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
     }, function (error) {
         $rootScope.isLoadingScreenActive = false;
     })
-
     $scope.childDetails = function (val) {
         console.log(val);
         $scope.Mastinv = val;
@@ -925,19 +943,27 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
     $scope.isSucessDB = false;
     $scope.ngSubmitReturn = function () {
         var obj = $scope.ReturnInv;
-        $rootScope.isLoadingScreenActive = true;
-        $http({
-            method: 'post',
-            url: "/Sales/ReturnMedicine",
-            data: JSON.stringify(obj),
-            dataType: "json"
-        }).then(function (res) {
-            $scope.isSucessDB = true;
-            $rootScope.isLoadingScreenActive = false;
-        }, function (error) {
-            $scope.isSucessDB = false;
-            $rootScope.isLoadingScreenActive = false;
-        })
+        let hasMagenicVendor = obj.some(vendor => vendor['soldQty'] === 0)
+        if (hasMagenicVendor == true)
+        {
+            alert("Some of your product is no more left to return.!!");
+            return false
+        }
+        else {
+            $rootScope.isLoadingScreenActive = true;
+            $http({
+                method: 'post',
+                url: "/Sales/ReturnMedicine",
+                data: JSON.stringify(obj),
+                dataType: "json"
+            }).then(function (res) {
+                $scope.isSucessDB = true;
+                $rootScope.isLoadingScreenActive = false;
+            }, function (error) {
+                $scope.isSucessDB = false;
+                $rootScope.isLoadingScreenActive = false;
+            })
+        }
     }
     $scope.ReturnInv = [];
     $scope.returnPreview = false;
@@ -993,7 +1019,7 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
         }
         )
     }
-//-----------------------------------XX----------------------------------
+   //-----------------------------------XX----------------------------------    
 });
 
 app.controller('DashboardController', function ($rootScope) {
@@ -1002,6 +1028,7 @@ app.controller('DashboardController', function ($rootScope) {
 
 app.controller('SalesResportController', function ($scope, $http, loadvndor, $rootScope, $filter) {
     setuser();
+    //$scope.leader = '';
     $scope.InvList = [];
     $scope.GridData = []
     $scope.FilterType = '';
@@ -1010,14 +1037,23 @@ app.controller('SalesResportController', function ($scope, $http, loadvndor, $ro
         if (val == 'Monthly') {
             $scope.GridData = $scope.InvList.MonthlyResult;
             $scope.FilterType = 'm';
+            $('#chk2').attr('checked', true);
+            $('#chk1').attr('checked', false);
+            $('#chk3').attr('checked', false);
         }
         else if (val == 'Yearly') {
             $scope.GridData = $scope.InvList.YearlyResult;
             $scope.FilterType = 'y';
+            $('#chk3').attr('checked', true);
+            $('#chk2').attr('checked', false);
+            $('#chk1').attr('checked', false);            
         }
         else {
             $scope.GridData = $scope.InvList.DailyResult;
             $scope.FilterType = 'd';
+            $('#chk1').attr('checked', true);
+            $('#chk2').attr('checked', false);
+            $('#chk3').attr('checked', false);       
         }
         
     }

@@ -8,6 +8,10 @@
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE;RELEASE;NETCOREAPP1_1</DefineConstants>
+  </PropertyGroup>
+
   <!--<itemgroup>
     <content remove="wwwroot/24c61767-2c79-44ed-b906-2ea3160f5e71.xlsx" />
     <content remove="wwwroot/bulktemplate\~%24bulkuploadtemplate.xlsx" />
