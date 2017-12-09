@@ -54,15 +54,19 @@ Layout=null;
             @{double total=0.0;}
            @foreach(var item in Model.invcchld) {
             <tr>
+                @if (@item.Qty > 0)
+                {
                 <td>@item.Qty</td>
                 <td><span>@item.Description</span></td>
                 <td><span>@item.Mfg</span></td>
                 <td>@item.BatchNo</td>
                 <td>@item.ExpDt</td>
-                <td>@item.Amount</td>               
+                <td>@item.Amount</td>  
+                 total += @item.Amount;
+                }
             </tr>
 
-            total+=@item.Amount;
+            
             }
            
             <tr>

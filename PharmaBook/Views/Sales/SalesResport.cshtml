@@ -31,7 +31,7 @@
         <div class="col-xs-6">
             <label>Filter : </label>
             
-            <label class="radio-inline"><input type="radio" name="optradio" checked ng-click="onInboxFiler('Daily')">Daily</label>
+            <label class="radio-inline"><input type="radio" name="optradio" checked ng-click="onInboxFiler('Daily')" >Daily</label>
             <label class="radio-inline"><input type="radio" name="optradio" ng-click="onInboxFiler('Monthly')">Monthly</label>
             <label class="radio-inline"><input type="radio" name="optradio" ng-click="onInboxFiler('Yearly')">Yearly</label>
 
@@ -44,7 +44,7 @@
     </div>
     <hr />
     <div id="slsdiv">
-        <div ng-show="hide">
+        <div ng-show="isPreview">
             <h1 style="text-align:center;line-height:5px;">{{curuser.clinicname}}</h1>
             <h3 style="text-align:center;line-height:.25px;font-weight:normal">{{curuser.Title}}</h3>
             <h3 style="text-align:center;line-height:5px;font-weight:normal">{{curuser.address}}</h3>
@@ -54,15 +54,14 @@
             <hr />
             <span>Total Billing Amount:</span> <strong> Rs {{getTotal() | number : 2}}</strong>
             <span style="float:right">
-                <label class="radio-inline"><input type="radio" name="optradio" checked ng-click="onInboxFiler('Daily')">Daily</label>
-                <label class="radio-inline"><input type="radio" name="optradio" ng-click="onInboxFiler('Monthly')">Monthly</label>
-                <label class="radio-inline"><input type="radio" name="optradio" ng-click="onInboxFiler('Yearly')">Yearly</label>
+                <label class="radio-inline"><input type="radio" name="optradio1" id="chk1" checked ng-click="onInboxFiler('Daily')">Daily</label>
+                <label class="radio-inline"><input type="radio" name="optradio2" id="chk2" ng-click="onInboxFiler('Monthly')">Monthly</label>
+                <label class="radio-inline"><input type="radio" name="optradio3" id="chk3" ng-click="onInboxFiler('Yearly')">Yearly</label>
             </span>
             <hr />
             <span>Total Invoice:</span> <strong> {{getTotalInv()}}</strong>
             <hr />
         </div>
-
         <table class="table table-striped table-advance table-hover" rules="rows" style="width:100%" id="tbl1">
             <thead>
                 <tr>

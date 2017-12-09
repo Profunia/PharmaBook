@@ -7,7 +7,7 @@
       //  $('.btn').hide();
         var colcnt = ($("#" + id).find('tr')[0].cells.length) - 1;
         var printContents = document.getElementById(divName).innerHTML;
-        var newLbl = $("#" + divName + ",#" + id + " tr").find("input:text,th:last,td:eq(" + colcnt + ")").remove().end().html();
+        var newLbl = $("#" + divName + ",#" + id + " tr").find("input:text,th:last,td:eq(" + colcnt + ")").hide().end().html();
         var printWindow = window.open('', '', 'height=400');
         printWindow.document.write('<html><head><title style=""></title>');
         printWindow.document.write('</head><body>');
@@ -15,6 +15,7 @@
         printWindow.document.write('</body></html>');
         printWindow.document.close();
         printWindow.print();
+        $("#" + id + " tr").find("th:last,td:eq(" + colcnt + ")").show()
       //  location.reload();
     } 
 </script>
@@ -98,7 +99,7 @@
                             <label>Total Medicine : {{ProductList.length}}</label>
                         </div>
                         <div class="col-xs-6 right">
-                            <input type="text" placeholder="Search Vendor" class="form-control" ng-model="searchbox" />
+                            <input type="text" placeholder="Search Medicine" class="form-control" ng-model="searchbox" />
                         </div>
                         <div class="col-xs-2 right">
                             <button type="button" style="float:right" class="btn btn-primary btn-sm" id="prntbtn" onclick="printDiv('pdinbx','tbl1')">
@@ -112,7 +113,7 @@
                             <h3 style="text-align:center;line-height:.25px;font-weight:normal">{{curuser.Title}}</h3>
                             <h3 style="text-align:center;line-height:5px;font-weight:normal">{{curuser.address}}</h3>
                             <h3 style="text-align:center;line-height:15px;font-weight:normal">Email: {{curuser.email}} | Mobile: {{curuser.mobile}}</h3>
-                            <h3 style="text-align:center;line-height:.5px;font-weight:normal">{{curuser.dlno}}</h3>
+                            <h3 style="text-align:center;line-height:.5px;font-weight:normal">DL No# {{curuser.dlno}}</h3>
                             <h2 style="text-align:center">Medicine List</h2>
                             <hr />
                             <h3 style="text-align:left;line-height:.5px;font-weight:normal"><span>Total Medicine :</span> <strong>{{ProductList.length}}</strong></h3>
