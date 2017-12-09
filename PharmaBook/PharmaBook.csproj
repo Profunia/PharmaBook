@@ -8,6 +8,10 @@
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Include="wwwroot\images\sad.jpg" />
+  </ItemGroup>
+
   <!--<itemgroup>
     <content remove="wwwroot/24c61767-2c79-44ed-b906-2ea3160f5e71.xlsx" />
     <content remove="wwwroot/bulktemplate\~%24bulkuploadtemplate.xlsx" />
