@@ -305,7 +305,7 @@ namespace PharmaBook.Controllers
                                         productDetails.Remarks = rowData;
 
                                     }
-                                    else if (cName.Equals("stef"))
+                                    else if (cName.Equals("Stef"))
                                     {
                                         if (!string.IsNullOrEmpty(rowData))
                                         {
@@ -319,7 +319,7 @@ namespace PharmaBook.Controllers
                                             }
                                         }
                                     }
-                                    else if (cName.Equals("NoOFTablets"))
+                                    else if (cName.Equals("TabletsCapsule"))
                                     {
                                         if (!string.IsNullOrEmpty(rowData))
                                         {
@@ -334,7 +334,7 @@ namespace PharmaBook.Controllers
                                         }
 
                                     }
-                                    else if (cName.Equals("PricePerStef"))
+                                    else if (cName.Equals("StefPrice"))
                                     {
                                         if (!string.IsNullOrEmpty(rowData))
                                         {
