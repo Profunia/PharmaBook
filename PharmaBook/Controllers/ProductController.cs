@@ -354,7 +354,7 @@ namespace PharmaBook.Controllers
                             }
                             if (bHeaderRow == false)
                             {
-                                if ((!String.IsNullOrWhiteSpace(productDetails.name)) && (!string.IsNullOrWhiteSpace(productDetails.batchNo))  && (!string.IsNullOrWhiteSpace(productDetails.companyName)) && (!productDetails.stef.HasValue) && (!productDetails.eachStefPrice.HasValue) && (!productDetails.tabletsCapsule.HasValue))
+                                if ((!String.IsNullOrWhiteSpace(productDetails.name)) && (!string.IsNullOrWhiteSpace(productDetails.batchNo))  && (!string.IsNullOrWhiteSpace(productDetails.companyName)) && (productDetails.stef.HasValue==true) && (productDetails.eachStefPrice.HasValue==true) && (productDetails.tabletsCapsule.HasValue==true))
                                 {                                    
                                     var status = Create(productDetails);
                                     obj.successlst.Add(productDetails);
