@@ -5,12 +5,12 @@
 <h2>Create Invoice</h2>
 <div ng-controller="SalesController">
     <div class="blankpage-main" ng-show="!isCreatedInvoice">
-        @*<div class="row">
-                <div class="col-xs-4">
-                    <a href="" class="btn btn-primary" ng-click="bcktoinbx('create')">Back to Inbox</a>
-                </div>
-            </div>*@
-        <div class="row mt">
+        <button ng-click="fnShowMe();" class="btn btn-primary btn-sm" style="float:right;">
+            <span ng-show="showMe">Hide me</span>
+            <span ng-show="!showMe">Show me</span>
+        </button>
+    <hr />
+        <div class="row mt" ng-show="showMe">
            
             <div class="col-xs-6">
                 <div class="form-group">
@@ -38,11 +38,8 @@
     </div><br />
     <div class="blankpage-main" ng-show="!isCreatedInvoice">
         <div class="row">
-            <div class="col-xs-6">
-                <div class="form-group">
-                    @*<label>Medicine <span style="color:red;"> * </span></label>*@
-
-
+            <div class="col-xs-4">
+                <div class="form-group">                   
                     <div class="dropdown dropdown-scroll" ng-app="app">
                         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
                            Medicine - {{medicineName}} <span style="color:red;">*</span> <span class="caret"></span>
@@ -62,19 +59,19 @@
                         </ul>
                     </div>
 
+                </div>
+            </div>
 
+            <div class="col-xs-2">
+                <div class="form-group" ng-show="child.Availstk">
+                    <label>Available Stock  </label><br/>
 
-
-                    @*<select class="form-control" required placeholder="Medicine" ng-model="PrdId" ng-change="medicineselect()">
-
-                            <option ng-repeat="s in ProductList" value="{{s.id}}">{{s.name}}</option>
-                        </select>*@
-                    @*<select class="form-control" required placeholder="Medicine" ng-model="PrdId"
-                        ng-options="s.id as s.name for s in ProductList" ng-change="medicineselect()"></select>*@
-                    <span asp-for="batchNo" style="color:red;"></span>
+                    <h2 style="color:green;" ng-show="child.Availstk > 5"> {{child.Availstk}} </h2>
+                    <h2 style="color:red;" ng-show="child.Availstk <= 5"> {{child.Availstk}} </h2>
                 </div>
             </div>
             <div class="col-xs-6">
+               
                 <div class="form-group">
                     <label>Mfg <span style="color:red;"> * </span></label>
                     <input class="form-control" required placeholder="Desciption" ng-model="child.Mfg">
@@ -158,10 +155,18 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="5"></td>
-                                    <th>Total</th>
+                                    <td colspan="6"></td>
+                                    <th>Sub-Total</th>
                                     <th>Rs. {{totalprice | number:2}}</th>
                                 </tr>
+                                <tr>
+                                    
+                                    <th>Discount (Rs.)</th>
+                                    <th><input  type="number" ng-model="master.discountAmt" min="0" max="{{totalprice}}" class="form-control input-sm"/></th>
+                                    <th colspan="4"></th>
+                                    <th>Grand Total</th>
+                                    <th>Rs. {{grandtotalprice - master.discountAmt|number:2}}</th>
+                                </tr>                               
                             </tbody>
                         </table>
                         <div class="form-group">

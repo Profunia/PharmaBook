@@ -12,6 +12,7 @@ namespace PharmaBook.Entities
         public string PatientName { get; set; }
         public string PatientAdres { get; set; }
         public string DrName { get; set; }
+        public double? Discount { get; set; }
         public string RegNo { get; set; }
         public DateTime InvCrtdate { get; set; }
         public string UserName { get; set; }

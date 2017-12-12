@@ -5,7 +5,7 @@ Layout=null;
 }
 <link href="~/css/bootstrap.css" rel="stylesheet" />
 @model SalesViewModel
-<div style="width: 23cm;min-height: 29.7cm;padding: 1cm;margin: 1cm auto;border: 1px #D3D3D3 solid;border-radius: 5px;background: white;box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);line-height:90%" ng-controller="SalesController">
+<div style="width: 24cm;min-height: 29.7cm;padding: 1cm;margin: 1cm auto;border: 1px #D3D3D3 solid;border-radius: 5px;background: white;box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);line-height:90%" ng-controller="SalesController">
     <div class="row" style="margin-top:20px;">
         <div class="col-xs-3">
             Inv No. : @Html.DisplayFor(x => x.masterinvc.InvId)
@@ -21,13 +21,13 @@ Layout=null;
     </div>
 
     <div class="row">
-        <div class="col-xs-6">
+        <div class="col-xs-8">
             <span style="font-size: 30px;">@Html.DisplayFor(x => x.userProfile.Name)</span> <br/>
             <span style="line-height: 3">@Html.DisplayFor(x => x.userProfile.subTitle)</span><br/>
             <span>@Html.DisplayFor(x => x.userProfile.Address1)</span> <br />
             <span style="line-height: 2;">@Html.DisplayFor(x => x.userProfile.Address2)</span>
         </div>
-        <div class="col-xs-6">
+        <div class="col-xs-4">
             <label>Patient Name: </label> @Html.DisplayFor(x => x.masterinvc.PatientName) <br/>
             <span>Address:</span> @Html.DisplayFor(x => x.masterinvc.PatientAdres) <br/>
             <label style="line-height: 3;">Dr.'s Name:</label> @Html.DisplayFor(x => x.masterinvc.DrName) <br/>
@@ -61,7 +61,7 @@ Layout=null;
                 <td><span>@item.Mfg</span></td>
                 <td>@item.BatchNo</td>
                 <td>@item.ExpDt</td>
-                <td>@item.Amount</td>  
+                <td>@(Math.Round(item.Amount, 2))</td>  
                  total += @item.Amount;
                 }
             </tr>
@@ -70,12 +70,29 @@ Layout=null;
             }
            
             <tr>
-                <th colspan="5"> <span style="float:right;">Total</span> </th>
-                <th>@total</th>
+                <th colspan="5"> <span style="float:right;">Sub-Total</span> </th>
+                <th>@(Math.Round(total, 2))</th>
+            </tr>
+            <tr>
+                <th colspan="5"> <span style="float:right;">Discount</span> </th>
+                <th>@Html.DisplayFor(x => x.masterinvc.Discount)
+                @{
+                    double discount = 0;
+                    if (Model.masterinvc.Discount != null)
+                    {
+                        discount = Convert.ToDouble(Model.masterinvc.Discount);
+
+                    }
+                }
+                </th>
+            </tr>
+            <tr>
+                <th colspan="5"> <span style="float:right;">Grand Total</span> </th>
+                <th>@(Math.Round((total - discount), 2))</th>
             </tr>
         </tbody>
     </table>
-
+   
     <div>
         <div class="col-xs-9">
             <span>

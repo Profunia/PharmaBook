@@ -19,8 +19,7 @@ namespace PharmaBook.Services
             Random rnd = new Random();
             int Dynaid = rnd.Next(100000, 999999);
             return Convert.ToString(Dynaid);
-        }
-
+        }        
         public static double getDoubleValue(string str)
         {
             if (!string.IsNullOrEmpty(str))

@@ -77,7 +77,7 @@
                                 <td style="text-align:center">{{item.docName}} <br />{{item.docRegi}}</td>
                                 <td style="text-align:center">{{item.createdDate}}</td>
                                 <td style="text-align:center">{{item.noOfMedicine}}</td>
-                                <td style="text-align:center">Rs. {{item.billingAmount}}</td>
+                                <td style="text-align:center">Rs. {{item.billingAmount | number : 2}}</td>
                                 <td><a ng-click="childDetails(item);" style="cursor:pointer;">View details</a></td>
                             </tr>
                         </tbody>

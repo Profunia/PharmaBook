@@ -55,7 +55,9 @@ namespace PharmaBook.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    Product chk = _iProduct.GetAll(User.Identity.Name).Where(x => x.name == obj.name && x.companyName == obj.companyName).FirstOrDefault();
+                    Product chk = _iProduct.GetAll(User.Identity.Name)
+                        .Where(x => x.name.ToLower().Trim() == obj.name.ToLower().Trim() 
+                        && x.companyName == obj.companyName).FirstOrDefault();
                     var stockMRP = commonServices.getStockMRP((int)obj.stef, (int)obj.tabletsCapsule, obj.eachStefPrice);
                     obj.MRP= stockMRP.MRP;
                     obj.openingStock = stockMRP.openingStock;
@@ -74,6 +76,10 @@ namespace PharmaBook.Controllers
                             prd.lastUpdated = DateTime.Now.ToString();
                             prd.isActive = true;
                             _iProduct.Commit();
+                        }
+                        else
+                        {
+                            return BadRequest(prd.name + " medicine seems to be duplicate");
                         }
                     }
                     if (chk == null)

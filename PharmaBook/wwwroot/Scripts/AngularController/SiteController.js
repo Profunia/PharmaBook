@@ -8,7 +8,7 @@ app.factory('loadvndor', ['$http', '$rootScope', function ($http, $rootScope) {
         $rootScope.isLoadingScreenActive = true;
         $http.get('/Vendor/GetAllVendor').then(function (res) {
             $rootScope.VendorList = res.data;
-           
+
             $rootScope.isLoadingScreenActive = false;
         }, function (error) {
             $rootScope.isLoadingScreenActive = false;
@@ -240,6 +240,8 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
                 $window.location.href = "/Product/Create";
                 $rootScope.isLoadingScreenActive = false;
             }, function (error) {
+                console.log(error);
+                $scope.errMsg = error.data;
                 $rootScope.isLoadingScreenActive = false;
             })
         }
@@ -378,6 +380,8 @@ app.controller('SalesController', function ($scope, $http, $rootScope, loadvndor
         total = 0;
         $scope.unitprice = '';
         $scope.totalprice = '';
+        $scope.grandtotalprice = '';
+        $scope.discountAmt = '';        
         $scope.cartlists = [];
         loadvndor.getprdct()
         $scope.PrdId = '',
@@ -388,7 +392,8 @@ app.controller('SalesController', function ($scope, $http, $rootScope, loadvndor
             PatientName: '',
             PatientAdres: '',
             DrName: '',
-            RegNo: ''
+            RegNo: '',
+            Discount:''
         }
         $scope.child = {
             Id: '',
@@ -430,13 +435,29 @@ app.controller('SalesController', function ($scope, $http, $rootScope, loadvndor
                 'Description': $scope.child.Description,
                 'BatchNo': $scope.child.BatchNo
             });
-
+            $scope.grandtotalprice = $scope.totalprice;
+            $scope.child = {
+                Id: '',
+                Name: '',
+                Description: '',
+                Mrg: '',
+                BatchNo: '',
+                ExpDt: '',
+                Amount: '',
+                Qty: ''
+            }
         }
         else {
             $scope.ErrMsg = "please fill required fields";
         }
 
     }
+    $scope.showMe = true;
+    $scope.fnShowMe = function () {
+        $scope.showMe = !$scope.showMe;
+    }
+
+    
     $scope.DelCrtIitem = function (index) {
         total = $scope.child.Amount;
         final -= total;
@@ -464,7 +485,8 @@ app.controller('SalesController', function ($scope, $http, $rootScope, loadvndor
 
     $scope.SaveInvc = function () {
         $rootScope.isLoadingScreenActive = true;
-        if ($scope.master.PatientName == '' || $scope.master.PatientAdres == '' || $scope.master.DrName == '' || $scope.master.RegNo == '') {
+        if ($scope.master.PatientName == '' || $scope.master.PatientAdres == ''
+            || $scope.master.DrName == '' || $scope.master.RegNo == '') {
             $scope.master.PatientName = 'Guest',
                 $scope.master.PatientAdres = '',
                 $scope.master.DrName = '',
@@ -474,8 +496,9 @@ app.controller('SalesController', function ($scope, $http, $rootScope, loadvndor
             'PatientName': $scope.master.PatientName,
             'PatientAdres': $scope.master.PatientAdres,
             'DrName': $scope.master.DrName,
-            'RegNo': $scope.master.RegNo
-        };
+            'RegNo': $scope.master.RegNo,
+            'Discount': $scope.master.discountAmt
+        };        
         var obj2 = $scope.cartlists;
         var obj = { childinvc: obj2, masterinvc: obj1 }
         things = JSON.stringify({ 'things': obj1 });
