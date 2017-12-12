@@ -3,7 +3,7 @@
     ViewData["Title"] = "CreateDirectPO";
 }
 
-<h2>Create Purchase Entry</h2>
+<h2>Direct Purchase Entry</h2>
 <div ng-controller="PurchasedDirectEntryController">
     
         <div class="blankpage-main" ng-show="!isSuccessPOEntry">
@@ -15,7 +15,7 @@
                 </div>
                 <div class="col-xs-6" ng-show="!isPreview">
                     <div class="form-group">
-                        <label>Select Vendor</label> <span style="color:red;">*</span>
+                        <label>Select Vendor</label>
 
                         <select class="form-control" id="exampleSelect1"
                                 ng-options="s.id as s.vendorName for s in VendorList"
@@ -25,13 +25,15 @@
                     </div>
                 </div>
                 <div class="col-xs-6" ng-show="isVendorSelected">
-                    <p>
+                    <p ng-show="selectedVendor">
                         Selected vendor details : <br /><hr />
                         Vendor ID:  <strong>{{vendorID}}</strong><br />
-                        Name : <strong> {{selectedVendor.vendorName }}</strong>,
-                        From : <strong> {{selectedVendor.vendorCompnay}}</strong>,
+                        Name : <strong ng-show="selectedVendor.vendorName"> {{selectedVendor.vendorName }}</strong> 
+                        <strong ng-show="!selectedVendor.vendorName"> Self</strong><br/>
+                        Company : <strong> {{selectedVendor.vendorCompnay}}</strong><br/>
                         Address : <strong> {{selectedVendor.vendorAddress}}</strong>
-                    </p>
+                    </p>                   
+                    
                 </div>
 
             </div>
@@ -41,11 +43,32 @@
     <div class="blankpage-main" ng-show="!isSuccessPOEntry">
         <div class="row" ng-show="!isPreview">
             <div class="col-xs-6">
-                <div class="form-group">
-                    <label>Medicine <span style="color:red;"> * </span></label>
-                    <select class="form-control" required placeholder="Medicine" ng-model="PrdId" ng-options="s.id as s.name for s in ProductList" ng-change="medicineselect()"></select>
-                    <span asp-for="batchNo" style="color:red;"></span>
+
+                <div class="dropdown dropdown-scroll">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                        Medicine - {{medicineName}} <span style="color:red;">*</span> <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        <li role="presentation">
+                            <div class="input-group input-group-sm search-control">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </span>
+                                <input type="text" class="form-control" placeholder="Filter" ng-model="filter" />
+                            </div>
+                        </li>
+                        <li role="presentation" ng-repeat='item in ProductList | filter:filter' ng-click="medicineselect(item)">
+                            <a href="">{{item.name}} </a>
+                        </li>
+                    </ul>
                 </div>
+
+                @*<div class="form-group">
+                    <label>Medicine <span style="color:red;"> * </span></label>
+                    <select class="form-control" required placeholder="Medicine"
+                            ng-model="PrdId" ng-options="s.id as s.name for s in ProductList" ng-change="medicineselect()"></select>
+                    <span asp-for="batchNo" style="color:red;"></span>
+                </div>*@
             </div>
             <div class="col-xs-4">
                 <div class="form-group">

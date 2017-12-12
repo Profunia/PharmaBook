@@ -237,7 +237,7 @@ namespace PharmaBook.Controllers
          
             Mapper.Map(Obj,medicn);
             var a = medicn;
-           
+            medicn.IsActive = true;
             _iProfile.Commit();
             TempData["msg"] = "Successfully updated";
             var laste= _iProfile.GetByUserName(User.Identity.Name);

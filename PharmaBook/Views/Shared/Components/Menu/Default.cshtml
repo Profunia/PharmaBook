@@ -16,13 +16,11 @@
     </li>   
    
     <li id="menu-purchase">
-        <a asp-action="Index" asp-controller="Purchased"><i class="fa fa-desktop"></i><span>Purchase</span><span class="fa cfa fa-angle-right" style="float: right"></span></a>
+        <a asp-action="CreateDirectPO" asp-controller="Purchased"><i class="fa fa-desktop"></i><span>Purchase</span><span class="fa cfa fa-angle-right" style="float: right"></span></a>
         <ul>
-            <li><a asp-action="Index" asp-controller="Purchased">Purchase Inbox</a></li>
-            <li><a asp-action="CreatePurchasedOrder" asp-controller="Purchased">Create New Purchased Order</a></li>
-            <li><a asp-action="CreateDirectPO" asp-controller="Purchased">Create New Purchase Entry</a></li>
-            
-            
+            <li><a asp-action="CreateDirectPO" asp-controller="Purchased">Direct Purchase</a></li>
+            <li><a asp-action="Index" asp-controller="Purchased">Purchase Order Inbox</a></li>
+            <li><a asp-action="CreatePurchasedOrder" asp-controller="Purchased">Purchase Order</a></li>
         </ul>
     </li>
     <li id="menu-SalesResport"><a asp-action="SalesResport" asp-controller="sales"><i class="fa fa-line-chart"></i><span>Sales Reports</span></a></li>

@@ -84,7 +84,8 @@ namespace PharmaBook.Controllers
             var lst = (object)null;
             try
             {
-                var vendorlist = _iVendorServices.GetAll(User.Identity.Name).Where(x=>x.isActive==true).ToList();
+                var vendorlist = _iVendorServices.GetAll(User.Identity.Name)
+                    .Where(x=>x.isActive==true).ToList();
                 //lst = vendorlist;
                 lst = Mapper.Map<IEnumerable<VendorDtl>>(vendorlist);
             }

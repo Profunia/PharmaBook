@@ -31,7 +31,7 @@
                     </div>
                     <div class="col-xs-4">
                         <select class="form-control" ng-model="vendorDDL" id="exampleSelect1" ng-change="getSelectedVendor()">
-                            <option value="">-- All vendor--</option>
+                            <option value="">-- All vendor--</option>                            
                             <option ng-repeat="item in VendorList" value="{{item.vendorName}}">{{item.vendorName}}</option>
                         </select>                               
                         </div>
@@ -88,7 +88,9 @@
                                 <td style="text-align:center">{{item.stef}}</td>
                                 <td style="text-align:center">{{item.tabletsCapsule}}</td>                              
                                 <td style="text-align:center">{{item.purchasedDated}}</td>
-                                <td>{{item.vendorname}} <br />
+                                <td> <span ng-show="item.vendorname">{{item.vendorname}}</span>
+                                    <span ng-show="!item.vendorname">self</span>
+                                 <br />
                                 {{item.vendorcompany}} 
                                 </td>                              
                                 <td>{{item.remark}}</td>

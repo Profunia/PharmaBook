@@ -7,7 +7,8 @@ app.factory('loadvndor', ['$http', '$rootScope', function ($http, $rootScope) {
     fac.getvndr = function () {
         $rootScope.isLoadingScreenActive = true;
         $http.get('/Vendor/GetAllVendor').then(function (res) {
-            $rootScope.VendorList = res.data;    
+            $rootScope.VendorList = res.data;
+           
             $rootScope.isLoadingScreenActive = false;
         }, function (error) {
             $rootScope.isLoadingScreenActive = false;
@@ -17,24 +18,24 @@ app.factory('loadvndor', ['$http', '$rootScope', function ($http, $rootScope) {
     fac.getprdct = function () {
         $rootScope.isLoadingScreenActive = true;
         $http.get('/Product/GetAllMedicine').then(function (res) {
-            $rootScope.ProductList = res.data; 
+            $rootScope.ProductList = res.data;
             $rootScope.isLoadingScreenActive = false;
         }, function (error) {
             $rootScope.isLoadingScreenActive = false;
-        }       
+        }
         )
     }
 
     fac.getVendorbyID = function (id) {
         $rootScope.isLoadingScreenActive = true;
         $http.get('/Vendor/GetVendorByID/' + id).then(function (res) {
-            $rootScope.selectedVendor = res.data;   
+            $rootScope.selectedVendor = res.data;
             $rootScope.isLoadingScreenActive = false;
         }, function (error) {
             $rootScope.isLoadingScreenActive = false;
         }
         )
-    };   
+    };
     return fac;
 }])
 app.controller('MyController', function ($scope, $http, loadvndor, $rootScope) {
@@ -45,14 +46,13 @@ app.controller('MyController', function ($scope, $http, loadvndor, $rootScope) {
     $scope.savebtn = false;
     $scope.isPreview = false;
     $scope.Item = {
-        
+
         Name: '',
         Address: '',
         Mobile: '',
         Company: '',
-        UserName: ''
     }
-    debugger
+
     $scope.AddValues = function () {
         if (!$scope.Item.Name || !$scope.Item.Mobile || !$scope.Item.Address) {
             $scope.errMsg = "Please provide required fields";
@@ -63,7 +63,7 @@ app.controller('MyController', function ($scope, $http, loadvndor, $rootScope) {
             'vendorName': $scope.Item.Name,
             'vendorAddress': $scope.Item.Address,
             'vendorMobile': $scope.Item.Mobile,
-            'vendorCompnay': $scope.Item.Company           
+            'vendorCompnay': $scope.Item.Company
         };
 
         $http({
@@ -106,7 +106,7 @@ app.controller('MyController', function ($scope, $http, loadvndor, $rootScope) {
         $scope.savebtn = false;
         $scope.editbtn = true;
     }
-    $scope.delitem = function (id) {      
+    $scope.delitem = function (id) {
         if (confirm("Do you want to continue?")) {
             $rootScope.isLoadingScreenActive = true;
             $http.post('/Vendor/VendorDlt/?id=' + id).then(
@@ -127,6 +127,14 @@ app.controller('MyController', function ($scope, $http, loadvndor, $rootScope) {
         if (type == "inbox") {
             $scope.divhide1 = true;
             $scope.divhide2 = false;
+            $scope.isPreview = false;
+            $scope.Item = {
+
+                Name: '',
+                Address: '',
+                Mobile: '',
+                Company: '',
+            }
         }
     }
     $scope.purchasedhistry = [];
@@ -140,20 +148,20 @@ app.controller('MyController', function ($scope, $http, loadvndor, $rootScope) {
                     $scope.purchasedhistry[ln].vendorcompany = $rootScope.VendorList[i].vendorCompnay;
                     $scope.purchasedhistry[ln].vendoradres = $rootScope.VendorList[i].vendorAddress;
                 }
-            }           
-        }          
+            }
+        }
     }, function (error) {
     })
 })
 app.controller('ProductController', function ($scope, $http, $location, $rootScope, loadvndor, $window) {
-    $scope.vendorDDL = ''; 
-    setuser();   
+    $scope.vendorDDL = '';
+    setuser();
     $scope.getSelectedVendor = function () {
-        if ($scope.vendorDDL !='') {
+        if ($scope.vendorDDL != '') {
             $scope.searchbox = $scope.vendorDDL;
         }
         else {
-            $scope.searchbox = '';            
+            $scope.searchbox = '';
         }
         console.log($scope.vendorDD);
         console.log($scope.searchbox);
@@ -166,7 +174,7 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
             $scope.searchbox = $scope.ItemNameMedicine;
         }
         else {
-            $scope.searchbox = '';           
+            $scope.searchbox = '';
         }
         console.log($scope.ItemNameMedicine);
         console.log($scope.searchbox);
@@ -192,7 +200,7 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
         CompanyName: '',
         MRP: '',
         vendorID: '',
-        Remarks:''
+        Remarks: ''
     }
     //$scope.purchasedhistry = {
     //    name: '',
@@ -212,9 +220,9 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
             $rootScope.isLoadingScreenActive = true;
             var obj = {
                 'name': $scope.MediProdct.MedicineName,
-                'batchNo': $scope.MediProdct.batchNo,               
+                'batchNo': $scope.MediProdct.batchNo,
                 'expDate': $scope.MediProdct.ExpDt,
-                'companyName': $scope.MediProdct.CompanyName,                
+                'companyName': $scope.MediProdct.CompanyName,
                 'vendorID': $scope.MediProdct.vendorID,
                 'Remarks': $scope.MediProdct.Remarks,
                 'stef': $scope.stef,
@@ -255,7 +263,7 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
             'companyName': item.companyName,
             'stef': item.stef,
             'tabletsCapsule': item.tabletsCapsule,
-            'eachStefPrice': item.eachStefPrice,            
+            'eachStefPrice': item.eachStefPrice,
             'vendorID': item.vendorID,
             'cusUserName': item.cusUserName
         };
@@ -268,8 +276,8 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
         }).then(function (response) {
             loadvndor.getprdct();
             $rootScope.isLoadingScreenActive = false;
-            }, function (error) {
-                $rootScope.isLoadingScreenActive = false;
+        }, function (error) {
+            $rootScope.isLoadingScreenActive = false;
 
         })
         $scope.cClass = false;
@@ -277,7 +285,7 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
         $scope.editbtn = true;
     }
     $scope.delitem = function (id) {
-        
+
         if (confirm("Do you want to continue?")) {
             $rootScope.isLoadingScreenActive = true;
             $http.post('/Product/DeleteMedicine/?id=' + id).then(
@@ -319,7 +327,7 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
     }
     $scope.purchasedhistry = [];
     $http.get('/Product/PurchsdHstryInbx/').then(function (res) {
-        $scope.purchasedhistry = res.data;        
+        $scope.purchasedhistry = res.data;
         //for (var i = 0; i < $rootScope.VendorList.length; i++)
         //{
         //    var vendorid = $rootScope.VendorList[i].id;
@@ -333,13 +341,13 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
         //    //$scope.purchasedhistry.name.push(value);
         //}
         //$scope.purchasedhistry = res.data;        
-      
+
     }, function (error) {
-        })
+    })
     //------------------Set Vendor For Report Printing----------------------
     $scope.curuser = {
         clinicname: '',
-        Title:'',
+        Title: '',
         email: '',
         dlno: '',
         mobile: '',
@@ -358,14 +366,14 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
         }
         )
     }
-//-----------------------------------XX----------------------------------
+    //-----------------------------------XX----------------------------------
 })
 
-app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor) {
+app.controller('SalesController', function ($scope, $http, $rootScope, loadvndor) {
     var total = 0;
     function initialSetup() {
         $scope.medicineName = 'Name';
-        $scope.isPreview=false;
+        $scope.isPreview = false;
         final = 0;
         total = 0;
         $scope.unitprice = '';
@@ -399,15 +407,15 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
         initialSetup();
         $scope.isCreatedInvoice = false;
     }
-   
+
     $scope.AddChildInvc = function () {
         $scope.ErrMsg = '';
-        if ($scope.child.Qty  && $scope.child.Description) {
+        if ($scope.child.Qty && $scope.child.Description) {
             var price = $scope.child.Amount;
             var qty = $scope.child.Qty;
-          //  console.log("amount" + $scope.child.Amount);
-          //  console.log(qty + price);
-          // var  total = ($scope.child.Qty * $scope.child.Amount);
+            //  console.log("amount" + $scope.child.Amount);
+            //  console.log(qty + price);
+            // var  total = ($scope.child.Qty * $scope.child.Amount);
             var total = (qty * price);
             final += total;
             $scope.unitprice = total;
@@ -422,12 +430,12 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
                 'Description': $scope.child.Description,
                 'BatchNo': $scope.child.BatchNo
             });
-           
+
         }
         else {
             $scope.ErrMsg = "please fill required fields";
         }
-        
+
     }
     $scope.DelCrtIitem = function (index) {
         total = $scope.child.Amount;
@@ -435,7 +443,7 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
         $scope.totalprice = final;
         $scope.cartlists.splice(index, 1);
     }
-    $scope.medicineselect = function (item) {       
+    $scope.medicineselect = function (item) {
         $http.get('/Product/GetMedicnById/?id=' + item.id).then(function (res) {
             console.log(res.data);
             $scope.PrdId = item.id;
@@ -450,8 +458,8 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
             };
             console.log($scope.child);
         }, function (error) {
-            })
-        
+        })
+
     }
 
     $scope.SaveInvc = function () {
@@ -486,14 +494,13 @@ app.controller('SalesController', function ($scope, $http, $rootScope,loadvndor)
     }
     $scope.PrintInvoice = function () {
         window.open("/Sales/Invoice", "_blank");
-       // window.location="/Sales/Invoice";
-    }   
-    $scope.qtychk = function (qty,avlstk) {
+        // window.location="/Sales/Invoice";
+    }
+    $scope.qtychk = function (qty, avlstk) {
         if (qty > avlstk) {
             confirm("Given quantity is greater than available quantity")
         }
-        if (qty == 0)
-        {
+        if (qty == 0) {
             alert("Given quantity is not Available")
         }
     }
@@ -524,7 +531,7 @@ app.controller('StockController', function ($scope, $http, loadvndor, $rootScope
         }
         )
     }
-//-----------------------------------XX----------------------------------
+    //-----------------------------------XX----------------------------------
 });
 
 app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootScope, $filter) {
@@ -532,17 +539,17 @@ app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootS
     loadvndor.getprdct();
     $scope.isPreview = false;
     $scope.previewPO = function () {
-        
-        
 
-        if (!$scope.vendorID) {            
+
+
+        if (!$scope.vendorID) {
             $scope.vendorErrMsg = "- please select vendor.";
         }
         else {
             $scope.vendorErrMsg = '';
         }
         if ($scope.PreCreatePO.length < 1) {
-            $scope.poErrMsg ="- please select at least one medicine";
+            $scope.poErrMsg = "- please select at least one medicine";
         }
         else {
             $scope.poErrMsg = '';
@@ -565,17 +572,17 @@ app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootS
     $scope.PreCreatePO = [];
     $scope.toggleItemIndex = function ($event, item) {
         $event.stopPropagation();
-      //  var ProdList = $filter('orderBy')($rootScope.ProductList, 'openingStock');    
-        
-        
+        //  var ProdList = $filter('orderBy')($rootScope.ProductList, 'openingStock');    
+
+
         if ($event.target.checked) {
             console.log(item);
-            var temp = item;            
-            var CreateObj = {                
+            var temp = item;
+            var CreateObj = {
                 ProdID: temp.id,
                 AvlStock: temp.openingStock,
                 MedicineName: temp.name,
-                Mfg: temp.companyName,                
+                Mfg: temp.companyName,
                 VendorID: $scope.vendorID,
                 Remarks: '',
                 stef: item.stef,
@@ -589,8 +596,8 @@ app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootS
                     $scope.PreCreatePO.splice(i, 1);
                 }
             }
-           
-        }  
+
+        }
     }
 
     $scope.isVendorSelected = false;
@@ -602,12 +609,11 @@ app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootS
 
     $scope.createPoOrder = function () {
         $scope.errEntry = "";
-        $scope.isReadyToCallAPI = false;       
-        for (var i = 0; i < $scope.PreCreatePO.length; i++) {           
-            if ($scope.PreCreatePO[i].stef)
-            {
+        $scope.isReadyToCallAPI = false;
+        for (var i = 0; i < $scope.PreCreatePO.length; i++) {
+            if ($scope.PreCreatePO[i].stef) {
                 $scope.isReadyToCallAPI = true;
-              
+
             }
             else {
                 $scope.errEntry = "please provide Stef.";
@@ -618,8 +624,8 @@ app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootS
 
         if ($scope.isReadyToCallAPI) {
             $rootScope.isLoadingScreenActive = true;
-            $scope.isSucessDB = false;           
-            var obj = $scope.PreCreatePO;            
+            $scope.isSucessDB = false;
+            var obj = $scope.PreCreatePO;
             $http({
                 method: 'post',
                 url: "/Purchased/CreatePO",
@@ -633,7 +639,7 @@ app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootS
                 $scope.isSucessDB = false;
                 $rootScope.isLoadingScreenActive = false;
             })
-            
+
         }
     }
 
@@ -644,12 +650,11 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
     setuser();
     $scope.masterPo = [];
     $scope.childPoView = false;
-    
-    function getPurchasedInbox()
-    {
+
+    function getPurchasedInbox() {
         $rootScope.isLoadingScreenActive = true;
         $http.get('/Purchased/InboxPO').then(function (res) {
-        
+
             $scope.masterPo = res.data.masterPo;
             $rootScope.isLoadingScreenActive = false;
         }, function (error) {
@@ -660,7 +665,7 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
     getPurchasedInbox();
     $scope.backtoPurchased = function () {
         $scope.childPoView = !$scope.childPoView;
-        
+
     }
     $scope.backToMail = function () {
         $scope.purchasedEntryView = !$scope.purchasedEntryView;
@@ -669,7 +674,7 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
     $scope.purchasedEntryView = false;
     $scope.CreatePurchased = function () {
         $scope.Prepurchased = [];
-       
+
         for (var i = 0; i < $scope.childPO.cpoList.length; i++) {
             var model = {
                 ProductID: $scope.childPO.cpoList[i].productID,
@@ -680,24 +685,24 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
                 eachStefPrice: $scope.childPO.cpoList[i].eachStefPrice,
                 vendorID: $scope.childPO.vendorID,
                 masterPOid: $scope.childPO.masterPOid,
-                BatchNo: $scope.childPO.cpoList[i].batchNo,                
+                BatchNo: $scope.childPO.cpoList[i].batchNo,
                 ExpDate: $scope.childPO.cpoList[i].expDate,
                 Remark: $scope.childPO.cpoList[i].remarks
             }
             $scope.Prepurchased.push(model);
         }
-       // $scope.Prepurchased = $scope.childPO;
-        $scope.purchasedEntryView = true;    
+        // $scope.Prepurchased = $scope.childPO;
+        $scope.purchasedEntryView = true;
         console.log($scope.Prepurchased);
 
     }
-    $scope.DeletePurchasedItem = function (val) {  
-        
+    $scope.DeletePurchasedItem = function (val) {
+
         if (confirm('are you sure want to delete ?? \n medicine : ' + val.productName + "\n Mfg : " + val.mfg)) {
             var childId = val.childPoId;
             $rootScope.isLoadingScreenActive = true;
             $http.post('/Purchased/childPoDelete/' + childId).then(function (res) {
-              
+
                 alert('successfully deleted... \n medicine : ' + val.productName + '\n Mfg : ' + val.mfg);
                 $scope.backtoPurchased();
                 getPurchasedInbox();
@@ -705,34 +710,34 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
             }, function (error) {
                 $rootScope.isLoadingScreenActive = false;
             })
-                      
 
-        }        
+
+        }
     }
 
-    $scope.childDetails = function (val) {      
+    $scope.childDetails = function (val) {
         $scope.childPO = val;
         $scope.childPoView = !$scope.childPoView;
     }
 
     // purchased Entry 
     $scope.onSubmitforCreatePurchased = function () {
-       var obj= $scope.Prepurchased;
-       $scope.isSuccessPOEntry = false;
-       $rootScope.isLoadingScreenActive = true;
+        var obj = $scope.Prepurchased;
+        $scope.isSuccessPOEntry = false;
+        $rootScope.isLoadingScreenActive = true;
         $http({
             method: 'post',
             url: "/Purchased/EntryCreatePurchase",
             data: JSON.stringify(obj),
             dataType: "json"
-        }).then(function (response) {           
+        }).then(function (response) {
             $scope.POmsg = "Purchased Entry has been successfully created..!";
-            $scope.isSuccessPOEntry = true;  
+            $scope.isSuccessPOEntry = true;
             $rootScope.isLoadingScreenActive = false;
-            }, function (error) {
-                $scope.isSuccessPOEntry = false;
-                $scope.POmsg = "Something went wrong.. please try again..";
-                $rootScope.isLoadingScreenActive = false;
+        }, function (error) {
+            $scope.isSuccessPOEntry = false;
+            $scope.POmsg = "Something went wrong.. please try again..";
+            $rootScope.isLoadingScreenActive = false;
         })
 
     }
@@ -742,26 +747,25 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
             $scope.inboxfiler = "Open";
             $('#chk1').attr('checked', true);
             $('#chk2').attr('checked', false);
-            $('#chk3').attr('checked', false); 
+            $('#chk3').attr('checked', false);
         }
-        else if (val == "Closed")
-        {
+        else if (val == "Closed") {
             $scope.inboxfiler = "Closed";
             $('#chk1').attr('checked', false);
             $('#chk2').attr('checked', true);
-            $('#chk3').attr('checked', false); 
+            $('#chk3').attr('checked', false);
         }
         else {
             $scope.inboxfiler = '';
             $('#chk1').attr('checked', false);
             $('#chk2').attr('checked', false);
-            $('#chk3').attr('checked', true); 
+            $('#chk3').attr('checked', true);
         }
     }
- //------------------Set Vendor For Report Printing----------------------
+    //------------------Set Vendor For Report Printing----------------------
     $scope.curuser = {
         clinicname: '',
-        Title:'',
+        Title: '',
         email: '',
         dlno: '',
         mobile: '',
@@ -780,7 +784,7 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
         }
         )
     }
-//-----------------------------------XX----------------------------------
+    //-----------------------------------XX----------------------------------
 });
 
 app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvndor, $rootScope, $filter) {
@@ -795,17 +799,17 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
     $scope.child = {
         Id: '',
         Name: '',
-        Mfg: '',        
+        Mfg: '',
         BatchNo: '',
-        ExpDt: '',       
+        ExpDt: '',
         Remarks: '',
         stef: '',
         tabletsCapsule: '',
-        eachStefPrice:''
+        eachStefPrice: ''
 
     }
     $scope.cartlists = [];
-    $scope.AddChildInvc = function () {        
+    $scope.AddChildInvc = function () {
         var qty = $scope.Qty
         if ($scope.child.stef && $scope.child.Mfg && $scope.child.BatchNo &&
             $scope.child.eachStefPrice && $scope.child.tabletsCapsule && $scope.child.ExpDt && $scope.child.Mrp) {
@@ -816,26 +820,28 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
                 'stef': $scope.child.stef,
                 'tabletsCapsule': $scope.child.tabletsCapsule,
                 'eachStefPrice': $scope.child.eachStefPrice,
-                'ExpDt': $scope.child.ExpDt,                
+                'ExpDt': $scope.child.ExpDt,
                 'Mfg': $scope.child.Mfg,
                 'BatchNo': $scope.child.BatchNo,
                 'Remarks': $scope.child.Remarks
             });
-            $scope.child = [];           
+            $scope.child = [];
 
         }
         else {
             $scope.err = "please provide required fields (*)";
-               
+
         }
-       
+        $scope.medicineName = '';
     }
-    $scope.medicineselect = function () {
+    $scope.medicineselect = function (item) {
+        $scope.PrdId = item.id;
         var id = $scope.PrdId;
         $http.get('/Product/GetMedicnById/?id=' + id).then(function (res) {
             console.log(res.data);
+            $scope.medicineName = res.data.name;
             $scope.child = {
-                Name:res.data.name,
+                Name: res.data.name,
                 Mfg: res.data.companyName,
                 Mrp: res.data.mrp,
                 BatchNo: res.data.batchNo,
@@ -849,8 +855,8 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
         }, function (error) {
         })
     }
-    
-    $scope.DelCrtIitem = function (index) {      
+
+    $scope.DelCrtIitem = function (index) {
         $scope.cartlists.splice(index, 1);
     }
 
@@ -861,24 +867,24 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
     $scope.onSubmit = function () {
         // TODO API Call
         $rootScope.isLoadingScreenActive = true;
-        $scope.Prepurchased = [];      
+        $scope.Prepurchased = [];
         for (var i = 0; i < $scope.cartlists.length; i++) {
             var model = {
                 ProductID: $scope.cartlists[i].PrdId,
                 Name: $scope.cartlists[i].Name,
-                Mfg: $scope.cartlists[i].Mfg,              
+                Mfg: $scope.cartlists[i].Mfg,
                 vendorID: $scope.vendorID,
                 //masterPOid: $scope.childPO.masterPOid,
                 stef: $scope.cartlists[i].stef,
                 tabletsCapsule: $scope.cartlists[i].tabletsCapsule,
                 eachStefPrice: $scope.cartlists[i].eachStefPrice,
-                BatchNo: $scope.cartlists[i].BatchNo,               
+                BatchNo: $scope.cartlists[i].BatchNo,
                 ExpDate: $scope.cartlists[i].ExpDt,
                 Remark: $scope.cartlists[i].Remarks
             }
             $scope.Prepurchased.push(model);
         }
-       
+
         var obj = $scope.Prepurchased;
         $scope.isSuccessPOEntry = false;
         $http({
@@ -897,25 +903,27 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
 
         })
 
-        
+
     }
 
     $scope.Preview = function () {
-        if (!$scope.vendorID) {
-            $scope.vendorErrMsg = "please select vendor";
+
+        if ($scope.cartlists.length == 0) {
+            $scope.vendorErrMsg = "please add at least one item in cart";
         }
         else {
-            $scope.vendorErrMsg = "";
-            // TODO
+            $scope.vendorErrMsg = "";            // TODO
             $scope.isPreview = !$scope.isPreview;
+            $scope.isVendorSelected = !$scope.isVendorSelected;
+
 
         }
     }
 
 });
 
-app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $rootScope, $filter) {    
-    setuser();    
+app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $rootScope, $filter) {
+    setuser();
     $scope.InvList = [];
     $scope.isPreview = false;
     $rootScope.isLoadingScreenActive = true;
@@ -931,7 +939,7 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
         $scope.isPreview = true;
     }
     $scope.onReturn = function () {
-      
+
         if ($scope.ReturnInv.length >= 1) {
             $scope.returnPreview = true;
         }
@@ -944,8 +952,7 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
     $scope.ngSubmitReturn = function () {
         var obj = $scope.ReturnInv;
         let hasMagenicVendor = obj.some(vendor => vendor['soldQty'] === 0)
-        if (hasMagenicVendor == true)
-        {
+        if (hasMagenicVendor == true) {
             alert("Some of your product is no more left to return.!!");
             return false
         }
@@ -968,12 +975,12 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
     $scope.ReturnInv = [];
     $scope.returnPreview = false;
     $scope.toggleItemIndex = function ($event, index) {
-        $event.stopPropagation(); 
+        $event.stopPropagation();
         if ($event.target.checked) {
             var temp = $scope.Mastinv.childInv[index];
             var CreateObj = {
-                mastInv: $scope.Mastinv.invId,                
-                parentIndex:index,
+                mastInv: $scope.Mastinv.invId,
+                parentIndex: index,
                 batchNo: temp.batchNo,
                 expDate: temp.expDate,
                 mfg: temp.mfg,
@@ -986,7 +993,7 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
                 remarks: ''
             }
             $scope.ReturnInv.push(CreateObj);
-           
+
         }
         else {
             for (var i = $scope.ReturnInv.length - 1; i >= 0; i--) {
@@ -995,12 +1002,12 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
                 }
             }
         }
-             
+
     }
     //------------------Set Vendor For Report Printing----------------------
     $scope.curuser = {
         clinicname: '',
-        Title:'',
+        Title: '',
         email: '',
         dlno: '',
         mobile: '',
@@ -1019,7 +1026,7 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
         }
         )
     }
-   //-----------------------------------XX----------------------------------    
+    //-----------------------------------XX----------------------------------    
 });
 
 app.controller('DashboardController', function ($rootScope) {
@@ -1046,16 +1053,16 @@ app.controller('SalesResportController', function ($scope, $http, loadvndor, $ro
             $scope.FilterType = 'y';
             $('#chk3').attr('checked', true);
             $('#chk2').attr('checked', false);
-            $('#chk1').attr('checked', false);            
+            $('#chk1').attr('checked', false);
         }
         else {
             $scope.GridData = $scope.InvList.DailyResult;
             $scope.FilterType = 'd';
             $('#chk1').attr('checked', true);
             $('#chk2').attr('checked', false);
-            $('#chk3').attr('checked', false);       
+            $('#chk3').attr('checked', false);
         }
-        
+
     }
     $scope.getTotal = function () {
         var total = 0;
@@ -1081,7 +1088,7 @@ app.controller('SalesResportController', function ($scope, $http, loadvndor, $ro
         $rootScope.isLoadingScreenActive = false;
     }, function (error) {
         $rootScope.isLoadingScreenActive = false;
-})
+    })
     //------------------Set Vendor For Report Printing----------------------
     $scope.curuser = {
         clinicname: '',
@@ -1104,7 +1111,7 @@ app.controller('SalesResportController', function ($scope, $http, loadvndor, $ro
         }
         )
     }
-//-----------------------------------XX----------------------------------
+    //-----------------------------------XX----------------------------------
 });
 
 app.controller('TotalExpMedicineController', function ($scope, $http, loadvndor, $rootScope, $filter) {
@@ -1113,7 +1120,7 @@ app.controller('TotalExpMedicineController', function ($scope, $http, loadvndor,
     $http.get('/Home/getTotalExpMedicine').then(function (res) {
         $scope.InvList = res.data;
         console.log($scope.InvList)
-     
+
         $rootScope.isLoadingScreenActive = false;
     }, function (error) {
         $rootScope.isLoadingScreenActive = false;
@@ -1121,7 +1128,7 @@ app.controller('TotalExpMedicineController', function ($scope, $http, loadvndor,
     //------------------Set Vendor For Report Printing----------------------
     $scope.curuser = {
         clinicname: '',
-        Title:'',
+        Title: '',
         email: '',
         dlno: '',
         mobile: '',
@@ -1140,7 +1147,7 @@ app.controller('TotalExpMedicineController', function ($scope, $http, loadvndor,
         }
         )
     }
-//-----------------------------------XX----------------------------------
+    //-----------------------------------XX----------------------------------
 });
 app.controller('OutOfStockMedicineController', function ($scope, $http, loadvndor, $rootScope, $filter) {
     setuser();
@@ -1148,7 +1155,7 @@ app.controller('OutOfStockMedicineController', function ($scope, $http, loadvndo
     $http.get('/Home/getOutOfStockMedicine').then(function (res) {
         $scope.InvList = res.data;
         console.log($scope.InvList)
-        
+
         $rootScope.isLoadingScreenActive = false;
     }, function (error) {
         $rootScope.isLoadingScreenActive = false;
@@ -1156,7 +1163,7 @@ app.controller('OutOfStockMedicineController', function ($scope, $http, loadvndo
     //------------------Set Vendor For Report Printing----------------------
     $scope.curuser = {
         clinicname: '',
-        Title:'',
+        Title: '',
         email: '',
         dlno: '',
         mobile: '',
@@ -1175,5 +1182,5 @@ app.controller('OutOfStockMedicineController', function ($scope, $http, loadvndo
         }
         )
     }
-//-----------------------------------XX----------------------------------
+    //-----------------------------------XX----------------------------------
 });
