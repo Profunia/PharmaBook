@@ -305,7 +305,7 @@ namespace PharmaBook.Controllers
                                         productDetails.Remarks = rowData;
 
                                     }
-                                    else if (cName.Equals("stef"))
+                                    else if (cName.Equals("Stef"))
                                     {
                                         if (!string.IsNullOrEmpty(rowData))
                                         {
@@ -319,7 +319,7 @@ namespace PharmaBook.Controllers
                                             }
                                         }
                                     }
-                                    else if (cName.Equals("NoOFTablets"))
+                                    else if (cName.Equals("TabletsCapsule"))
                                     {
                                         if (!string.IsNullOrEmpty(rowData))
                                         {
@@ -334,7 +334,7 @@ namespace PharmaBook.Controllers
                                         }
 
                                     }
-                                    else if (cName.Equals("PricePerStef"))
+                                    else if (cName.Equals("StefPrice"))
                                     {
                                         if (!string.IsNullOrEmpty(rowData))
                                         {
@@ -354,7 +354,7 @@ namespace PharmaBook.Controllers
                             }
                             if (bHeaderRow == false)
                             {
-                                if (productDetails.name != null && productDetails.batchNo != null  && productDetails.companyName != null && productDetails.stef != 0 && productDetails.eachStefPrice != null && productDetails.tabletsCapsule != null)
+                                if ((!String.IsNullOrWhiteSpace(productDetails.name)) && (!string.IsNullOrWhiteSpace(productDetails.batchNo))  && (!string.IsNullOrWhiteSpace(productDetails.companyName)) && (productDetails.stef.HasValue==true) && (productDetails.eachStefPrice.HasValue==true) && (productDetails.tabletsCapsule.HasValue==true))
                                 {                                    
                                     var status = Create(productDetails);
                                     obj.successlst.Add(productDetails);
