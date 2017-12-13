@@ -132,6 +132,7 @@ namespace PharmaBook.Controllers
                     svm.Paddress = item.PatientAdres;
                     svm.DocName = item.DrName;
                     svm.DocRegi = item.RegNo;
+                    svm.Discount = item.Discount;
                     svm.CreatedDate = item.InvCrtdate.ToString("dd/MM/yyyy");
                     var child = _ichild.GetAll().Where(x => x.MasterInvID == item.Id).ToList();
                     svm.NoOfMedicine = child.Count();

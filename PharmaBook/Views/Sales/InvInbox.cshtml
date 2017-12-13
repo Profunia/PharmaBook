@@ -60,6 +60,8 @@
                                 <th style="text-align:center">Doctor</th>
                                 <th style="text-align:center">Created Date</th>
                                 <th style="text-align:center">No of Medicine</th>
+                                <th style="text-align:center">Discount</th>
+                                <th style="text-align:center">Sub-Total</th>
                                 <th style="text-align:center">Billing Amt</th>
                                 <th></th>
                             </tr>
@@ -77,7 +79,9 @@
                                 <td style="text-align:center">{{item.docName}} <br />{{item.docRegi}}</td>
                                 <td style="text-align:center">{{item.createdDate}}</td>
                                 <td style="text-align:center">{{item.noOfMedicine}}</td>
-                                <td style="text-align:center">Rs. {{item.billingAmount | number : 2}}</td>
+                                <td style="text-align:center">{{ item.discount | number : 2}}</td>
+                                <td style="text-align:center">{{item.billingAmount | number : 2}}</td>
+                                <td style="text-align:center">Rs. {{item.billingAmount - item.discount | number : 2}}</td>
                                 <td><a ng-click="childDetails(item);" style="cursor:pointer;">View details</a></td>
                             </tr>
                         </tbody>
@@ -86,14 +90,24 @@
             </div>
 
             <div class="blankpage-main" ng-show="isPreview">
+                <button class="btn btn-primary" ng-click="fnInbox()">
+                    << Back to Inbox
+                </button>
+                <hr/>
+                
                 <div class="row">
-                    <div class="col-xs-2"> <label>InvId</label> <br />  {{Mastinv.invId}} </div>
-                    <div class="col-xs-2"> <label>Patient</label> <br /> {{Mastinv.patient }}<br /> {{Mastinv.paddress}}  </div>
-                    <div class="col-xs-2"> <label>Doctor</label> <br />  {{Mastinv.docName}} <br />{{Mastinv.docRegi}}</div>
-                    <div class="col-xs-2"> <label>Created Date</label> <br /> {{Mastinv.createdDate}} </div>
-                    <div class="col-xs-2"> <label>No of Medicine</label> <br /> {{Mastinv.noOfMedicine}} </div>
-                    <div class="col-xs-2"> <label>Billing Amt</label> <br /> Rs {{Mastinv.billingAmount}} </div>
-                </div>
+                    <div class="col-xs-3"> <label>InvId</label> <br />  {{Mastinv.invId}} <hr/>
+                    <label>Created Date</label> <br /> {{Mastinv.createdDate}} </div>
+                    <div class="col-xs-3"> <label>Patient</label> <br /> {{Mastinv.patient }}<br /> {{Mastinv.paddress}} 
+                    <hr/>
+                        <label>Doctor</label> <br />  {{Mastinv.docName}} <br />{{Mastinv.docRegi}}</div>                    
+                    <div class="col-xs-3"><label>Discount</label> <br /> Rs {{Mastinv.discount | number : 2}} <hr/>
+                        <label>Sub-Total</label> <br /> Rs {{Mastinv.billingAmount | number : 2}}</div>
+                    <div class="col-xs-3"><label>Billing Amt</label> <br /> Rs {{Mastinv.billingAmount - Mastinv.discount | number : 2}} 
+                    <hr/>
+                        <label>No of Medicine</label> <br /> {{Mastinv.noOfMedicine}}</div>                                      
+                    
+                </div>               
             </div>
 
             <div class="blankpage-main" ng-show="isPreview">

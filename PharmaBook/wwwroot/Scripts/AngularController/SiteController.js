@@ -947,15 +947,20 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
 
 app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $rootScope, $filter) {
     setuser();
+   
     $scope.InvList = [];
     $scope.isPreview = false;
     $rootScope.isLoadingScreenActive = true;
     $http.get('/Sales/GetAllInvoice').then(function (res) {
         $scope.InvList = res.data;
+        console.log(res.data);
         $rootScope.isLoadingScreenActive = false;
     }, function (error) {
         $rootScope.isLoadingScreenActive = false;
-    })
+        })
+    $scope.fnInbox = function () {
+        $scope.isPreview = !$scope.isPreview
+    }
     $scope.childDetails = function (val) {
         console.log(val);
         $scope.Mastinv = val;

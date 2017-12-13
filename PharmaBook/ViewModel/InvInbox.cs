@@ -14,6 +14,7 @@ namespace PharmaBook.ViewModel
         public string Paddress { get; set; }
         public string DocName { get; set; }
         public string DocRegi { get; set; }
+        public double? Discount { get; set; }
         public string CreatedDate { get; set; }
         public int NoOfMedicine { get; set; }
         public string BillingAmount { get; set; }
