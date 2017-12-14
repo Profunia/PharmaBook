@@ -950,14 +950,56 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
    
     $scope.InvList = [];
     $scope.isPreview = false;
-    $rootScope.isLoadingScreenActive = true;
-    $http.get('/Sales/GetAllInvoice').then(function (res) {
-        $scope.InvList = res.data;
-        console.log(res.data);
-        $rootScope.isLoadingScreenActive = false;
-    }, function (error) {
-        $rootScope.isLoadingScreenActive = false;
-        })
+    $scope.frmDate = '';
+    $scope.toDate = '';
+    $scope.filerErr = ''
+    $scope.filtered = false;
+    $scope.getSubtotal = function () {
+        var subtotal = 0
+        for (var i = 0; i < $scope.InvList.length; i++) {
+            if ($scope.InvList[i].billingAmount) {
+                subtotal += parseFloat($scope.InvList[i].billingAmount);
+            }
+        }
+        return parseFloat(subtotal);
+    }
+    $scope.getdiscount = function () {
+        var discount = 0
+        for (var i = 0; i < $scope.InvList.length; i++) {
+            if ($scope.InvList[i].discount) {
+                discount += parseFloat($scope.InvList[i].discount);
+            }
+        }
+        return parseFloat(discount);
+    }
+
+    // $rootScope.isLoadingScreenActive = true;
+    $scope.onFilterInbox = function () {
+        if ($scope.frmDate && $scope.toDate) {
+            $rootScope.isLoadingScreenActive = true;
+            var invoiceURL = "/Sales/GetAllInvoice?fromDate=" + $scope.frmDate + "&toDate=" + $scope.toDate;
+            $http.get(invoiceURL).then(function (res) {
+                $scope.InvList = res.data;
+                console.log(res.data);
+                $rootScope.isLoadingScreenActive = false;
+                $scope.filtered = true;
+            }, function (error) {
+                $rootScope.isLoadingScreenActive = false;
+                $scope.filtered = true;
+                })
+            $scope.filerErr = '';
+        }
+        else {
+            $scope.filerErr = "please provide date";
+        }
+    }
+    //$http.get('/Sales/GetAllInvoice').then(function (res) {
+    //    $scope.InvList = res.data;
+    //    console.log(res.data);
+    //    $rootScope.isLoadingScreenActive = false;
+    //}, function (error) {
+    //    $rootScope.isLoadingScreenActive = false;
+    //    })
     $scope.fnInbox = function () {
         $scope.isPreview = !$scope.isPreview
     }

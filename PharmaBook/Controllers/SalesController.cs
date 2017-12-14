@@ -114,7 +114,7 @@ namespace PharmaBook.Controllers
             return Json(slsvwmdl);
         }
 
-        public IActionResult GetAllInvoice()
+        public IActionResult GetAllInvoice(string fromDate, string toDate)
         {
             try
             {
@@ -122,7 +122,9 @@ namespace PharmaBook.Controllers
                 List<MasterInv> sList = new List<MasterInv>();
                 ChildInv cInv = null;
                 List<ChildInv> cInvList = null;
-                var InvList = _imaster.GetAll(User.Identity.Name).Where(x => x.UserName != null).ToList();
+                DateTime frmDate = commonServices.ConvertToDate(fromDate);
+                DateTime tDate = commonServices.ConvertToDate(toDate);
+                var InvList = _imaster.GetAll(User.Identity.Name).Where(x => x.InvCrtdate.Date >= frmDate.Date && x.InvCrtdate.Date <=tDate.Date && x.UserName != null).ToList();
                 foreach (var item in InvList)
                 {
                     svm = new MasterInv();
