@@ -4,7 +4,7 @@
 }
 <script type="text/javascript">
     function printDiv(divName, id) {
-       // $('.btn').hide();
+        // $('.btn').hide();
         var colcnt = ($("#" + id).find('tr')[0].cells.length) - 1;
         var printContents = document.getElementById(divName).innerHTML;
         //var newLbl = $("#" + divName + ",#" + id + " tr").find("input:text,th:last,td:eq(" + colcnt + ")").remove().end().html();
@@ -15,26 +15,26 @@
         printWindow.document.write('</body></html>');
         printWindow.document.close();
         printWindow.print();
-       // location.reload();
+        // location.reload();
     }
 </script>
 <h2>Purchased History Inbox</h2>
 <div class="blankpage-main" ng-controller="ProductController">
-   
+
     <div class="row mt">
         <div class="col-md-12">
             <div class="content-panel">
                 <div class="row">
                     <div class="col-xs-3">
-                       
+
                         <label>Total Medicine : {{filtered.length}}</label>
                     </div>
                     <div class="col-xs-4">
                         <select class="form-control" ng-model="vendorDDL" id="exampleSelect1" ng-change="getSelectedVendor()">
-                            <option value="">-- All vendor--</option>                            
+                            <option value="">-- All vendor--</option>
                             <option ng-repeat="item in VendorList" value="{{item.vendorName}}">{{item.vendorName}}</option>
-                        </select>                               
-                        </div>
+                        </select>
+                    </div>
                     <div class="col-xs-4 right">
                         <select class="form-control" placeholder="Medicine" ng-model="ItemNameMedicine"
                                 ng-change="medicineselect()">
@@ -44,7 +44,7 @@
 
                     </div>
                     <div class="col-xs-1">
-                        <button type="button" style="float:right" class="btn btn-primary btn-sm"  id="prntbtn" onclick="printDiv('purchsdinbx','tbl1')">
+                        <button type="button" style="float:right" class="btn btn-primary btn-sm" id="prntbtn" onclick="printDiv('purchsdinbx','tbl1')">
                             <span class="glyphicon glyphicon-print"></span> Print
                         </button>
                     </div>
@@ -69,11 +69,9 @@
                                 <th style="text-align:center">Batch No</th>
                                 <th style="text-align:center">Exp Date</th>
                                 <th style="text-align:center">Mfg</th>
-                                <th style="text-align:center">Stef MRP</th>
-                                <th style="text-align:center">Total Stef</th>
-                                <th style="text-align:center">Tablets/Capsule</th>                             
+                                <th style="text-align:center">Details</th>                                
                                 <th style="text-align:center">Purchased Date</th>
-                                <th style="text-align:center">Vendor</th>                               
+                                <th style="text-align:center">Vendor</th>
                                 <th style="text-align:center">remark  </th>
                             </tr>
                         </thead>
@@ -84,15 +82,22 @@
                                 <td style="text-align:center">{{item.batchNo}}</td>
                                 <td style="text-align:center">{{item.expDate}}</td>
                                 <td>{{item.mfg}}</td>
-                                <td style="text-align:center">{{item.eachStefPrice }}</td>
-                                <td style="text-align:center">{{item.stef}}</td>
-                                <td style="text-align:center">{{item.tabletsCapsule}}</td>                              
+                                <td style="text-align:center">
+                                   <p>
+                                       <span ng-show="item.eachStefPrice">MRP : {{item.eachStefPrice }}, </span>
+                                       <span ng-show="item.stef">Total Stef:  {{item.stef}}, </span>
+                                       <span ng-show="item.tabletsCapsule">Tablets: {{item.tabletsCapsule}},</span>
+                                      <span ng-show="item.qty">Qty: {{item.qty}}</span> 
+                                   </p>
+                                </td>
+                              
                                 <td style="text-align:center">{{item.purchasedDated}}</td>
-                                <td> <span ng-show="item.vendorname">{{item.vendorname}}</span>
+                                <td>
+                                    <span ng-show="item.vendorname">{{item.vendorname}}</span>
                                     <span ng-show="!item.vendorname">self</span>
-                                 <br />
-                                {{item.vendorcompany}} 
-                                </td>                              
+                                    <br />
+                                    {{item.vendorcompany}}
+                                </td>
                                 <td>{{item.remark}}</td>
                             </tr>
                         </tbody>
