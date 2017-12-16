@@ -1,0 +1,86 @@
+@{
+    ViewData["Title"] = "Index";
+}
+@model NotesModel
+<h2>Notes</h2>
+<div class="blankpage-main">
+    @if (TempData["msg"] != null)
+    {
+        <span class="alert alert-success">@TempData["msg"]</span>
+        <hr />
+    }
+    <form method="post" asp-action="index" asp-controller="Notes">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea class="form-control" asp-for="note.remarks">
+
+                    </textarea>
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-primary" type="submit"></input>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+</div>
+<div class="blankpage-main">
+    <strong>Total Notes : @Model.notes.Count()</strong>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Created Date</th>
+                <th>Notes</th>
+                @*<th>Status</th>*@
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.notes)
+            {
+                <tr>
+                    <td>@item.createdDate</td>
+                    <td>@item.remarks</td>
+                    @*<td>
+                        @{
+                        if (item.isActive == true)
+                        {
+                            <span>Open</span>
+                        }
+                        else
+                        {
+                            <span>Closed</span>
+                        }
+                    }
+                </td>*@
+                <td><a class="btn btn-primary btn-sm" href="" onclick="isConfirm(@(item.id))">Delete</a></td>
+            </tr>
+                        }
+        </tbody>
+
+    </table>
+</div>
+
+
+
+@section Scripts{
+    <script>
+        function isConfirm(id) {
+            if (confirm('are sure want to delete??')) {
+                window.location = '/Notes/Closed/' + id;
+            }
+            else {
+                return false;
+            }
+
+        }
+        $('#menu').load('click', 'li', function () {
+            $('#menu li.active').removeClass('active');
+            console.log("#menu-Medicine");
+            $('#menu-notes').addClass('active');
+        });
+    </script>
+}

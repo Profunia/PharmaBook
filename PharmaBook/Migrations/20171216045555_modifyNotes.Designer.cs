@@ -8,9 +8,10 @@ using PharmaBook.Entities;
 namespace PharmaBook.Migrations
 {
     [DbContext(typeof(PharmaBookContext))]
-    partial class PharmaBookContextModelSnapshot : ModelSnapshot
+    [Migration("20171216045555_modifyNotes")]
+    partial class modifyNotes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")

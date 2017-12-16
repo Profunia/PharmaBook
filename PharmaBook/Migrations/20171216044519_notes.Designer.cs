@@ -8,9 +8,10 @@ using PharmaBook.Entities;
 namespace PharmaBook.Migrations
 {
     [DbContext(typeof(PharmaBookContext))]
-    partial class PharmaBookContextModelSnapshot : ModelSnapshot
+    [Migration("20171216044519_notes")]
+    partial class notes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -223,13 +224,9 @@ namespace PharmaBook.Migrations
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("createdDate");
-
                     b.Property<bool>("isActive");
 
                     b.Property<string>("remarks");
-
-                    b.Property<string>("userName");
 
                     b.HasKey("id");
 
