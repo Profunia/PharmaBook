@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using PharmaBook.Entities;
 using PharmaBook.Services;
 using PharmaBook.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PharmaBook.Controllers
 {
+    [Authorize]
     public class NotesController : Controller
     {
         private INoteServices _iNote;
