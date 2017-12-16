@@ -1136,11 +1136,18 @@ app.controller('SalesResportController', function ($scope, $http, loadvndor, $ro
     }
     $scope.getTotal = function () {
         var total = 0;
+        var discount = 0;
         for (var i = 0; i < $scope.GridData.length; i++) {
             var amount = $scope.GridData[i].amount;
             total += amount;
+
+            // discount
+            var dis = $scope.GridData[i].discount;
+            if (dis) {
+                discount += dis;
+            }
         }
-        return total;
+        return (total - discount);
     }
     $scope.getTotalInv = function () {
         var grosstotalInv = 0;

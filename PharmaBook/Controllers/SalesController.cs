@@ -231,35 +231,39 @@ namespace PharmaBook.Controllers
                 var InvList = _imaster.GetAll(User.Identity.Name).Where(x => x.UserName != null).ToList();
                 var MonthlyResult = (from m in InvList
                                      join c in _ichild.GetAll() on m.Id equals c.MasterInvID
-                                     select new { c.Amount, m.InvCrtdate, m.Id,c.MasterInvID } into x
+                                     select new {m.Discount, c.Amount, m.InvCrtdate, m.Id,c.MasterInvID } into x
                                      group x by new { date = new DateTime(x.InvCrtdate.Year, x.InvCrtdate.Month, 1) } into g
                                      select new
                                      {
                                          inv_date = g.Key.date,
                                          totalInv= g.Select(i => i.MasterInvID).Distinct().Count(),
-                                         amount = g.Sum(x => x.Amount)
+                                         amount = g.Sum(x => x.Amount),
+                                         discount = g.Sum(x => x.Discount)
+
                                      }).ToList();
 
                 var DailyResult = (from m in InvList
                                    join c in _ichild.GetAll() on m.Id equals c.MasterInvID
-                                   select new { c.Amount, m.InvCrtdate,c.MasterInvID } into x
+                                   select new {m.Discount, c.Amount, m.InvCrtdate,c.MasterInvID } into x
                                    group x by new { date = x.InvCrtdate.Date } into g
                                    select new
                                    {
                                        inv_date = g.Key.date,
                                        totalInv = g.Select(i => i.MasterInvID).Distinct().Count(),
-                                       amount = g.Sum(x => x.Amount)
+                                       amount = g.Sum(x => x.Amount),
+                                       discount = g.Sum(x => x.Discount)
                                    }).ToList();
 
                 var YearlyResult = (from m in InvList
                                     join c in _ichild.GetAll() on m.Id equals c.MasterInvID
-                                    select new { c.Amount, m.InvCrtdate,c.MasterInvID } into x
+                                    select new {m.Discount, c.Amount, m.InvCrtdate,c.MasterInvID } into x
                                     group x by new { date = x.InvCrtdate.Year } into g
                                     select new
                                     {
                                         inv_date = g.Key.date,
                                         totalInv = g.Select(i => i.MasterInvID).Distinct().Count(),
-                                        amount = g.Sum(x => x.Amount)
+                                        amount = g.Sum(x => x.Amount),
+                                        discount = g.Sum(x => x.Discount)
                                     }).ToList();
 
                 dList.Add("MonthlyResult", MonthlyResult);
