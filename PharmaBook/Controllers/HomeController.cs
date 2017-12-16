@@ -39,7 +39,7 @@ namespace PharmaBook.Controllers
             _iProfile = iProfile;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var userProfile = _iProfile.GetByUserName(User.Identity.Name);
             if (userProfile.IsActive == false)
@@ -65,7 +65,7 @@ namespace PharmaBook.Controllers
 
             DateTime StartDt = DateTime.Now.AddMonths(3);
             DateTime Enddt = DateTime.Now;            
-            var Products = _iProduct.GetAll(User.Identity.Name);
+            var Products = await _iProduct.GetAll(User.Identity.Name);
             var ProductExp = Products.Where(x => x.expDate >= Enddt && x.expDate <= StartDt ).ToList();
 
             ViewBag.outOfStock = Products.Where(x => x.openingStock <= 5).Count();
@@ -83,7 +83,7 @@ namespace PharmaBook.Controllers
         }
 
         [HttpPost]
-        public IActionResult topSellingMedicine()
+        public async Task<IActionResult> topSellingMedicine()
         {
             try
             {
@@ -111,7 +111,7 @@ namespace PharmaBook.Controllers
                     try
                     {
                         graph = new graphModelVM();
-                        var prod = _iProduct.GetById(item.PID);
+                        var prod = await _iProduct.GetById(item.PID);
                         graph.Name = prod.name + ", " + prod.companyName;
                         graph.Value = item.Total;
                         gList.Add(graph);
@@ -249,11 +249,11 @@ namespace PharmaBook.Controllers
             return View();
         }
 
-        public IActionResult getOutOfStockMedicine()
+        public async Task<IActionResult> getOutOfStockMedicine()
         {
             try
             {             
-                var Products = _iProduct.GetAll(User.Identity.Name);
+                var Products =  await _iProduct.GetAll(User.Identity.Name);
                 var ProductExp = Products.Where(x => x.openingStock <= 5).ToList();
                 return Ok(ProductExp.OrderBy(x=>x.openingStock));
 
@@ -270,13 +270,13 @@ namespace PharmaBook.Controllers
             return View();
         }
 
-        public IActionResult getTotalExpMedicine()
+        public async Task<IActionResult> getTotalExpMedicine()
         {
             try
             {
                 DateTime StartDt = DateTime.Now.AddMonths(3);
                 DateTime Enddt = DateTime.Now;                
-                var Products = _iProduct.GetAll(User.Identity.Name);
+                var Products = await _iProduct.GetAll(User.Identity.Name);
                 var ProductExp = Products.Where(x => x.expDate >= Enddt && x.expDate <= StartDt).ToList();
                 return Ok(ProductExp.OrderByDescending(x=>x.openingStock));
             }

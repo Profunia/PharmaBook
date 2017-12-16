@@ -48,15 +48,15 @@ namespace PharmaBook.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create([FromBody]ProductViewModel obj)
+        public async Task<IActionResult> Create([FromBody]ProductViewModel obj)
         {
             String msg = string.Empty;
             try
             {
                 if (ModelState.IsValid)
                 {
-                    Product chk = _iProduct.GetAll(User.Identity.Name)
-                        .Where(x => x.name.ToLower().Trim() == obj.name.ToLower().Trim() 
+                    var prodList = await _iProduct.GetAll(User.Identity.Name);
+                    Product chk = prodList.Where(x => x.name.ToLower().Trim() == obj.name.ToLower().Trim() 
                         && x.companyName == obj.companyName).FirstOrDefault();
                     var stockMRP = commonServices.getStockMRP((int)obj.stef, (int)obj.tabletsCapsule, obj.eachStefPrice);
                     obj.MRP= stockMRP.MRP;
@@ -68,7 +68,7 @@ namespace PharmaBook.Controllers
                     objMap.cusUserName = User.Identity.Name;
                     if (chk != null)
                     {
-                        var prd = _iProduct.GetById(chk.Id);
+                        var prd = await _iProduct.GetById(chk.Id);
                         if (prd.isActive == false)
                         {
                             prd.MRP = stockMRP.MRP;
@@ -92,7 +92,8 @@ namespace PharmaBook.Controllers
 
                     // update product histry table
                     PurchasedHistory purchasedHistory = new PurchasedHistory();
-                    var pId = _iProduct.GetAll(User.Identity.Name).OrderByDescending(x => x.Id).FirstOrDefault().Id;
+                    var tempProdList = await _iProduct.GetAll(User.Identity.Name);
+                    var pId = tempProdList.OrderByDescending(x => x.Id).FirstOrDefault().Id;
                     purchasedHistory.ProductID = pId;
                     purchasedHistory.vendorID = obj.vendorID; // Replace with Vendor ID
                     purchasedHistory.stef = Convert.ToString(obj.stef);
@@ -163,7 +164,7 @@ namespace PharmaBook.Controllers
                         obj.producterrlst = new List<ProductError>();
                         for (int row = 1; row <= rowCount; row++)
                         {
-                            var productlst = _iProduct.GetAll(User.Identity.Name);
+                            var productlst = await _iProduct.GetAll(User.Identity.Name);
                             string DplictrowData = string.Empty;
                             string rowData = string.Empty;
                             productDetails = new ProductViewModel();
@@ -393,7 +394,8 @@ namespace PharmaBook.Controllers
                                 }                                
                                 else if (medicine != "" && mfg != "")
                                 {
-                                    var prodct = _iProduct.GetAll(User.Identity.Name).Where(x => x.name == medicine && x.companyName == mfg).FirstOrDefault(); ;
+                                    var tempProd = await _iProduct.GetAll(User.Identity.Name);
+                                    var prodct = tempProd.Where(x => x.name == medicine && x.companyName == mfg).FirstOrDefault(); ;
                                     if (prodct.isActive == false)
                                     {
                                         productDetails.name = medicine;
@@ -430,27 +432,28 @@ namespace PharmaBook.Controllers
         {
             return View();
         }
-        public IActionResult GetAllMedicine()
+        public async Task<IActionResult> GetAllMedicine()
         {
             string username = User.Identity.Name;
-            var productlist = _iProduct.GetAll(username).Where(x=>x.isActive==true).OrderByDescending(x => x.Id).ToList();
+            var prodList = await _iProduct.GetAll(username);
+            var productlist = prodList.Where(x=>x.isActive==true).OrderByDescending(x => x.Id).ToList();
             List<ProductViewModel> lst = (List<ProductViewModel>)commonServices.MapProductListToVM(productlist);
             //lst = Mapper.Map<IEnumerable<ProductViewModel>>(productlist);
 
             return Ok(lst);
         }
-        public IActionResult GetMedicnById([FromHeader] int id)
+        public async Task<IActionResult> GetMedicnById([FromHeader] int id)
         {
-            var productlist = _iProduct.GetById(id);
+            var productlist = await _iProduct.GetById(id);
             ProductViewModel vm = commonServices.MapProductToVM(productlist);
             return Ok(vm);
         }
-        public JsonResult UpdateMedicn([FromBody]ProductViewModel prdvwmdl)
+        public async Task <IActionResult> UpdateMedicn([FromBody]ProductViewModel prdvwmdl)
         {
             string msg = string.Empty;
             try
             {
-                var medicn = _iProduct.GetById(prdvwmdl.Id);
+                var medicn = await _iProduct.GetById(prdvwmdl.Id);
                 medicn.batchNo = prdvwmdl.batchNo;
                 medicn.companyName = prdvwmdl.companyName;
                 medicn.expDate = commonServices.ConvertToDate(prdvwmdl.expDate);
@@ -472,14 +475,14 @@ namespace PharmaBook.Controllers
             {
                 msg = "Something went wrong";
             }
-            return Json(msg);
+            return Ok(msg);
         }
-        public JsonResult DeleteMedicine([FromHeader]int id)
+        public async Task<IActionResult> DeleteMedicine([FromHeader]int id)
         {
             string msg = string.Empty;
             try
             {
-                var dltmedicn = _iProduct.GetById(id);
+                var dltmedicn =await _iProduct.GetById(id);
                 dltmedicn.isActive = false;
                 _iProduct.Commit();
                 msg = "Medicine has been deleted Succesfully .!!";

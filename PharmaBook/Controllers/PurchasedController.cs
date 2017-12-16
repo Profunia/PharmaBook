@@ -79,7 +79,7 @@ namespace PharmaBook.Controllers
             return Json("success");
         }
 
-        public IActionResult InboxPO()
+        public async Task<IActionResult> InboxPO()
         {
             try
             {
@@ -122,7 +122,7 @@ namespace PharmaBook.Controllers
                         cpo.ChildPoId = cItem.Id;
                         cpo.ProductID = cItem.ProdID;
                         cpo.masterPOid = cItem.masterPOid;
-                        var productInfo = _iProduct.GetById(cItem.ProdID);
+                        var productInfo = await _iProduct.GetById(cItem.ProdID);
                         cpo.ProductName = productInfo.name;
                         cpo.Mfg = productInfo.companyName;
                         cpo.stef = (int)cItem.stef;
@@ -174,7 +174,7 @@ namespace PharmaBook.Controllers
         }
 
         [HttpPost]
-        public IActionResult EntryCreatePurchase([FromBody]IEnumerable<CreatePurchased> obj)
+        public async Task<IActionResult> EntryCreatePurchase([FromBody]IEnumerable<CreatePurchased> obj)
         {
             try
             {
@@ -182,7 +182,7 @@ namespace PharmaBook.Controllers
                 {
                     
                     var stockMRP = commonServices.getStockMRP((int)item.stef, (int)item.tabletsCapsule, item.eachStefPrice);
-                    var product = _iProduct.GetById(item.ProductID);
+                    var product = await _iProduct.GetById(item.ProductID);
                     product.openingStock += stockMRP.openingStock;
                     product.batchNo = item.BatchNo;
                     product.MRP = stockMRP.MRP;

@@ -9,6 +9,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -67,7 +68,7 @@ namespace PharmaBook.Controllers
             slsvwmdl.userProfile = _iProfile.GetByUserName(User.Identity.Name);
             return View(slsvwmdl);
         }
-        public IActionResult AddMasterInvc([FromBody]SalesClientViewModel slsmodel)
+        public async Task<IActionResult> AddMasterInvc([FromBody]SalesClientViewModel slsmodel)
         {
             string msg = string.Empty;
             try
@@ -89,7 +90,7 @@ namespace PharmaBook.Controllers
                     _ichild.Add(chldinvc);
                     _ichild.Commit();
 
-                    var medicn = _iProduct.GetById(i.PrdId);
+                    var medicn = await _iProduct.GetById(i.PrdId);
                     int openstk = medicn.openingStock;
                     medicn.lastUpdated = DateTime.Now.ToString();
                     medicn.isActive = true;
@@ -167,7 +168,7 @@ namespace PharmaBook.Controllers
 
         }
 
-        public IActionResult ReturnMedicine([FromBody]IEnumerable<ReturnInv> obj)
+        public async Task<IActionResult> ReturnMedicine([FromBody]IEnumerable<ReturnInv> obj)
         {
             try
             {
@@ -181,7 +182,7 @@ namespace PharmaBook.Controllers
                     // Update Stock
                     try
                     {
-                        var product = _iProduct.GetById(child.PrdId);
+                        var product =await _iProduct.GetById(child.PrdId);
                         product.openingStock = product.openingStock + item.qty;
                         _iProduct.Commit();
                     }
