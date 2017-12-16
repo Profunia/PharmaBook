@@ -3,6 +3,7 @@ using PharmaBook.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace PharmaBook.Services
 {
@@ -11,6 +12,7 @@ namespace PharmaBook.Services
         void Add(Product prd);       
         void Commit();
         Task<List<Product>> GetAll(string userName);
+        List<Product> GetAllSync(string userName);
         Task<Product> GetById(int Id);
     }
     public class ProductServices : IProduct
@@ -33,6 +35,11 @@ namespace PharmaBook.Services
         public async Task<List<Product>> GetAll(string userName)
         {
             return await Task.FromResult(_context.products.Where(x => x.cusUserName.Equals(userName)).OrderByDescending(x => x.Id).ToList());
+        }
+
+        public List<Product> GetAllSync(string userName)
+        {
+           return  _context.products.Where(x => x.cusUserName.Equals(userName)).OrderByDescending(x => x.Id).ToList();
         }
 
         public async Task<Product> GetById(int Id)
