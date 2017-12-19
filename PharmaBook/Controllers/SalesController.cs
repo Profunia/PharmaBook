@@ -87,6 +87,7 @@ namespace PharmaBook.Controllers
                 {
                     ChildInvoice chldinvc = Mapper.Map<ChildInvoice>(i);
                     chldinvc.MasterInvID = mstrobj.Id;
+                    chldinvc.Mrp = i.unitprice;
                     _ichild.Add(chldinvc);
                     _ichild.Commit();
 
@@ -138,9 +139,10 @@ namespace PharmaBook.Controllers
                     svm.Discount = item.Discount;
                     svm.CreatedDate = item.InvCrtdate.ToString("dd/MM/yyyy");
                     var child = _ichild.GetAll().Where(x => x.MasterInvID == item.Id).ToList();
-                    svm.NoOfMedicine = child.Count();
+                    svm.NoOfMedicine = child.Count();                    
                     svm.BillingAmount = child.Sum(x => x.Amount).ToString();
                     cInvList = new List<ChildInv>();
+                    //double billingAmt = 0.0;
                     foreach (var c in child)
                     {
                         cInv = new ChildInv();
@@ -150,10 +152,12 @@ namespace PharmaBook.Controllers
                         cInv.Mfg = c.Mfg;
                         cInv.ExpDate = c.ExpDt;
                         cInv.BatchNo = c.BatchNo;
-                        cInv.MRP = c.Amount;
+                        cInv.MRP = commonServices.getDoubleValue(c.Mrp);
                         cInv.Qty = c.Qty;
+                       // billingAmt += (cInv.MRP * cInv.Qty);
                         cInvList.Add(cInv);
                     }
+                  //  svm.BillingAmount = Convert.ToString(billingAmt);
                     svm.childInv = cInvList;
                     sList.Add(svm);
 
@@ -177,6 +181,7 @@ namespace PharmaBook.Controllers
                     // update InvChild
                     var child = _ichild.GetIdByPK(item.id);
                     child.Qty = child.Qty - item.qty;
+                    child.Amount = commonServices.getDoubleValue(item.mrp) * child.Qty;
                     _ichild.Commit();
 
                     // Update Stock

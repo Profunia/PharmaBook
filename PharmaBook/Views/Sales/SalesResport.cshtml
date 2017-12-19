@@ -81,7 +81,7 @@
                     <td ng-if="FilterType=='m'" style="text-align:center">{{item.inv_date | date:'MM/yyyy'}}</td>
                     <td ng-if="FilterType=='y'" style="text-align:center">{{item.inv_date}}</td>
                     <td style="text-align:center">{{item.totalInv}}</td>
-                    <td style="text-align:center">Rs {{item.amount | number : 2}}</td>
+                    <td style="text-align:center">Rs {{item.amount - item.discount | number : 2}}</td>
                 </tr>
             </tbody>
         </table>

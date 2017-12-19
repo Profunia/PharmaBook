@@ -485,13 +485,9 @@ app.controller('SalesController', function ($scope, $http, $rootScope, loadvndor
 
     $scope.SaveInvc = function () {
         $rootScope.isLoadingScreenActive = true;
-        if ($scope.master.PatientName == '' || $scope.master.PatientAdres == ''
-            || $scope.master.DrName == '' || $scope.master.RegNo == '') {
-            $scope.master.PatientName = 'Guest',
-                $scope.master.PatientAdres = '',
-                $scope.master.DrName = '',
-                $scope.master.RegNo = ''
-        }
+        if ($scope.master.PatientName == '') {
+            $scope.master.PatientName = 'Guest'
+        }       
         var obj1 = {
             'PatientName': $scope.master.PatientName,
             'PatientAdres': $scope.master.PatientAdres,
@@ -1007,6 +1003,7 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
         console.log(val);
         $scope.Mastinv = val;
         $scope.isPreview = true;
+        $scope.isSucessDB = false;
     }
     $scope.onReturn = function () {
 
@@ -1138,13 +1135,13 @@ app.controller('SalesResportController', function ($scope, $http, loadvndor, $ro
         var total = 0;
         var discount = 0;
         for (var i = 0; i < $scope.GridData.length; i++) {
-            var amount = $scope.GridData[i].amount;
+            var amount = parseFloat($scope.GridData[i].amount);
             total += amount;
 
             // discount
             var dis = $scope.GridData[i].discount;
             if (dis) {
-                discount += dis;
+                discount += parseFloat(dis);
             }
         }
         return (total - discount);

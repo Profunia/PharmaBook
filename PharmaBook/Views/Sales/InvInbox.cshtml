@@ -150,7 +150,7 @@
         </div>
     </div>
 
-    <div class="blankpage-main" ng-show="isPreview">
+    <div class="blankpage-main" ng-show="isPreview && !isSucessDB">
         <button class="btn btn-primary" ng-click="fnInbox()">
             << Back to Inbox
         </button>
@@ -200,6 +200,7 @@
                         <th>Mfg</th>
                         <th>Qty</th>
                         <th>Batch No.</th>
+                        
                         <th>MRP</th>
                         <th>Exp Date</th>
 
@@ -215,7 +216,7 @@
                         <td>{{item.mfg}}</td>
                         <td>{{item.qty}}</td>
                         <td>{{item.batchNo}}</td>
-                        <td>{{item.mrp | number :2}}</td>
+                        <td>{{item.mrp | number :2}}</td>                        
                         <td>{{item.expDate}}</td>
                     </tr>
                 </tbody>
