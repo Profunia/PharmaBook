@@ -1157,6 +1157,21 @@ app.controller('SalesResportController', function ($scope, $http, loadvndor, $ro
     $rootScope.isLoadingScreenActive = true
     $http.get('/Sales/GridRecords').then(function (res) {
         $scope.InvList = res.data;
+        for (var i = 0; i < $scope.InvList.DailyResult.length; i++) {
+            if ($scope.InvList.DailyResult[i].inv_date == $scope.InvList.DailyDiscount[i].inv_date) {
+                $scope.InvList.DailyResult[i].discount = $scope.InvList.DailyDiscount[i].discount;             
+            }
+        }
+        for (var i = 0; i < $scope.InvList.MonthlyResult.length; i++) {
+            if ($scope.InvList.MonthlyResult[i].inv_date == $scope.InvList.MonthlyDiscount[i].inv_date) {
+                $scope.InvList.MonthlyResult[i].discount = $scope.InvList.MonthlyDiscount[i].discount;
+            }
+        }
+        for (var i = 0; i < $scope.InvList.YearlyResult.length; i++) {
+            if ($scope.InvList.YearlyResult[i].inv_date == $scope.InvList.YearlyDisCount[i].inv_date) {
+                $scope.InvList.YearlyResult[i].discount = $scope.InvList.YearlyDisCount[i].discount;
+            }
+        }
         console.log($scope.InvList)
         $scope.onInboxFiler('');
         $rootScope.isLoadingScreenActive = false;

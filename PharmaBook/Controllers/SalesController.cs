@@ -28,7 +28,7 @@ namespace PharmaBook.Controllers
         {
             return View();
         }
-        public SalesController(Imaster master, 
+        public SalesController(Imaster master,
             IChild child,
             IPurchasedHistory iPurchasedHistory,
             IProfileServices iProfileServices,
@@ -48,14 +48,14 @@ namespace PharmaBook.Controllers
         public IActionResult Invoice(int? invcid)
         {
             SalesViewModel slsvwmdl = new SalesViewModel();
-            if ( invcid != null)
+            if (invcid != null)
             {
                 int id = Convert.ToInt32(invcid);
                 var mtrobj = _imaster.GetAll(User.Identity.Name).Where(x => x.Id == id).FirstOrDefault();
                 var cldinvoice = _ichild.GetById(mtrobj.Id);
                 var lstitm = Mapper.Map<IEnumerable<InvcChildVmdl>>(cldinvoice);
                 slsvwmdl.invcchld = lstitm;
-                slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mtrobj);                
+                slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mtrobj);
             }
             else
             {
@@ -63,7 +63,7 @@ namespace PharmaBook.Controllers
                 var chldinvoice = _ichild.GetById(mstrobj.Id);
                 var lst = Mapper.Map<IEnumerable<InvcChildVmdl>>(chldinvoice);
                 slsvwmdl.invcchld = lst;
-                slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mstrobj);                
+                slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mstrobj);
             }
             slsvwmdl.userProfile = _iProfile.GetByUserName(User.Identity.Name);
             return View(slsvwmdl);
@@ -96,10 +96,10 @@ namespace PharmaBook.Controllers
                     medicn.lastUpdated = DateTime.Now.ToString();
                     medicn.isActive = true;
                     medicn.openingStock = (openstk - i.Qty);
-                    _iProduct.Commit();                    
-                }                
+                    _iProduct.Commit();
+                }
             }
-            catch(Exception er)
+            catch (Exception er)
             {
                 return BadRequest(er.Message);
             }
@@ -126,7 +126,7 @@ namespace PharmaBook.Controllers
                 List<ChildInv> cInvList = null;
                 DateTime frmDate = commonServices.ConvertToDate(fromDate);
                 DateTime tDate = commonServices.ConvertToDate(toDate);
-                var InvList = _imaster.GetAll(User.Identity.Name).Where(x => x.InvCrtdate.Date >= frmDate.Date && x.InvCrtdate.Date <=tDate.Date && x.UserName != null).ToList();
+                var InvList = _imaster.GetAll(User.Identity.Name).Where(x => x.InvCrtdate.Date >= frmDate.Date && x.InvCrtdate.Date <= tDate.Date && x.UserName != null).ToList();
                 foreach (var item in InvList)
                 {
                     svm = new MasterInv();
@@ -139,7 +139,7 @@ namespace PharmaBook.Controllers
                     svm.Discount = item.Discount;
                     svm.CreatedDate = item.InvCrtdate.ToString("dd/MM/yyyy");
                     var child = _ichild.GetAll().Where(x => x.MasterInvID == item.Id).ToList();
-                    svm.NoOfMedicine = child.Count();                    
+                    svm.NoOfMedicine = child.Count();
                     svm.BillingAmount = child.Sum(x => x.Amount).ToString();
                     cInvList = new List<ChildInv>();
                     //double billingAmt = 0.0;
@@ -154,10 +154,10 @@ namespace PharmaBook.Controllers
                         cInv.BatchNo = c.BatchNo;
                         cInv.MRP = commonServices.getDoubleValue(c.Mrp);
                         cInv.Qty = c.Qty;
-                       // billingAmt += (cInv.MRP * cInv.Qty);
+                        // billingAmt += (cInv.MRP * cInv.Qty);
                         cInvList.Add(cInv);
                     }
-                  //  svm.BillingAmount = Convert.ToString(billingAmt);
+                    //  svm.BillingAmount = Convert.ToString(billingAmt);
                     svm.childInv = cInvList;
                     sList.Add(svm);
 
@@ -187,7 +187,7 @@ namespace PharmaBook.Controllers
                     // Update Stock
                     try
                     {
-                        var product =await _iProduct.GetById(child.PrdId);
+                        var product = await _iProduct.GetById(child.PrdId);
                         product.openingStock = product.openingStock + item.qty;
                         _iProduct.Commit();
                     }
@@ -205,7 +205,7 @@ namespace PharmaBook.Controllers
                     ph.ExpDate = child.ExpDt;
                     ph.Mfg = child.Mfg;
                     ph.Name = child.Description;
-                    ph.Remark = string.IsNullOrEmpty(item.remarks) ?  "Inv No. " + item.mastInv + " Return Medicine" : item.remarks;
+                    ph.Remark = string.IsNullOrEmpty(item.remarks) ? "Inv No. " + item.mastInv + " Return Medicine" : item.remarks;
 
                     _iPurchasedHistory.Add(ph);
                     _iPurchasedHistory.Commit();
@@ -234,23 +234,12 @@ namespace PharmaBook.Controllers
             {
                 Dictionary<string, object> dList = new Dictionary<string, object>();
 
-                var InvList = _imaster.GetAll(User.Identity.Name).Where(x => x.UserName != null).ToList();
-                var MonthlyResult = (from m in InvList
-                                     join c in _ichild.GetAll() on m.Id equals c.MasterInvID
-                                     select new {m.Discount, c.Amount, m.InvCrtdate, m.Id,c.MasterInvID } into x
-                                     group x by new { date = new DateTime(x.InvCrtdate.Year, x.InvCrtdate.Month, 1) } into g
-                                     select new
-                                     {
-                                         inv_date = g.Key.date,
-                                         totalInv= g.Select(i => i.MasterInvID).Distinct().Count(),
-                                         amount = g.Sum(x => x.Amount),
-                                         discount = g.Sum(x => x.Discount)
 
-                                     }).ToList();
+                var InvList = _imaster.GetAll(User.Identity.Name).Where(x => x.UserName != null).ToList();
 
                 var DailyResult = (from m in InvList
                                    join c in _ichild.GetAll() on m.Id equals c.MasterInvID
-                                   select new {m.Discount, c.Amount, m.InvCrtdate,c.MasterInvID } into x
+                                   select new { m.Discount, c.Amount, m.InvCrtdate, c.MasterInvID } into x
                                    group x by new { date = x.InvCrtdate.Date } into g
                                    select new
                                    {
@@ -260,9 +249,44 @@ namespace PharmaBook.Controllers
                                        discount = g.Sum(x => x.Discount)
                                    }).ToList();
 
+
+                var DailyDiscount = (from m in InvList
+                                     select new { m.Discount, m.InvCrtdate } into x
+                                     group x by new { date = x.InvCrtdate.Date } into g
+                                     select new
+                                     {
+                                         inv_date = g.Key.date,
+                                         discount = g.Sum(x => x.Discount)
+                                     }).ToList();
+
+                var MonthlyDiscount = (from m in InvList
+                                       select new { m.Discount, m.InvCrtdate } into x
+                                       group x by new { date = new DateTime(x.InvCrtdate.Year, x.InvCrtdate.Month, 1) } into g
+                                       select new
+                                       {
+                                           inv_date = g.Key.date,
+                                           discount = g.Sum(x => x.Discount)
+
+                                       }).ToList();
+
+                var MonthlyResult = (from m in InvList
+                                     join c in _ichild.GetAll() on m.Id equals c.MasterInvID
+                                     select new { m.Discount, c.Amount, m.InvCrtdate, c.MasterInvID } into x
+                                     group x by new { date = new DateTime(x.InvCrtdate.Year, x.InvCrtdate.Month, 1) } into g
+                                     select new
+                                     {
+                                         inv_date = g.Key.date,
+                                         totalInv = g.Select(i => i.MasterInvID).Distinct().Count(),
+                                         amount = g.Sum(x => x.Amount),
+                                         discount = g.Sum(x => x.Discount)
+
+                                     }).ToList();
+
+
+
                 var YearlyResult = (from m in InvList
                                     join c in _ichild.GetAll() on m.Id equals c.MasterInvID
-                                    select new {m.Discount, c.Amount, m.InvCrtdate,c.MasterInvID } into x
+                                    select new { m.Discount, c.Amount, m.InvCrtdate, c.MasterInvID } into x
                                     group x by new { date = x.InvCrtdate.Year } into g
                                     select new
                                     {
@@ -272,9 +296,23 @@ namespace PharmaBook.Controllers
                                         discount = g.Sum(x => x.Discount)
                                     }).ToList();
 
+                var YearlyDisCount = (from m in InvList
+                                      select new { m.Discount, m.InvCrtdate } into x
+                                      group x by new { date = x.InvCrtdate.Year } into g
+                                      select new
+                                      {
+                                          inv_date = g.Key.date,
+                                          discount = g.Sum(x => x.Discount)
+                                      }).ToList();
+
+                dList.Add("MonthlyDiscount", MonthlyDiscount);
                 dList.Add("MonthlyResult", MonthlyResult);
+
                 dList.Add("DailyResult", DailyResult);
+                dList.Add("DailyDiscount", DailyDiscount);
+
                 dList.Add("YearlyResult", YearlyResult);
+                dList.Add("YearlyDisCount", YearlyDisCount);
                 return Ok(dList);
             }
             catch (Exception ep)
