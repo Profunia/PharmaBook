@@ -13,7 +13,7 @@ namespace PharmaBook.Controllers
 {
     [Authorize]
     public class HomeController : Controller
-    { 
+    {
 
         private IProduct _iProduct;
         private Imaster _imaster;
@@ -24,7 +24,7 @@ namespace PharmaBook.Controllers
         private IProfileServices _iProfile;
         public HomeController(IProduct iProduct,
             IProfileServices iProfile,
-            Imaster imaster, 
+            Imaster imaster,
             IChild ichild,
             IMasterPOServices iMasterPo,
             IVendorServices iVendorServices,
@@ -55,18 +55,18 @@ namespace PharmaBook.Controllers
             }
             else
             {
-                int d = (userProfile.AccountExpDt - DateTime.Now).Days; 
-                    if (d < 45)
-                    {
-                        TempData["accErr"] = "Account has been expire next " + d + " day. Please contact to Administrator";
-                    }
+                int d = (userProfile.AccountExpDt - DateTime.Now).Days;
+                if (d < 45)
+                {
+                    TempData["accErr"] = "Account has been expire next " + d + " day. Please contact to Administrator";
+                }
             }
 
 
             DateTime StartDt = DateTime.Now.AddMonths(3);
-            DateTime Enddt = DateTime.Now;            
+            DateTime Enddt = DateTime.Now;
             var Products = await _iProduct.GetAll(User.Identity.Name);
-            var ProductExp = Products.Where(x => x.expDate >= Enddt && x.expDate <= StartDt ).ToList();
+            var ProductExp = Products.Where(x => x.expDate >= Enddt && x.expDate <= StartDt).ToList();
 
             ViewBag.outOfStock = Products.Where(x => x.openingStock <= 5).Count();
             ViewBag.TotalExpMedicine = ProductExp.Count();
@@ -88,13 +88,13 @@ namespace PharmaBook.Controllers
             try
             {
                 List<graphModelVM> gList = new List<graphModelVM>();
-                DateTime StartDt= DateTime.Now.AddMonths(-3);
+                DateTime StartDt = DateTime.Now.AddMonths(-3);
                 DateTime Enddt = DateTime.Now;
                 var masterInv = _imaster.GetAll(User.Identity.Name)
-                               .Where(x => x.InvCrtdate.Date >= StartDt.Date 
+                               .Where(x => x.InvCrtdate.Date >= StartDt.Date
                                && x.InvCrtdate.Date <= Enddt.Date
-                               && x.UserName!=null).ToList();
-                
+                               && x.UserName != null).ToList();
+
                 var InvList = (from m in masterInv
                                join c in _ichild.GetAll() on m.Id equals c.MasterInvID
                                select new { c.PrdId, c.Qty } into x
@@ -106,7 +106,7 @@ namespace PharmaBook.Controllers
                                }).ToList();
 
                 graphModelVM graph = null;
-                foreach (var item in InvList.OrderByDescending(x => x.Total).Take(10))
+                foreach (var item in InvList.OrderByDescending(x => x.Total).Take(7))
                 {
                     try
                     {
@@ -131,7 +131,7 @@ namespace PharmaBook.Controllers
             }
 
 
-            
+
         }
 
         [HttpPost]
@@ -146,8 +146,8 @@ namespace PharmaBook.Controllers
                                .Where(x => x.purchasedDated >= StartDt && x.purchasedDated <= Enddt
                                && x.cusUserName != null).ToList();
 
-                var InvList = (from m in purchasedHis                               
-                               select new { m.vendorID} into x
+                var InvList = (from m in purchasedHis
+                               select new { m.vendorID } into x
                                group x by new { x.vendorID } into g
                                select new
                                {
@@ -166,7 +166,7 @@ namespace PharmaBook.Controllers
                         if (vendorId == 0)
                         {
                             var b = gList.Where(x => x.Name.Equals("Self"));
-                            if (b.Count()==0)
+                            if (b.Count() == 0)
                             {
                                 graph.Name = "Self";
                                 graph.Value = item.Total;
@@ -192,7 +192,7 @@ namespace PharmaBook.Controllers
                     {
 
                     }
-                    
+
 
                 }
 
@@ -205,7 +205,92 @@ namespace PharmaBook.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult DailySallingReport()
+        {
+            try
+            {
+                List<graphModelVM> gList = new List<graphModelVM>();
+                DateTime StartDt = DateTime.Now.AddDays(-10);
+                DateTime Enddt = DateTime.Now;
+                var InvList = _imaster.GetAll(User.Identity.Name)
+                               .Where(x => x.InvCrtdate >= StartDt && x.InvCrtdate <= Enddt
+                               && x.UserName != null).ToList();
 
+
+                var DailyResult = (from m in InvList
+                                   join c in _ichild.GetAll() on m.Id equals c.MasterInvID
+                                   select new { m.Discount, c.Amount, m.InvCrtdate, c.MasterInvID } into x
+                                   group x by new { date = x.InvCrtdate.Date } into g
+                                   select new
+                                   {
+                                       inv_date = g.Key.date,
+                                       totalInv = g.Select(i => i.MasterInvID).Distinct().Count(),
+                                       amount = g.Sum(x => x.Amount),
+                                       discount = g.Sum(x => x.Discount)
+                                   }).ToList();
+
+
+                var DailyDiscount = (from m in InvList
+                                     select new { m.Discount, m.InvCrtdate } into x
+                                     group x by new { date = x.InvCrtdate.Date } into g
+                                     select new
+                                     {
+                                         inv_date = g.Key.date,
+                                         discount = g.Sum(x => x.Discount)
+                                     }).ToList();
+
+
+                graphModelVM graph = null;
+                for (int i = 0; i < 7; i++)
+                {
+                    try
+                    {
+                        graph = new graphModelVM();
+                        DateTime dt = DateTime.Now.AddDays(-i);
+                        graph.Name = dt.ToString("dd/MM/yyyy");
+
+                        var Inv = DailyResult.Where(x => x.inv_date.Date == dt.Date).FirstOrDefault();
+                        if (Inv != null)
+                        {
+                            double discount = 0.0;
+                            var disCnt = DailyDiscount.Where(x => x.inv_date.Date == dt.Date).FirstOrDefault();
+                            if (disCnt != null)
+                            {
+                                if (disCnt.discount != 0)
+                                {
+                                    discount = (double)disCnt.discount;
+                                }
+                            }
+                            double temp1 = Convert.ToDouble(Inv.amount - discount);
+                            string temp2 = String.Format("{0:0.00}", temp1);
+
+                            graph.Value = Convert.ToDouble(temp2);
+
+                        }
+                        else
+                        {
+                            graph.Value = 0;
+                        }
+                        gList.Add(graph);
+
+                    }
+                    catch
+                    {
+
+                    }
+
+
+                }
+
+                return Ok(gList);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+
+            }
+        }
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
@@ -220,7 +305,7 @@ namespace PharmaBook.Controllers
 
         public IActionResult Profile()
         {
-            var model = _iProfile.GetByUserName(User.Identity.Name);            
+            var model = _iProfile.GetByUserName(User.Identity.Name);
             var modelVM = Mapper.Map<UserProfileVM>(model);
             return View(modelVM);
         }
@@ -234,13 +319,13 @@ namespace PharmaBook.Controllers
         public IActionResult Profile(UserProfileVM Obj)
         {
             UserProfile medicn = _iProfile.GetByUserName(User.Identity.Name);
-         
-            Mapper.Map(Obj,medicn);
+
+            Mapper.Map(Obj, medicn);
             var a = medicn;
             medicn.IsActive = true;
             _iProfile.Commit();
             TempData["msg"] = "Successfully updated";
-            var laste= _iProfile.GetByUserName(User.Identity.Name);
+            var laste = _iProfile.GetByUserName(User.Identity.Name);
             return RedirectToAction("Profile");
         }
 
@@ -252,10 +337,10 @@ namespace PharmaBook.Controllers
         public async Task<IActionResult> getOutOfStockMedicine()
         {
             try
-            {             
-                var Products =  await _iProduct.GetAll(User.Identity.Name);
+            {
+                var Products = await _iProduct.GetAll(User.Identity.Name);
                 var ProductExp = Products.Where(x => x.openingStock <= 5).ToList();
-                return Ok(ProductExp.OrderBy(x=>x.openingStock));
+                return Ok(ProductExp.OrderBy(x => x.openingStock));
 
             }
             catch (Exception ep)
@@ -265,7 +350,7 @@ namespace PharmaBook.Controllers
             }
         }
         public IActionResult TotalExpMedicine()
-        {            
+        {
 
             return View();
         }
@@ -275,10 +360,10 @@ namespace PharmaBook.Controllers
             try
             {
                 DateTime StartDt = DateTime.Now.AddMonths(3);
-                DateTime Enddt = DateTime.Now;                
+                DateTime Enddt = DateTime.Now;
                 var Products = await _iProduct.GetAll(User.Identity.Name);
                 var ProductExp = Products.Where(x => x.expDate >= Enddt && x.expDate <= StartDt).ToList();
-                return Ok(ProductExp.OrderByDescending(x=>x.openingStock));
+                return Ok(ProductExp.OrderByDescending(x => x.openingStock));
             }
             catch (Exception ep)
             {

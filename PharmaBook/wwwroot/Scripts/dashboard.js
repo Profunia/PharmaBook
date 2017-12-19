@@ -5,7 +5,7 @@
     $.ajax({
         type: "POST",
         contentType: "application/json; charset=utf-8",
-        url: "/Home/topVendorList",
+        url: "/Home/DailySallingReport",
         data: "{}",
         dataType: "json",
         success: function (Result) {
@@ -28,17 +28,17 @@
 
         var chart = new Highcharts.Chart({
             chart: {
-                type: 'line',
+                type: 'column',
                 renderTo: 'topvendorchart'
             },
             credits: {
                 enabled: false
             },
             title: {
-                text: 'Top 10 Vendors'
+                text: 'Daily Sales'
             },
             subtitle: {
-                text: 'Frequent transaction accourding to last 3 months data.'
+                text: 'Last 7 days total billing amount '
             },
             xAxis: {
                 type: 'category'
@@ -46,7 +46,7 @@
             },
             yAxis: {
                 title: {
-                    text: 'Total No of transaction'
+                    text: 'Total Billing Amount'
                 }
 
             },
@@ -111,7 +111,7 @@
                 enabled: false
             },
             title: {
-                text: 'Top 10 Selling Medicine'
+                text: 'Top 7 Selling Medicine'
             },
             subtitle: {
                 text: 'Chart display accourding to last 3 months records.'
