@@ -66,7 +66,7 @@ namespace PharmaBook.Controllers
             DateTime StartDt = DateTime.Now.AddMonths(3);
             DateTime Enddt = DateTime.Now;
             var Products = await _iProduct.GetAll(User.Identity.Name);
-            var ProductExp = Products.Where(x => x.expDate >= Enddt && x.expDate <= StartDt).ToList();
+            var ProductExp = Products.Where(x => x.expDate <= StartDt).ToList();
 
             ViewBag.outOfStock = Products.Where(x => x.openingStock <= 5).Count();
             ViewBag.TotalExpMedicine = ProductExp.Count();
@@ -80,6 +80,57 @@ namespace PharmaBook.Controllers
             ViewData["Message"] = "Your application description page.";
 
             return View();
+        }
+
+        public IActionResult SellingMedicineReport()
+        {
+            return View();
+        }
+        public async Task<IActionResult> getSellingMedicineReport()
+        {
+            try
+            {
+                List<graphModelVM> gList = new List<graphModelVM>();
+                DateTime StartDt = DateTime.Now.AddMonths(-3);
+                DateTime Enddt = DateTime.Now;
+                var masterInv = _imaster.GetAll(User.Identity.Name)
+                               .Where(x => x.InvCrtdate.Date >= StartDt.Date
+                               && x.InvCrtdate.Date <= Enddt.Date
+                               && x.UserName != null).ToList();
+
+                var InvList = (from m in masterInv
+                               join c in _ichild.GetAll() on m.Id equals c.MasterInvID
+                               select new { c.PrdId, c.Qty } into x
+                               group x by new { x.PrdId } into g
+                               select new
+                               {
+                                   PID = g.Key.PrdId,
+                                   Total = g.Sum(i => i.Qty)
+                               }).ToList();
+                graphModelVM graph = null;
+                foreach (var item in InvList.OrderByDescending(x => x.Total))
+                {
+                    try
+                    {
+                        graph = new graphModelVM();
+                        var prod = await _iProduct.GetById(item.PID);
+                        graph.Name = prod.name + ", " + prod.companyName;
+                        graph.Value = item.Total;
+                        gList.Add(graph);
+                    }
+                    catch
+                    {
+
+                    }
+
+                }
+                return Ok(gList);                
+            }
+            catch (Exception ep)
+            {
+                return BadRequest(ep.Message);
+            }
+            
         }
 
         [HttpPost]
@@ -362,7 +413,7 @@ namespace PharmaBook.Controllers
                 DateTime StartDt = DateTime.Now.AddMonths(3);
                 DateTime Enddt = DateTime.Now;
                 var Products = await _iProduct.GetAll(User.Identity.Name);
-                var ProductExp = Products.Where(x => x.expDate >= Enddt && x.expDate <= StartDt).ToList();
+                var ProductExp = Products.Where(x => x.expDate <= StartDt).ToList();
                 return Ok(ProductExp.OrderByDescending(x => x.openingStock));
             }
             catch (Exception ep)
