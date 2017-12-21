@@ -18,12 +18,13 @@ namespace PharmaBook.Controllers
         private IchildPoServices _iChildPO;
         public IVendorServices _iVendor;
         private IPurchasedHistory _iPurchased;
-        
+        private IErrorLogger _iErrorLogger;
         private IProduct _iProduct;
         public PurchasedController(IMasterPOServices iMasterPOServices, 
             IVendorServices ivendor,
             IPurchasedHistory iPurchasedHistory,
-            IProduct iProduct,
+            IErrorLogger iErrorLogger,
+        IProduct iProduct,
             
             IchildPoServices ichildPoServices)
         {
@@ -32,6 +33,7 @@ namespace PharmaBook.Controllers
             _iVendor = ivendor;
             _iProduct = iProduct;
             _iPurchased = iPurchasedHistory;
+            _iErrorLogger = iErrorLogger;
             
         }
         public IActionResult Index()

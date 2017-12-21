@@ -25,15 +25,18 @@ namespace PharmaBook.Controllers
         private IProduct _iProduct;
         private IPurchasedHistory _iPurchased;
         private IVendorServices _iVendor;
+        private IErrorLogger _iErrorLogger;
         private readonly IHostingEnvironment _hostingEnvironment;
         public ProductController(IHostingEnvironment hostingEnvironment,
             IVendorServices ivendor,
-            IProduct product, IPurchasedHistory ipurchasedHistory)
+            IErrorLogger iErrorLogger,
+        IProduct product, IPurchasedHistory ipurchasedHistory)
         {
             _iProduct = product;
             _iPurchased = ipurchasedHistory;
             _hostingEnvironment = hostingEnvironment;
             _iVendor = ivendor;
+            _iErrorLogger = iErrorLogger;
         }
         // GET: /<controller>/
         //public IActionResult Index()
@@ -55,7 +58,7 @@ namespace PharmaBook.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                   var prodList = await _iProduct.GetAll(User.Identity.Name);
+                    var prodList = await _iProduct.GetAll(User.Identity.Name);
                     Product chk = prodList.Where(x => x.name.ToLower().Trim() == obj.name.ToLower().Trim()
                         && x.companyName == obj.companyName).FirstOrDefault();
                     var stockMRP = commonServices.getStockMRP((int)obj.stef, (int)obj.tabletsCapsule, obj.eachStefPrice);
@@ -428,7 +431,7 @@ namespace PharmaBook.Controllers
                                         // Create new medicine 
                                         productDetails.name = medicine;
                                         productDetails.companyName = mfg;
-                                        var status = Create(productDetails);                                        
+                                        var status = Create(productDetails);
                                         obj.successlst.Add(productDetails);
                                     }
                                 }

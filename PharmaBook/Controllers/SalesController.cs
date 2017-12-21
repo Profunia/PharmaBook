@@ -23,6 +23,7 @@ namespace PharmaBook.Controllers
         private IProduct _iProduct;
         private IPurchasedHistory _iPurchasedHistory;
         private IProfileServices _iProfile;
+        private IErrorLogger _iErrorLogger;
         [HttpGet]
         public IActionResult InvInbox()
         {
@@ -31,10 +32,12 @@ namespace PharmaBook.Controllers
         public SalesController(Imaster master,
             IChild child,
             IPurchasedHistory iPurchasedHistory,
-            IProfileServices iProfileServices,
+            IErrorLogger iErrorLogger,
+        IProfileServices iProfileServices,
             IProduct product)
         {
             _imaster = master;
+            _iErrorLogger = iErrorLogger;
             _ichild = child;
             _iProduct = product;
             _iPurchasedHistory = iPurchasedHistory;

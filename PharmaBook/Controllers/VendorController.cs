@@ -17,10 +17,13 @@ namespace PharmaBook.Controllers
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         private IVendorServices _iVendorServices;
-        public VendorController(IHostingEnvironment hostingEnvironment, IVendorServices iVendorServices)
+        private IErrorLogger _iErrorLogger;
+        public VendorController(IHostingEnvironment hostingEnvironment,
+            IErrorLogger iErrorLogger, IVendorServices iVendorServices)
         {
             _hostingEnvironment = hostingEnvironment;
             _iVendorServices = iVendorServices;
+            _iErrorLogger = iErrorLogger;
         }
         public IActionResult Index()
         {

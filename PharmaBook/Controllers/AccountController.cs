@@ -5,16 +5,20 @@ using PharmaBook.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using PharmaBook.Services;
+
 namespace PharmaBook.Controllers
 {
     public class AccountController : Controller
     {
         private SignInManager<User> _singInManager;
         private UserManager<User> _userManager;
-        public AccountController(UserManager<User> userManager, SignInManager<User> singInManager)
+        private IErrorLogger _iErrorLogger;
+        public AccountController(UserManager<User> userManager, IErrorLogger iError, SignInManager<User> singInManager)
         {
             _userManager = userManager;
             _singInManager = singInManager;
+            _iErrorLogger = iError;
 
         }
       

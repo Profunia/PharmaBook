@@ -56,6 +56,7 @@ namespace PharmaBook
 
             services.AddScoped<IProfileServices, ProfileServices>();
             services.AddScoped<INoteServices, NotesServices>();
+            services.AddScoped<IErrorLogger, ErrorLoggerServices>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

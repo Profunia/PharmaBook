@@ -22,11 +22,13 @@ namespace PharmaBook.Controllers
         private IVendorServices _iVendor;
         private IMasterPOServices _iMasterPo;
         private IProfileServices _iProfile;
+        private IErrorLogger _iErrorLogger;
         public HomeController(IProduct iProduct,
             IProfileServices iProfile,
             Imaster imaster,
             IChild ichild,
-            IMasterPOServices iMasterPo,
+            IErrorLogger iErrorLogger,
+        IMasterPOServices iMasterPo,
             IVendorServices iVendorServices,
             IPurchasedHistory iPurchased)
         {
@@ -37,6 +39,7 @@ namespace PharmaBook.Controllers
             _iVendor = iVendorServices;
             _iMasterPo = iMasterPo;
             _iProfile = iProfile;
+            _iErrorLogger = iErrorLogger;
         }
 
         public async Task<IActionResult> Index()
@@ -94,9 +97,9 @@ namespace PharmaBook.Controllers
                 DateTime StartDt = DateTime.Now.AddMonths(-3);
                 DateTime Enddt = DateTime.Now;
                 var masterInv = await _imaster.GetAll(User.Identity.Name);
-                      masterInv= masterInv.Where(x => x.InvCrtdate.Date >= StartDt.Date
-                               && x.InvCrtdate.Date <= Enddt.Date
-                               && x.UserName != null).ToList();
+                masterInv = masterInv.Where(x => x.InvCrtdate.Date >= StartDt.Date
+                          && x.InvCrtdate.Date <= Enddt.Date
+                          && x.UserName != null).ToList();
                 var childInv = await _ichild.GetAll();
                 var InvList = (from m in masterInv
                                join c in childInv on m.Id equals c.MasterInvID
@@ -124,13 +127,13 @@ namespace PharmaBook.Controllers
                     }
 
                 }
-                return Ok(gList);                
+                return Ok(gList);
             }
             catch (Exception ep)
             {
                 return BadRequest(ep.Message);
             }
-            
+
         }
 
         [HttpPost]
@@ -142,9 +145,9 @@ namespace PharmaBook.Controllers
                 DateTime StartDt = DateTime.Now.AddMonths(-3);
                 DateTime Enddt = DateTime.Now;
                 var masterInv = await _imaster.GetAll(User.Identity.Name);
-                masterInv= masterInv.Where(x => x.InvCrtdate.Date >= StartDt.Date
-                               && x.InvCrtdate.Date <= Enddt.Date
-                               && x.UserName != null).ToList();
+                masterInv = masterInv.Where(x => x.InvCrtdate.Date >= StartDt.Date
+                                && x.InvCrtdate.Date <= Enddt.Date
+                                && x.UserName != null).ToList();
 
                 var childInv = await _ichild.GetAll();
                 var InvList = (from m in masterInv
@@ -266,8 +269,8 @@ namespace PharmaBook.Controllers
                 DateTime StartDt = DateTime.Now.AddDays(-10);
                 DateTime Enddt = DateTime.Now;
                 var InvList = await _imaster.GetAll(User.Identity.Name);
-                         InvList= InvList.Where(x => x.InvCrtdate >= StartDt && x.InvCrtdate <= Enddt
-                               && x.UserName != null).ToList();
+                InvList = InvList.Where(x => x.InvCrtdate >= StartDt && x.InvCrtdate <= Enddt
+                       && x.UserName != null).ToList();
 
                 var childInv = await _ichild.GetAll();
                 var DailyResult = (from m in InvList
@@ -370,7 +373,7 @@ namespace PharmaBook.Controllers
         [HttpPost]
         public async Task<IActionResult> Profile(UserProfileVM Obj)
         {
-            UserProfile medicn =  await _iProfile.GetByUserName(User.Identity.Name);
+            UserProfile medicn = await _iProfile.GetByUserName(User.Identity.Name);
 
             Mapper.Map(Obj, medicn);
             var a = medicn;

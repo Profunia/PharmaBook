@@ -14,9 +14,11 @@ namespace PharmaBook.Controllers
     public class NotesController : Controller
     {
         private INoteServices _iNote;
-        public NotesController(INoteServices note)
+        private IErrorLogger _iErrorLogger;
+        public NotesController(INoteServices note, IErrorLogger iErrorLogger)
         {
             _iNote = note;
+            _iErrorLogger = iErrorLogger;
         }
         [HttpGet]
         public async Task<IActionResult> Index()
