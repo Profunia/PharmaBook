@@ -43,7 +43,7 @@ namespace PharmaBook.Controllers
             return View();
         }
 
-        public JsonResult CreatePO([FromBody]IEnumerable<PurchasedOrderVM> obj)
+        public async Task<IActionResult> CreatePO([FromBody]IEnumerable<PurchasedOrderVM> obj)
         {
             try
             {
@@ -55,8 +55,8 @@ namespace PharmaBook.Controllers
                 _iMasterPo.Add(Mo);
                 _iMasterPo.Commit();
 
-                int masterPoID = _iMasterPo.GetAll(User.Identity.Name)
-                                 .OrderByDescending(x => x.Id).FirstOrDefault().Id;
+                var mpo = await _iMasterPo.GetAll(User.Identity.Name);
+                int masterPoID = mpo.OrderByDescending(x => x.Id).FirstOrDefault().Id;
                 // Child PO Entry
                 ChildPO co = null;
                 foreach (var item in obj)
@@ -76,7 +76,7 @@ namespace PharmaBook.Controllers
                 
             }
 
-            return Json("success");
+            return Ok("success");
         }
 
         public async Task<IActionResult> InboxPO()
@@ -86,7 +86,8 @@ namespace PharmaBook.Controllers
                 Dictionary<string, object> dList = new Dictionary<string, object>();
                 List<MPO> mpoList = new List<MPO>();
                 List<CPO> cpoList = new List<CPO>();
-                var PurchasedOrder = _iMasterPo.GetAll(User.Identity.Name).OrderByDescending(x => x.Id).ToList();
+                var PurchasedOrder = await _iMasterPo.GetAll(User.Identity.Name);
+                PurchasedOrder = PurchasedOrder.OrderByDescending(x => x.Id).ToList();
                 foreach (var Item in PurchasedOrder)
                 {
                     MPO mpo = new MPO();
@@ -95,7 +96,7 @@ namespace PharmaBook.Controllers
                     // filling master Details 
                     if (Item.VendorID != 0)
                     {
-                        var vendorInfo = _iVendor.GetById(Item.VendorID);
+                        var vendorInfo = await _iVendor.GetById(Item.VendorID);
                         mpo.vendorID = Item.VendorID;
                         mpo.VendorName = vendorInfo.vendorName;
                         mpo.VendorAddress = vendorInfo.vendorAddress;
@@ -107,7 +108,8 @@ namespace PharmaBook.Controllers
                         mpo.VendorName = "Self";
                     }
                     mpo.PlacedOrder = Item.placedOrderDt.ToString("dd/MM/yyyy");
-                    var childObj = _iChildPO.GetAll().Where(x => x.masterPOid == Item.Id).ToList();
+                    var childObj = await _iChildPO.GetAll();
+                    childObj= childObj.Where(x => x.masterPOid == Item.Id).ToList();
                     mpo.NoOfItems = childObj.Count();
                     mpo.MasterPOid = Item.Id;
                     
@@ -156,11 +158,11 @@ namespace PharmaBook.Controllers
         } 
 
         [HttpPost]
-        public IActionResult childPoDelete(int id)
+        public async Task<IActionResult> childPoDelete(int id)
         {
             try
             {
-                var childPo = _iChildPO.GetById(id);
+                var childPo = await _iChildPO.GetById(id);
                 _iChildPO.Delete(childPo);
                 _iChildPO.Commit();
 
@@ -219,7 +221,7 @@ namespace PharmaBook.Controllers
                 if (obj.FirstOrDefault().MasterPOid != 0)
                 {
                     // update purchased order closed 
-                    var po = _iMasterPo.GetById(obj.FirstOrDefault().MasterPOid);
+                    var po =  await _iMasterPo.GetById(obj.FirstOrDefault().MasterPOid);
                     po.isActive = false;                    
                     _iMasterPo.Commit();
                 }

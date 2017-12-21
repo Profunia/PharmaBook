@@ -58,14 +58,14 @@ namespace PharmaBook.Controllers
             return View(VM);
         }
         [HttpPost]
-        public IActionResult EditUser(UserProfileVM model, int id)
+        public async Task<IActionResult> EditUser(UserProfileVM model, int id)
         {
             if (!User.Identity.Name.Equals("admin@admin.com"))
             {
                 return RedirectToAction("login", "account");
             }
 
-            UserProfile medicn = _iProfileServices.GetById(id);
+            UserProfile medicn = await _iProfileServices.GetById(id);
              Mapper.Map(model, medicn);
 
             //medicn.AccountExpDt = model.AccountExpDt;

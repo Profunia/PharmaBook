@@ -9,11 +9,10 @@ namespace PharmaBook.Services
 {
     public interface Imaster
     {
-        void Add(MasterInvoice mstinvc);      
-        void Commit();
-        MasterInvoice getlastproduct(string userName);
-        IEnumerable<MasterInvoice> GetAll(string userName);
-        MasterInvoice GetById(int Id);
+        void Add(MasterInvoice mstinvc);
+        void Commit();        
+        Task<List<MasterInvoice>> GetAll(string userName);
+        Task<MasterInvoice> GetById(int Id);
     }
     public class MasterInvcSrvice : Imaster
     {
@@ -22,29 +21,25 @@ namespace PharmaBook.Services
         {
             _context = context;
         }
-        public void Add(MasterInvoice mstinvc)
+        public async void Add(MasterInvoice mstinvc)
         {
-            _context.Add(mstinvc);
+           await Task.FromResult(_context.Add(mstinvc));
         }
 
-        public void Commit()
+        public async void Commit()
         {
-            _context.SaveChanges();
-        }        
-
-        public IEnumerable<MasterInvoice> GetAll(string userName)
-        {
-             return _context.InvMaster.Where(x=>x.UserName==userName).OrderByDescending(x => x.Id).ToList();
+          await Task.FromResult(_context.SaveChanges());
         }
 
-        public MasterInvoice GetById(int Id)
+        public async Task<List<MasterInvoice>> GetAll(string userName)
         {
-             return _context.InvMaster.FirstOrDefault(x => x.Id == Id);
-        }        
+            return await Task.FromResult(_context.InvMaster.Where(x => x.UserName == userName).OrderByDescending(x => x.Id).ToList());
+        }
+
+        public async Task<MasterInvoice> GetById(int Id)
+        {
+            return await Task.FromResult(_context.InvMaster.FirstOrDefault(x => x.Id == Id));
+        }
        
-        MasterInvoice Imaster.getlastproduct(string userName)
-        {
-            return _context.InvMaster.Where(x=>x.UserName.Equals(userName)).ToList().LastOrDefault();
-        }
     }
 }

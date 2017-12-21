@@ -41,7 +41,7 @@ namespace PharmaBook.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var userProfile = _iProfile.GetByUserName(User.Identity.Name);
+            var userProfile = await _iProfile.GetByUserName(User.Identity.Name);
             if (userProfile.IsActive == false)
             {
                 TempData["err"] = "Account has been locked. Please contact to Administrator";
@@ -70,8 +70,8 @@ namespace PharmaBook.Controllers
 
             ViewBag.outOfStock = Products.Where(x => x.openingStock <= 5).Count();
             ViewBag.TotalExpMedicine = ProductExp.Count();
-
-            ViewBag.OpenedPO = _iMasterPo.GetAll(User.Identity.Name).Where(x => x.isActive == true).Count();
+            var po = await _iMasterPo.GetAll(User.Identity.Name);
+            ViewBag.OpenedPO = po.Where(x => x.isActive == true).Count();
             return View();
         }
 
@@ -93,13 +93,13 @@ namespace PharmaBook.Controllers
                 List<graphModelVM> gList = new List<graphModelVM>();
                 DateTime StartDt = DateTime.Now.AddMonths(-3);
                 DateTime Enddt = DateTime.Now;
-                var masterInv = _imaster.GetAll(User.Identity.Name)
-                               .Where(x => x.InvCrtdate.Date >= StartDt.Date
+                var masterInv = await _imaster.GetAll(User.Identity.Name);
+                      masterInv= masterInv.Where(x => x.InvCrtdate.Date >= StartDt.Date
                                && x.InvCrtdate.Date <= Enddt.Date
                                && x.UserName != null).ToList();
-
+                var childInv = await _ichild.GetAll();
                 var InvList = (from m in masterInv
-                               join c in _ichild.GetAll() on m.Id equals c.MasterInvID
+                               join c in childInv on m.Id equals c.MasterInvID
                                select new { c.PrdId, c.Qty } into x
                                group x by new { x.PrdId } into g
                                select new
@@ -141,13 +141,14 @@ namespace PharmaBook.Controllers
                 List<graphModelVM> gList = new List<graphModelVM>();
                 DateTime StartDt = DateTime.Now.AddMonths(-3);
                 DateTime Enddt = DateTime.Now;
-                var masterInv = _imaster.GetAll(User.Identity.Name)
-                               .Where(x => x.InvCrtdate.Date >= StartDt.Date
+                var masterInv = await _imaster.GetAll(User.Identity.Name);
+                masterInv= masterInv.Where(x => x.InvCrtdate.Date >= StartDt.Date
                                && x.InvCrtdate.Date <= Enddt.Date
                                && x.UserName != null).ToList();
 
+                var childInv = await _ichild.GetAll();
                 var InvList = (from m in masterInv
-                               join c in _ichild.GetAll() on m.Id equals c.MasterInvID
+                               join c in childInv on m.Id equals c.MasterInvID
                                select new { c.PrdId, c.Qty } into x
                                group x by new { x.PrdId } into g
                                select new
@@ -186,15 +187,15 @@ namespace PharmaBook.Controllers
         }
 
         [HttpPost]
-        public IActionResult topVendorList()
+        public async Task<IActionResult> topVendorList()
         {
             try
             {
                 List<graphModelVM> gList = new List<graphModelVM>();
                 DateTime StartDt = DateTime.Now.AddMonths(-3);
                 DateTime Enddt = DateTime.Now;
-                var purchasedHis = _iPurchasedhistory.GetAll(User.Identity.Name)
-                               .Where(x => x.purchasedDated >= StartDt && x.purchasedDated <= Enddt
+                var purchasedHis = await _iPurchasedhistory.GetAll(User.Identity.Name);
+                purchasedHis = purchasedHis.Where(x => x.purchasedDated >= StartDt && x.purchasedDated <= Enddt
                                && x.cusUserName != null).ToList();
 
                 var InvList = (from m in purchasedHis
@@ -230,7 +231,7 @@ namespace PharmaBook.Controllers
                         }
                         else
                         {
-                            var vInfo = _iVendor.GetById(vendorId);
+                            var vInfo = await _iVendor.GetById(vendorId);
                             graph.Name = vInfo.vendorName + ", " + vInfo.vendorCompnay;
                             graph.Value = item.Total;
                         }
@@ -257,20 +258,20 @@ namespace PharmaBook.Controllers
         }
 
         [HttpPost]
-        public IActionResult DailySallingReport()
+        public async Task<IActionResult> DailySallingReport()
         {
             try
             {
                 List<graphModelVM> gList = new List<graphModelVM>();
                 DateTime StartDt = DateTime.Now.AddDays(-10);
                 DateTime Enddt = DateTime.Now;
-                var InvList = _imaster.GetAll(User.Identity.Name)
-                               .Where(x => x.InvCrtdate >= StartDt && x.InvCrtdate <= Enddt
+                var InvList = await _imaster.GetAll(User.Identity.Name);
+                         InvList= InvList.Where(x => x.InvCrtdate >= StartDt && x.InvCrtdate <= Enddt
                                && x.UserName != null).ToList();
 
-
+                var childInv = await _ichild.GetAll();
                 var DailyResult = (from m in InvList
-                                   join c in _ichild.GetAll() on m.Id equals c.MasterInvID
+                                   join c in childInv on m.Id equals c.MasterInvID
                                    select new { m.Discount, c.Amount, m.InvCrtdate, c.MasterInvID } into x
                                    group x by new { date = x.InvCrtdate.Date } into g
                                    select new
@@ -367,9 +368,9 @@ namespace PharmaBook.Controllers
             return Json(modelVM);
         }
         [HttpPost]
-        public IActionResult Profile(UserProfileVM Obj)
+        public async Task<IActionResult> Profile(UserProfileVM Obj)
         {
-            UserProfile medicn = _iProfile.GetByUserName(User.Identity.Name);
+            UserProfile medicn =  await _iProfile.GetByUserName(User.Identity.Name);
 
             Mapper.Map(Obj, medicn);
             var a = medicn;

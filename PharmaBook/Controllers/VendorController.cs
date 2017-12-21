@@ -58,14 +58,14 @@ namespace PharmaBook.Controllers
             }
             return Ok(msg);
         }
-        public JsonResult UpdtVendor([FromBody]VendorDtl obj)
+        public async Task<IActionResult> UpdtVendor([FromBody]VendorDtl obj)
         {
             string msg = string.Empty;
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var create =_iVendorServices.GetById(obj.Id);
+                    var create = await _iVendorServices.GetById(obj.Id);
                     Mapper.Map(obj, create);
                     create.isActive = true;
                     _iVendorServices.Commit();                   
@@ -77,15 +77,15 @@ namespace PharmaBook.Controllers
 
                 msg = e.Message;
             }
-            return Json(msg);
+            return Ok(msg);
         }
-        public JsonResult GetAllVendor()
+        public async Task<IActionResult> GetAllVendor()
         {
             var lst = (object)null;
             try
             {
-                var vendorlist = _iVendorServices.GetAll(User.Identity.Name)
-                    .Where(x=>x.isActive==true).ToList();
+                var vendorlist = await _iVendorServices.GetAll(User.Identity.Name);
+                vendorlist= vendorlist.Where(x=>x.isActive==true).ToList();
                 //lst = vendorlist;
                 lst = Mapper.Map<IEnumerable<VendorDtl>>(vendorlist);
             }
@@ -93,14 +93,14 @@ namespace PharmaBook.Controllers
             {
                 string msg=e.Message;
             }
-            return Json(lst);
+            return Ok(lst);
         }
-        public IActionResult VendorDlt([FromHeader]int id)
+        public async Task<IActionResult> VendorDlt([FromHeader]int id)
         {
             string msg = string.Empty;
             try
             {
-                var vndrdlt = _iVendorServices.GetById(id);
+                var vndrdlt =  await _iVendorServices.GetById(id);
                 vndrdlt.isActive = false;
                 _iVendorServices.Commit();
                 msg = "You have successfully Deleted vendor "+vndrdlt.vendorName;

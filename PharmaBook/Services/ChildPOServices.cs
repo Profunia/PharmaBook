@@ -2,6 +2,7 @@
 using PharmaBook.Entities;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PharmaBook.Services
 {
@@ -11,8 +12,8 @@ namespace PharmaBook.Services
         void Delete(ChildPO prd);
         void Update(ChildPO prd);
         void Commit();
-        IEnumerable<ChildPO> GetAll();
-        ChildPO GetById(int Id);
+        Task<List<ChildPO>> GetAll();
+        Task<ChildPO> GetById(int Id);
     }
 
     public class ChildPOServices : IchildPoServices
@@ -23,34 +24,34 @@ namespace PharmaBook.Services
             _context = context;
         }
 
-        public void Add(ChildPO prd)
+        public async void Add(ChildPO prd)
         {
-            _context.Add(prd);
+           await Task.FromResult(_context.Add(prd));
         }
 
-        public void Commit()
+        public async void Commit()
         {
-            _context.SaveChanges();
+            await Task.FromResult(_context.SaveChanges());
         }
 
-        public void Delete(ChildPO prd)
+        public async void Delete(ChildPO prd)
         {
-            _context.Remove(prd);
+           await Task.FromResult(_context.Remove(prd));
         }
 
-        public IEnumerable<ChildPO> GetAll()
+        public async Task<List<ChildPO>> GetAll()
         {
-            return _context.ChildPO.ToList();
+            return await Task.FromResult(_context.ChildPO.ToList());
         }
 
-        public ChildPO GetById(int Id)
+        public async Task<ChildPO> GetById(int Id)
         {
-            return _context.ChildPO.Find(Id);
+            return await Task.FromResult(_context.ChildPO.Find(Id));
         }
 
-        public void Update(ChildPO prd)
+        public async void Update(ChildPO prd)
         {
-            _context.Entry(prd).State = EntityState.Modified;
+           await Task.FromResult(_context.Entry(prd).State = EntityState.Modified);
         }
     }
 }

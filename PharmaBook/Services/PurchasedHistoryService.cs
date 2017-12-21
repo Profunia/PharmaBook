@@ -1,6 +1,7 @@
 ﻿using PharmaBook.Entities;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PharmaBook.Services
 {
@@ -8,8 +9,8 @@ namespace PharmaBook.Services
     {
         void Add(PurchasedHistory prd);      
         void Commit();
-        IEnumerable<PurchasedHistory> GetAll(string userName);
-        PurchasedHistory GetById(int Id);
+       Task<List<PurchasedHistory>> GetAll(string userName);
+        Task<PurchasedHistory> GetById(int Id);
     }
     public class PurchasedHistoryService : IPurchasedHistory
     {
@@ -18,24 +19,24 @@ namespace PharmaBook.Services
         {
             _context = context;
         }
-        public void Add(PurchasedHistory prd)
+        public async void Add(PurchasedHistory prd)
         {
-            _context.Add(prd);
+          await Task.FromResult(_context.Add(prd));
         }
 
-        public void Commit()
+        public async void Commit()
         {
-            _context.SaveChanges();
+           await Task.FromResult(_context.SaveChanges());
         }
 
-        public IEnumerable<PurchasedHistory> GetAll(string userName)
+        public async Task<List<PurchasedHistory>> GetAll(string userName)
         {
-            return _context.purchasedHistory.Where(x => x.cusUserName.Equals(userName)).OrderByDescending(x => x.Id).ToList();
+            return await Task.FromResult(_context.purchasedHistory.Where(x => x.cusUserName.Equals(userName)).OrderByDescending(x => x.Id).ToList());
         }
 
-        public PurchasedHistory GetById(int Id)
+        public async Task<PurchasedHistory> GetById(int Id)
         {
-            return _context.purchasedHistory.FirstOrDefault(x => x.Id == Id);
+            return await  Task.FromResult(_context.purchasedHistory.FirstOrDefault(x => x.Id == Id));
         }
     }
 }

@@ -10,11 +10,10 @@ namespace PharmaBook.Services
     public interface IProfileServices
     {
         void Add(UserProfile profile);
-        void Commit();
-        IEnumerable<UserProfile> GetAll(string userName);
-        UserProfile GetById(int Id);
-        UserProfile GetByUserName(string userName);
-        IEnumerable<UserProfile> GetAllforAdmin();
+        void Commit();       
+       Task<UserProfile> GetById(int Id);
+        Task<UserProfile> GetByUserName(string userName);
+        Task<List<UserProfile>> GetAllforAdmin();
     }
 
 
@@ -25,33 +24,28 @@ namespace PharmaBook.Services
         {
             _context = context;
         }
-        public void Add(UserProfile profile)
+        public async void Add(UserProfile profile)
         {
-            _context.Add(profile);
+           await Task.FromResult(_context.Add(profile));
         }
 
-        public void Commit()
+        public async void Commit()
         {
-            _context.SaveChanges();
+           await Task.FromResult(_context.SaveChanges());
+        }       
+
+        public async Task<UserProfile> GetById(int Id)
+        {
+            return await Task.FromResult(_context.UserProfile.Find(Id));
+        }
+        public async Task<List<UserProfile>> GetAllforAdmin()
+        {
+            return await Task.FromResult(_context.UserProfile.OrderByDescending(x => x.Id).ToList());
         }
 
-        public IEnumerable<UserProfile> GetAll(string userName)
+        public async Task<UserProfile> GetByUserName(string userName)
         {
-            return _context.UserProfile.Where(x => x.userName.Equals(userName)).ToList();
-        }
-
-        public UserProfile GetById(int Id)
-        {
-            return _context.UserProfile.Find(Id);
-        }
-        public IEnumerable<UserProfile> GetAllforAdmin()
-        {
-            return _context.UserProfile.OrderByDescending(x => x.Id).ToList();
-        }
-
-        public UserProfile GetByUserName(string userName)
-        {
-            return _context.UserProfile.FirstOrDefault(x => x.userName.Equals(userName));
+            return await Task.FromResult(_context.UserProfile.FirstOrDefault(x => x.userName.Equals(userName)));
         }
     }
 }

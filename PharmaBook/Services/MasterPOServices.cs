@@ -2,6 +2,7 @@
 using PharmaBook.Entities;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PharmaBook.Services
 {
@@ -9,8 +10,8 @@ namespace PharmaBook.Services
     {
             void Add(MasterPO prd);           
             void Commit();
-            IEnumerable<MasterPO> GetAll(string userName);
-            MasterPO GetById(int Id);        
+           Task<List<MasterPO>> GetAll(string userName);
+           Task<MasterPO> GetById(int Id);        
     }
     public class MasterPOServices : IMasterPOServices
     {
@@ -20,24 +21,24 @@ namespace PharmaBook.Services
             _context = context;
         }
 
-        public void Add(MasterPO prd)
+        public async void Add(MasterPO prd)
         {
-            _context.MasterPO.Add(prd);
+           await Task.FromResult(_context.MasterPO.Add(prd));
         }
 
-        public void Commit()
+        public async void Commit()
         {
-            _context.SaveChanges();
+           await Task.FromResult(_context.SaveChanges());
         }
         
-        public IEnumerable<MasterPO> GetAll(string userName)
+        public async Task<List<MasterPO>> GetAll(string userName)
         {
-            return _context.MasterPO.Where(x => x.userName.Equals(userName)).ToList();
+            return await Task.FromResult(_context.MasterPO.Where(x => x.userName.Equals(userName)).ToList());
         }
 
-        public MasterPO GetById(int Id)
+        public async Task<MasterPO> GetById(int Id)
         {
-            return _context.MasterPO.Find(Id);
+            return await Task.FromResult(_context.MasterPO.Find(Id));
         }
     }
 }

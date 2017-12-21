@@ -45,13 +45,14 @@ namespace PharmaBook.Controllers
         {
             return View();
         }
-        public IActionResult Invoice(int? invcid)
+        public async Task<IActionResult> Invoice(int? invcid)
         {
             SalesViewModel slsvwmdl = new SalesViewModel();
             if (invcid != null)
             {
                 int id = Convert.ToInt32(invcid);
-                var mtrobj = _imaster.GetAll(User.Identity.Name).Where(x => x.Id == id).FirstOrDefault();
+                var mtrobj1 = await _imaster.GetAll(User.Identity.Name);
+                var  mtrobj = mtrobj1.Where(x => x.Id == id).FirstOrDefault();
                 var cldinvoice = _ichild.GetById(mtrobj.Id);
                 var lstitm = Mapper.Map<IEnumerable<InvcChildVmdl>>(cldinvoice);
                 slsvwmdl.invcchld = lstitm;
@@ -59,13 +60,14 @@ namespace PharmaBook.Controllers
             }
             else
             {
-                MasterInvoice mstrobj = _imaster.getlastproduct(User.Identity.Name);
+                var mInvList = await _imaster.GetAll(User.Identity.Name);
+                MasterInvoice mstrobj = mInvList.OrderByDescending(x => x.Id).FirstOrDefault();
                 var chldinvoice = _ichild.GetById(mstrobj.Id);
                 var lst = Mapper.Map<IEnumerable<InvcChildVmdl>>(chldinvoice);
                 slsvwmdl.invcchld = lst;
                 slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mstrobj);
             }
-            slsvwmdl.userProfile = _iProfile.GetByUserName(User.Identity.Name);
+            slsvwmdl.userProfile = await _iProfile.GetByUserName(User.Identity.Name);
             return View(slsvwmdl);
         }
         public async Task<IActionResult> AddMasterInvc([FromBody]SalesClientViewModel slsmodel)
@@ -82,7 +84,8 @@ namespace PharmaBook.Controllers
                 obj.InvId = commonServices.getDynamicId();
                 _imaster.Add(obj);
                 _imaster.Commit();
-                MasterInvoice mstrobj = _imaster.getlastproduct(User.Identity.Name);
+                var masterInv = await _imaster.GetAll(User.Identity.Name);
+                MasterInvoice mstrobj = masterInv.OrderByDescending(x => x.Id).FirstOrDefault();
                 foreach (var i in childinvoice)
                 {
                     ChildInvoice chldinvc = Mapper.Map<ChildInvoice>(i);
@@ -105,18 +108,19 @@ namespace PharmaBook.Controllers
             }
             return Ok(msg);
         }
-        public JsonResult GetInvoice([FromHeader] int id)
+        public async Task<IActionResult> GetInvoice([FromHeader] int id)
         {
             SalesViewModel slsvwmdl = new SalesViewModel();
-            MasterInvoice mstrobj = _imaster.getlastproduct(User.Identity.Name);
+            var msterInv = await _imaster.GetAll(User.Identity.Name);
+            MasterInvoice mstrobj = msterInv.OrderByDescending(x => x.Id).FirstOrDefault();
             var chldinvoice = _ichild.GetAll();
             var lst = Mapper.Map<IEnumerable<InvcChildVmdl>>(chldinvoice);
             slsvwmdl.invcchld = lst;
             slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mstrobj);
-            return Json(slsvwmdl);
+            return Ok(slsvwmdl);
         }
 
-        public IActionResult GetAllInvoice(string fromDate, string toDate)
+        public async Task<IActionResult> GetAllInvoice(string fromDate, string toDate)
         {
             try
             {
@@ -126,7 +130,8 @@ namespace PharmaBook.Controllers
                 List<ChildInv> cInvList = null;
                 DateTime frmDate = commonServices.ConvertToDate(fromDate);
                 DateTime tDate = commonServices.ConvertToDate(toDate);
-                var InvList = _imaster.GetAll(User.Identity.Name).Where(x => x.InvCrtdate.Date >= frmDate.Date && x.InvCrtdate.Date <= tDate.Date && x.UserName != null).ToList();
+                var InvList = await _imaster.GetAll(User.Identity.Name);
+                InvList= InvList.Where(x => x.InvCrtdate.Date >= frmDate.Date && x.InvCrtdate.Date <= tDate.Date && x.UserName != null).ToList();
                 foreach (var item in InvList)
                 {
                     svm = new MasterInv();
@@ -138,7 +143,8 @@ namespace PharmaBook.Controllers
                     svm.DocRegi = item.RegNo;
                     svm.Discount = item.Discount;
                     svm.CreatedDate = item.InvCrtdate.ToString("dd/MM/yyyy");
-                    var child = _ichild.GetAll().Where(x => x.MasterInvID == item.Id).ToList();
+                    var child = await _ichild.GetAll();
+                        child= child.Where(x => x.MasterInvID == item.Id).ToList();
                     svm.NoOfMedicine = child.Count();
                     svm.BillingAmount = child.Sum(x => x.Amount).ToString();
                     cInvList = new List<ChildInv>();
@@ -179,7 +185,7 @@ namespace PharmaBook.Controllers
                 foreach (var item in obj)
                 {
                     // update InvChild
-                    var child = _ichild.GetIdByPK(item.id);
+                    var child = await _ichild.GetIdByPK(item.id);
                     child.Qty = child.Qty - item.qty;
                     child.Amount = commonServices.getDoubleValue(item.mrp) * child.Qty;
                     _ichild.Commit();
@@ -228,17 +234,19 @@ namespace PharmaBook.Controllers
             return View();
         }
 
-        public IActionResult GridRecords()
+        public async Task<IActionResult> GridRecords()
         {
             try
             {
                 Dictionary<string, object> dList = new Dictionary<string, object>();
 
 
-                var InvList = _imaster.GetAll(User.Identity.Name).Where(x => x.UserName != null).ToList();
+                var InvList = await _imaster.GetAll(User.Identity.Name);
+                   InvList= InvList.Where(x => x.UserName != null).ToList();
 
+                var InvChild = await _ichild.GetAll();
                 var DailyResult = (from m in InvList
-                                   join c in _ichild.GetAll() on m.Id equals c.MasterInvID
+                                   join c in InvChild on m.Id equals c.MasterInvID
                                    select new { m.Discount, c.Amount, m.InvCrtdate, c.MasterInvID } into x
                                    group x by new { date = x.InvCrtdate.Date } into g
                                    select new
@@ -270,7 +278,7 @@ namespace PharmaBook.Controllers
                                        }).ToList();
 
                 var MonthlyResult = (from m in InvList
-                                     join c in _ichild.GetAll() on m.Id equals c.MasterInvID
+                                     join c in InvChild on m.Id equals c.MasterInvID
                                      select new { m.Discount, c.Amount, m.InvCrtdate, c.MasterInvID } into x
                                      group x by new { date = new DateTime(x.InvCrtdate.Year, x.InvCrtdate.Month, 1) } into g
                                      select new
@@ -285,7 +293,7 @@ namespace PharmaBook.Controllers
 
 
                 var YearlyResult = (from m in InvList
-                                    join c in _ichild.GetAll() on m.Id equals c.MasterInvID
+                                    join c in InvChild on m.Id equals c.MasterInvID
                                     select new { m.Discount, c.Amount, m.InvCrtdate, c.MasterInvID } into x
                                     group x by new { date = x.InvCrtdate.Year } into g
                                     select new

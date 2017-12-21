@@ -9,14 +9,10 @@ namespace PharmaBook.Services
 {
     public interface IVendorServices
     {        
-        IEnumerable<Vendor> GetAll(string userName);
-        Vendor GetById(int id);      
+        Task<List<Vendor>> GetAll(string userName);
+        Task<Vendor> GetById(int id);      
         void Add(Vendor obj);
-        void Commit();
-
-        Task<IEnumerable<Vendor>> asyncGetAll(string userName);
-        Task<bool> asyncCommit();
-        Task<Vendor> asyncGetById(int id);
+        void Commit();       
     }
     public class VendorServices : IVendorServices
     {
@@ -26,40 +22,25 @@ namespace PharmaBook.Services
             _context = obj;
         }
 
-        public void Add(Vendor obj)
+        public async void Add(Vendor obj)
         {
-            _context.Add(obj);            
+           await Task.FromResult( _context.Add(obj));            
+        }
+       
+        public async void Commit()
+        {
+          await Task.FromResult(_context.SaveChanges());
         }
 
-        public Task<bool> asyncCommit()
+        public async Task<List<Vendor>> GetAll(string userName)
         {
-            throw new NotImplementedException();
+            return  await Task.FromResult( _context.vendors.Where(x=>x.cusUserName.Equals(userName) 
+            && x.cusUserName!=null).OrderByDescending(x => x.Id).ToList());
         }
 
-        public Task<IEnumerable<Vendor>> asyncGetAll(string userName)
+        public async Task<Vendor> GetById(int id)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<Vendor> asyncGetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Commit()
-        {
-            _context.SaveChanges();
-        }
-
-        public IEnumerable<Vendor> GetAll(string userName)
-        {
-            return _context.vendors.Where(x=>x.cusUserName.Equals(userName) 
-            && x.cusUserName!=null).OrderByDescending(x => x.Id);
-        }
-
-        public Vendor GetById(int id)
-        {
-            return _context.vendors.FirstOrDefault(x => x.Id == id);
+            return await Task.FromResult(_context.vendors.FirstOrDefault(x => x.Id == id));
         }
     }
 }

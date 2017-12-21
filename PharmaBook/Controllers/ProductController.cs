@@ -55,8 +55,8 @@ namespace PharmaBook.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                   // var prodList = await _iProduct.GetAllSync(User.Identity.Name);
-                    Product chk = _iProduct.GetAllSync(User.Identity.Name).Where(x => x.name.ToLower().Trim() == obj.name.ToLower().Trim()
+                   var prodList = await _iProduct.GetAll(User.Identity.Name);
+                    Product chk = prodList.Where(x => x.name.ToLower().Trim() == obj.name.ToLower().Trim()
                         && x.companyName == obj.companyName).FirstOrDefault();
                     var stockMRP = commonServices.getStockMRP((int)obj.stef, (int)obj.tabletsCapsule, obj.eachStefPrice);
                     obj.MRP = stockMRP.MRP;
@@ -305,7 +305,8 @@ namespace PharmaBook.Controllers
                                         if (!string.IsNullOrEmpty(rowData))
                                         {
                                             int vID = Convert.ToInt32(rowData);
-                                            bool isVidExits = _iVendor.GetAll(User.Identity.Name).Any(x => x.Id == vID);
+                                            var vnDer = await _iVendor.GetAll(User.Identity.Name);
+                                            bool isVidExits = vnDer.Any(x => x.Id == vID);
                                             productDetails.vendorID = isVidExits ? vID : 0;
                                         }
                                         else
@@ -402,8 +403,8 @@ namespace PharmaBook.Controllers
                                 }
                                 else if (medicine != "" && mfg != "")
                                 {
-                                   // var tempProd = await _iProduct.GetAllSync(User.Identity.Name);
-                                    var prodct = _iProduct.GetAllSync(User.Identity.Name).Where(x => x.name.ToLower().Trim().Equals(medicine.ToLower().Trim())
+                                    var tempProd = await _iProduct.GetAll(User.Identity.Name);
+                                    var prodct = tempProd.Where(x => x.name.ToLower().Trim().Equals(medicine.ToLower().Trim())
                                     && x.companyName.ToLower().Trim().Equals(mfg.ToLower().Trim())).FirstOrDefault();
                                     if (prodct != null)
                                     {
@@ -513,12 +514,12 @@ namespace PharmaBook.Controllers
             }
             return Json(msg);
         }
-        public IActionResult PurchsdHstryInbx()
+        public async Task<IActionResult> PurchsdHstryInbx()
         {
             try
             {
-                var inbxlst = _iPurchased.GetAll(User.Identity.Name);
-                var vendors = _iVendor.GetAll(User.Identity.Name).ToList();
+                var inbxlst = await _iPurchased.GetAll(User.Identity.Name);
+                var vendors = await _iVendor.GetAll(User.Identity.Name);
                 var lst = commonServices.MapPurchasedHistoryToVM(inbxlst, vendors);
                 //Mapper.Map<IEnumerable<PurchasedHistoryVM>>(inbxlst);
                 return Ok(lst);

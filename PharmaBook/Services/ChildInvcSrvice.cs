@@ -8,12 +8,12 @@ namespace PharmaBook.Services
 {
     public interface IChild
     {
-        void Add(ChildInvoice chldinvc);     
-        ChildInvoice getlastproduct();
+        void Add(ChildInvoice chldinvc);
+        Task<ChildInvoice> getlastproduct();
         void Commit();
-        IEnumerable<ChildInvoice> GetAll();
-        IEnumerable<ChildInvoice> GetById(int Id);
-        ChildInvoice GetIdByPK(int Id);
+        Task<List<ChildInvoice>> GetAll();
+        Task<List<ChildInvoice>> GetById(int Id);
+        Task<ChildInvoice> GetIdByPK(int Id);
     }
     public class ChildInvcSrvice : IChild
     {
@@ -22,32 +22,32 @@ namespace PharmaBook.Services
         {
             _context = context;
         }
-        public void Add(ChildInvoice chldinvc)
+        public async void Add(ChildInvoice chldinvc)
         {
-            _context.Add(chldinvc);
+            await Task.FromResult(_context.Add(chldinvc));
         }
 
-        public void Commit()
+        public async void Commit()
         {
-            _context.SaveChanges();
+            await Task.FromResult(_context.SaveChanges());
         }
 
-        public IEnumerable<ChildInvoice> GetAll()
+        public async Task<List<ChildInvoice>> GetAll()
         {
-            return _context.InvChild.OrderByDescending(x => x.Id).ToList();
+            return await Task.FromResult(_context.InvChild.OrderByDescending(x => x.Id).ToList());
         }
-        public ChildInvoice getlastproduct()
+        public async Task<ChildInvoice> getlastproduct()
         {
-            return _context.InvChild.ToList().LastOrDefault();
+            return await Task.FromResult(_context.InvChild.ToList().LastOrDefault());
         }
 
-        IEnumerable<ChildInvoice> IChild.GetById(int id)
+        public async Task<List<ChildInvoice>> GetById(int id)
         {
-            return _context.InvChild.Where(x => x.MasterInvID == id).ToList();
+            return await Task.FromResult(_context.InvChild.Where(x => x.MasterInvID == id).ToList());
         }
-      public ChildInvoice GetIdByPK(int Id)
+        public async Task<ChildInvoice> GetIdByPK(int Id)
         {
-            return _context.InvChild.Find(Id);
+            return await Task.FromResult(_context.InvChild.Find(Id));
         }
     }
 }
