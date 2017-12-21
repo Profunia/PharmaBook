@@ -8,19 +8,15 @@
         url: "/Home/DailySallingReport",
         data: "{}",
         dataType: "json",
-        success: function (Result) {
-            console.log(Result)
+        success: function (Result) {           
             var vendordata = [];
             for (var i in Result) {
                 var serie = new Array(Result[i].name, Result[i].value, );
                 vendordata.push(serie);
-            }
-            console.log(vendordata);
+            }           
             DreawPieChart(vendordata);
         },
-        error: function (err) {
-            console.log("topVendorList");
-            console.log(err);
+        error: function (err) {          
         }
     });
 
@@ -93,9 +89,7 @@
             }            
             DreawChart(data);
         },
-        error: function (err) {
-            console.log("topSellingMedicine");
-            console.log(err);
+        error: function (err) {           
         }
     });
 
