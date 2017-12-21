@@ -44,37 +44,46 @@ namespace PharmaBook.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var userProfile = await _iProfile.GetByUserName(User.Identity.Name);
-            if (userProfile.IsActive == false)
+            try
             {
-                TempData["err"] = "Account has been locked. Please contact to Administrator";
-                return RedirectToAction("login", "Account");
-            }
-            else if (userProfile.AccountExpDt <= DateTime.Now)
-            {
-                TempData["err"] = "Account has been expired. Please contact to Administrator";
-                return RedirectToAction("login", "Account");
-
-            }
-            else
-            {
-                int d = (userProfile.AccountExpDt - DateTime.Now).Days;
-                if (d < 45)
+                var userProfile = await _iProfile.GetByUserName(User.Identity.Name);
+                if (userProfile.IsActive == false)
                 {
-                    TempData["accErr"] = "Account has been expire next " + d + " day. Please contact to Administrator";
+                    TempData["err"] = "Account has been locked. Please contact to Administrator";
+                    return RedirectToAction("login", "Account");
                 }
+                else if (userProfile.AccountExpDt <= DateTime.Now)
+                {
+                    TempData["err"] = "Account has been expired. Please contact to Administrator";
+                    return RedirectToAction("login", "Account");
+
+                }
+                else
+                {
+                    int d = (userProfile.AccountExpDt - DateTime.Now).Days;
+                    if (d < 45)
+                    {
+                        TempData["accErr"] = "Account has been expire next " + d + " day. Please contact to Administrator";
+                    }
+                }
+
+
+                DateTime StartDt = DateTime.Now.AddMonths(3);
+                DateTime Enddt = DateTime.Now;
+                var Products = await _iProduct.GetAll(User.Identity.Name);
+                var ProductExp = Products.Where(x => x.expDate <= StartDt).ToList();
+
+                ViewBag.outOfStock = Products.Where(x => x.openingStock <= 5).Count();
+                ViewBag.TotalExpMedicine = ProductExp.Count();
+                var po = await _iMasterPo.GetAll(User.Identity.Name);
+                ViewBag.OpenedPO = po.Where(x => x.isActive == true).Count();
             }
+            catch (Exception ep)
+            {
 
-
-            DateTime StartDt = DateTime.Now.AddMonths(3);
-            DateTime Enddt = DateTime.Now;
-            var Products = await _iProduct.GetAll(User.Identity.Name);
-            var ProductExp = Products.Where(x => x.expDate <= StartDt).ToList();
-
-            ViewBag.outOfStock = Products.Where(x => x.openingStock <= 5).Count();
-            ViewBag.TotalExpMedicine = ProductExp.Count();
-            var po = await _iMasterPo.GetAll(User.Identity.Name);
-            ViewBag.OpenedPO = po.Where(x => x.isActive == true).Count();
+                ErrorLogger El = commonServices.ErrorLoggerMapper(ep, User.Identity.Name);
+                _iErrorLogger.Add(El);
+            }
             return View();
         }
 
@@ -131,6 +140,9 @@ namespace PharmaBook.Controllers
             }
             catch (Exception ep)
             {
+                ErrorLogger El = commonServices.ErrorLoggerMapper(ep, User.Identity.Name);
+                _iErrorLogger.Add(El);
+
                 return BadRequest(ep.Message);
             }
 
@@ -179,10 +191,11 @@ namespace PharmaBook.Controllers
                 }
                 return Ok(gList);
             }
-            catch (Exception e)
+            catch (Exception ep)
             {
-
-                return BadRequest(e.Message);
+                ErrorLogger El = commonServices.ErrorLoggerMapper(ep, User.Identity.Name);
+                _iErrorLogger.Add(El);
+                return BadRequest(ep.Message);
             }
 
 
@@ -255,6 +268,8 @@ namespace PharmaBook.Controllers
             }
             catch (Exception e)
             {
+                ErrorLogger El = commonServices.ErrorLoggerMapper(e, User.Identity.Name);
+                _iErrorLogger.Add(El);
                 return BadRequest(e.Message);
 
             }
@@ -330,9 +345,10 @@ namespace PharmaBook.Controllers
                         gList.Add(graph);
 
                     }
-                    catch
+                    catch (Exception ep)
                     {
-
+                        ErrorLogger El = commonServices.ErrorLoggerMapper(ep, User.Identity.Name);
+                        _iErrorLogger.Add(El);
                     }
 
 
@@ -342,6 +358,8 @@ namespace PharmaBook.Controllers
             }
             catch (Exception e)
             {
+                ErrorLogger El = commonServices.ErrorLoggerMapper(e, User.Identity.Name);
+                _iErrorLogger.Add(El);
                 return BadRequest(e.Message);
 
             }
@@ -373,14 +391,23 @@ namespace PharmaBook.Controllers
         [HttpPost]
         public async Task<IActionResult> Profile(UserProfileVM Obj)
         {
-            UserProfile medicn = await _iProfile.GetByUserName(User.Identity.Name);
+            try
+            {
+                UserProfile medicn = await _iProfile.GetByUserName(User.Identity.Name);
 
-            Mapper.Map(Obj, medicn);
-            var a = medicn;
-            medicn.IsActive = true;
-            _iProfile.Commit();
-            TempData["msg"] = "Successfully updated";
-            var laste = _iProfile.GetByUserName(User.Identity.Name);
+                Mapper.Map(Obj, medicn);
+                var a = medicn;
+                medicn.IsActive = true;
+                _iProfile.Commit();
+                TempData["msg"] = "Successfully updated";
+                var laste = _iProfile.GetByUserName(User.Identity.Name);
+            }
+            catch (Exception ep)
+            {
+
+                ErrorLogger El = commonServices.ErrorLoggerMapper(ep, User.Identity.Name);
+                _iErrorLogger.Add(El);
+            }
             return RedirectToAction("Profile");
         }
 
@@ -400,6 +427,8 @@ namespace PharmaBook.Controllers
             }
             catch (Exception ep)
             {
+                ErrorLogger El = commonServices.ErrorLoggerMapper(ep, User.Identity.Name);
+                _iErrorLogger.Add(El);
 
                 return BadRequest(ep.Message);
             }
@@ -422,6 +451,8 @@ namespace PharmaBook.Controllers
             }
             catch (Exception ep)
             {
+                ErrorLogger El = commonServices.ErrorLoggerMapper(ep, User.Identity.Name);
+                _iErrorLogger.Add(El);
 
                 return BadRequest(ep.Message);
             }

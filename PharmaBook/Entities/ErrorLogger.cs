@@ -8,8 +8,7 @@ namespace PharmaBook.Entities
     public class ErrorLogger
     {
         public int id { get; set; }
-        public string UserName { get; set; }
-        public string Status { get; set; }
+        public string UserName { get; set; }        
         public string ExpectionMsg { get; set; }
         public string InnnerExceptionMsg { get; set; }
         public string stackDetails { get; set; }

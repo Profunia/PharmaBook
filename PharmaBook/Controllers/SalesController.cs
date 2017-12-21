@@ -51,26 +51,35 @@ namespace PharmaBook.Controllers
         public async Task<IActionResult> Invoice(int? invcid)
         {
             SalesViewModel slsvwmdl = new SalesViewModel();
-            if (invcid != null)
+            try
             {
-                int id = Convert.ToInt32(invcid);
-                var mtrobj1 = await _imaster.GetAll(User.Identity.Name);
-                var  mtrobj = mtrobj1.Where(x => x.Id == id).FirstOrDefault();
-                var cldinvoice = _ichild.GetById(mtrobj.Id);
-                var lstitm = Mapper.Map<IEnumerable<InvcChildVmdl>>(cldinvoice);
-                slsvwmdl.invcchld = lstitm;
-                slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mtrobj);
+                if (invcid != null)
+                {
+                    int id = Convert.ToInt32(invcid);
+                    var mtrobj1 = await _imaster.GetAll(User.Identity.Name);
+                    var mtrobj = mtrobj1.Where(x => x.Id == id).FirstOrDefault();
+                    var cldinvoice = _ichild.GetById(mtrobj.Id);
+                    var lstitm = Mapper.Map<IEnumerable<InvcChildVmdl>>(cldinvoice);
+                    slsvwmdl.invcchld = lstitm;
+                    slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mtrobj);
+                }
+                else
+                {
+                    var mInvList = await _imaster.GetAll(User.Identity.Name);
+                    MasterInvoice mstrobj = mInvList.OrderByDescending(x => x.Id).FirstOrDefault();
+                    var chldinvoice = _ichild.GetById(mstrobj.Id);
+                    var lst = Mapper.Map<IEnumerable<InvcChildVmdl>>(chldinvoice);
+                    slsvwmdl.invcchld = lst;
+                    slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mstrobj);
+                }
+                slsvwmdl.userProfile = await _iProfile.GetByUserName(User.Identity.Name);
             }
-            else
+            catch (Exception ep)
             {
-                var mInvList = await _imaster.GetAll(User.Identity.Name);
-                MasterInvoice mstrobj = mInvList.OrderByDescending(x => x.Id).FirstOrDefault();
-                var chldinvoice = _ichild.GetById(mstrobj.Id);
-                var lst = Mapper.Map<IEnumerable<InvcChildVmdl>>(chldinvoice);
-                slsvwmdl.invcchld = lst;
-                slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mstrobj);
+
+                ErrorLogger El = commonServices.ErrorLoggerMapper(ep, User.Identity.Name);
+                _iErrorLogger.Add(El);
             }
-            slsvwmdl.userProfile = await _iProfile.GetByUserName(User.Identity.Name);
             return View(slsvwmdl);
         }
         public async Task<IActionResult> AddMasterInvc([FromBody]SalesClientViewModel slsmodel)
@@ -107,6 +116,9 @@ namespace PharmaBook.Controllers
             }
             catch (Exception er)
             {
+                ErrorLogger El = commonServices.ErrorLoggerMapper(er, User.Identity.Name);
+                _iErrorLogger.Add(El);
+
                 return BadRequest(er.Message);
             }
             return Ok(msg);
@@ -114,12 +126,21 @@ namespace PharmaBook.Controllers
         public async Task<IActionResult> GetInvoice([FromHeader] int id)
         {
             SalesViewModel slsvwmdl = new SalesViewModel();
-            var msterInv = await _imaster.GetAll(User.Identity.Name);
-            MasterInvoice mstrobj = msterInv.OrderByDescending(x => x.Id).FirstOrDefault();
-            var chldinvoice = _ichild.GetAll();
-            var lst = Mapper.Map<IEnumerable<InvcChildVmdl>>(chldinvoice);
-            slsvwmdl.invcchld = lst;
-            slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mstrobj);
+            try
+            {
+                var msterInv = await _imaster.GetAll(User.Identity.Name);
+                MasterInvoice mstrobj = msterInv.OrderByDescending(x => x.Id).FirstOrDefault();
+                var chldinvoice = _ichild.GetAll();
+                var lst = Mapper.Map<IEnumerable<InvcChildVmdl>>(chldinvoice);
+                slsvwmdl.invcchld = lst;
+                slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mstrobj);
+            }
+            catch (Exception ep)
+            {
+
+                ErrorLogger El = commonServices.ErrorLoggerMapper(ep, User.Identity.Name);
+                _iErrorLogger.Add(El);
+            }
             return Ok(slsvwmdl);
         }
 
@@ -175,6 +196,8 @@ namespace PharmaBook.Controllers
             }
             catch (Exception ep)
             {
+                ErrorLogger El = commonServices.ErrorLoggerMapper(ep, User.Identity.Name);
+                _iErrorLogger.Add(El);
                 return BadRequest(ep.Message);
             }
 
@@ -225,6 +248,8 @@ namespace PharmaBook.Controllers
             }
             catch (Exception e)
             {
+                ErrorLogger El = commonServices.ErrorLoggerMapper(e, User.Identity.Name);
+                _iErrorLogger.Add(El);
 
                 return BadRequest(e.Message);
             }
@@ -328,6 +353,8 @@ namespace PharmaBook.Controllers
             }
             catch (Exception ep)
             {
+                ErrorLogger El = commonServices.ErrorLoggerMapper(ep, User.Identity.Name);
+                _iErrorLogger.Add(El);
 
                 return BadRequest(ep.Message);
             }

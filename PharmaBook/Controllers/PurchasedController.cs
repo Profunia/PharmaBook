@@ -72,10 +72,12 @@ namespace PharmaBook.Controllers
                     _iChildPO.Commit();
                 }
             }
-            catch 
+            catch(Exception ep)
             {
+                ErrorLogger El = commonServices.ErrorLoggerMapper(ep, User.Identity.Name);
+                _iErrorLogger.Add(El);
+                return BadRequest(ep.Message);
 
-                
             }
 
             return Ok("success");
@@ -153,6 +155,8 @@ namespace PharmaBook.Controllers
             }
             catch (Exception rp)
             {
+                ErrorLogger El = commonServices.ErrorLoggerMapper(rp, User.Identity.Name);
+                _iErrorLogger.Add(El);
 
                 return BadRequest(rp.Message);
             }
@@ -170,9 +174,10 @@ namespace PharmaBook.Controllers
 
                 return Ok();
             }
-            catch
+            catch(Exception ep)
             {
-
+                ErrorLogger El = commonServices.ErrorLoggerMapper(ep, User.Identity.Name);
+                _iErrorLogger.Add(El);
                 return BadRequest();
             }           
         }
@@ -230,7 +235,8 @@ namespace PharmaBook.Controllers
             }
             catch (Exception ep)
             {
-
+                ErrorLogger El = commonServices.ErrorLoggerMapper(ep, User.Identity.Name);
+                _iErrorLogger.Add(El);
                 return BadRequest(ep.Message);
             }
             

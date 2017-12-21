@@ -14,6 +14,22 @@ namespace PharmaBook.Services
 {
     public static class commonServices
     {
+        public static ErrorLogger ErrorLoggerMapper(Exception exception, string UserName)
+        {
+            ErrorLogger El = new ErrorLogger();
+            El.LoggedDate = DateTime.Now;
+            if (exception.InnerException !=null)
+            {
+                El.InnnerExceptionMsg = exception.InnerException.Message;
+            }
+            
+            El.ExpectionMsg = exception.Message;
+            El.stackDetails = exception.StackTrace;
+            El.UserName = UserName;
+            El.isActive = true;
+            return El;
+        }
+
         public static string getDynamicId()
         {
             Random rnd = new Random();

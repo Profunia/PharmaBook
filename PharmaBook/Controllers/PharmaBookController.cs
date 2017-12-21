@@ -16,13 +16,16 @@ namespace PharmaBook.Controllers
         private SignInManager<User> _singInManager;
         private UserManager<User> _userManager;
         private IProfileServices _iProfileServices;
+        private IErrorLogger _ierror;
         public PharmaBookController(UserManager<User> userManager,
             IProfileServices iPro,
+            IErrorLogger ierror,
             SignInManager<User> singInManager)
         {
             _userManager = userManager;
             _singInManager = singInManager;
-            _iProfileServices = iPro;            
+            _iProfileServices = iPro;
+            _ierror = ierror;
 
         }
         public IActionResult Admin()
@@ -65,14 +68,23 @@ namespace PharmaBook.Controllers
                 return RedirectToAction("login", "account");
             }
 
-            UserProfile medicn = await _iProfileServices.GetById(id);
-             Mapper.Map(model, medicn);
+            try
+            {
+                UserProfile medicn = await _iProfileServices.GetById(id);
+                Mapper.Map(model, medicn);
 
-            //medicn.AccountExpDt = model.AccountExpDt;
-            //medicn.IsActive = model.IsActive;
-          //  _iProfileServices.Update(medicn);
-            _iProfileServices.Commit();
-            TempData["msg"]="Successfully updated";
+                //medicn.AccountExpDt = model.AccountExpDt;
+                //medicn.IsActive = model.IsActive;
+                //  _iProfileServices.Update(medicn);
+                _iProfileServices.Commit();
+                TempData["msg"] = "Successfully updated";
+            }
+            catch (Exception ep)
+            {
+
+                ErrorLogger El = commonServices.ErrorLoggerMapper(ep, User.Identity.Name);
+                _ierror.Add(El);
+            }
             return RedirectToAction("Admin");
         }
 
@@ -84,37 +96,46 @@ namespace PharmaBook.Controllers
                 return RedirectToAction("login", "account");
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                var user = new User { UserName = model.userName };
-
-                var createResult = await _userManager.CreateAsync(user, model.Pwd);
-                if (createResult.Succeeded)
+                if (ModelState.IsValid)
                 {
-                    await _singInManager.SignInAsync(user, false);
-                    model.CreatedDt = DateTime.Now;
-                    model.userName = model.userName;
-                    model.IsActive = true;
-                    model.lastLogin = DateTime.Now;
-                    UserProfile objMap = Mapper.Map<UserProfile>(model);
-                    _iProfileServices.Add(objMap);
-                    _iProfileServices.Commit();
-                    TempData["msg"] = "Successfully Created";
+                    var user = new User { UserName = model.userName };
+
+                    var createResult = await _userManager.CreateAsync(user, model.Pwd);
+                    if (createResult.Succeeded)
+                    {
+                        await _singInManager.SignInAsync(user, false);
+                        model.CreatedDt = DateTime.Now;
+                        model.userName = model.userName;
+                        model.IsActive = true;
+                        model.lastLogin = DateTime.Now;
+                        UserProfile objMap = Mapper.Map<UserProfile>(model);
+                        _iProfileServices.Add(objMap);
+                        _iProfileServices.Commit();
+                        TempData["msg"] = "Successfully Created";
 
 
-                    return RedirectToAction("Admin");
+                        return RedirectToAction("Admin");
+                    }
+                    else
+                    {
+                        foreach (var error in createResult.Errors)
+                        {
+                            ModelState.AddModelError("", error.Description);
+                        }
+                    }
                 }
                 else
                 {
-                    foreach (var error in createResult.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
+                    ModelState.AddModelError("", "Please provide the valid information");
                 }
             }
-            else
+            catch (Exception ep)
             {
-                ModelState.AddModelError("", "Please provide the valid information");
+
+                ErrorLogger El = commonServices.ErrorLoggerMapper(ep, User.Identity.Name);
+                _ierror.Add(El);
             }
 
             return View();

@@ -21,7 +21,7 @@ namespace PharmaBook.Controllers
             _iErrorLogger = iError;
 
         }
-      
+
         [HttpGet]
         public IActionResult ChangePassword()
         {
@@ -30,27 +30,41 @@ namespace PharmaBook.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePwdViewModel usermodel)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var user = await _userManager.FindByIdAsync(userId);
-                var result = await _userManager.ChangePasswordAsync(user, usermodel.oldPassword, usermodel.newPassword);
-                if (result.Succeeded)
+                if (ModelState.IsValid)
                 {
-                    TempData["msg"] = "Password has been successfully changed";
+                    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    var user = await _userManager.FindByIdAsync(userId);
+                    var result = await _userManager.ChangePasswordAsync(user, usermodel.oldPassword, usermodel.newPassword);
+                    if (result.Succeeded)
+                    {
+                        TempData["msg"] = "Password has been successfully changed";
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Sorry!! not able to update password.");
+                    }
+
+
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Sorry!! not able to update password.");
+                    ModelState.AddModelError("", "New & Confirm password not matched.");
                 }
-                
-               
+                return View();
             }
-            else
+            catch (System.Exception ep)
             {
-                ModelState.AddModelError("", "New & Confirm password not matched.");
+                ErrorLogger El = commonServices.ErrorLoggerMapper(ep, User.Identity.Name);
+                _iErrorLogger.Add(El);
+
+                ModelState.AddModelError("", ep.Message);
+                return View();
             }
-            return View();
+
+           
+
         }
 
         [HttpGet]
@@ -62,22 +76,31 @@ namespace PharmaBook.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var loginResults = await _singInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
-                if (loginResults.Succeeded)
+                if (ModelState.IsValid)
                 {
+                    var loginResults = await _singInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
+                    if (loginResults.Succeeded)
+                    {
 
-                    if (Url.IsLocalUrl(model.ReturnUrl))
-                    {
-                        return Redirect(model.ReturnUrl);
+                        if (Url.IsLocalUrl(model.ReturnUrl))
+                        {
+                            return Redirect(model.ReturnUrl);
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index", "Home");
+                        }
                     }
-                    else
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
+                    ModelState.AddModelError("", "Invalid UserName or Password.");
                 }
-                ModelState.AddModelError("", "Invalid UserName or Password.");
+            }
+            catch (System.Exception ep)
+            {
+
+                ErrorLogger El = commonServices.ErrorLoggerMapper(ep, User.Identity.Name);
+                _iErrorLogger.Add(El);
             }
             return View();
         }
@@ -88,7 +111,7 @@ namespace PharmaBook.Controllers
             await _singInManager.SignOutAsync();
             return RedirectToAction("Login", "Account");
         }
-        
+
         public IActionResult Index()
         {
             return View();
