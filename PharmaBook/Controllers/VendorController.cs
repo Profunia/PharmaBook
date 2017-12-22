@@ -29,10 +29,10 @@ namespace PharmaBook.Controllers
         {
             return View();
         }
-        public JsonResult GetVendorByID(int id)
+        public async Task<IActionResult> GetVendorByID(int id)
         {
-            var selectedVendor = _iVendorServices.GetById(id);
-            return Json(selectedVendor);
+            var selectedVendor = await _iVendorServices.GetById(id);
+            return Ok(selectedVendor);
         }
         public IActionResult VendorCreate([FromBody]VendorDtl obj)
         {

@@ -64,6 +64,7 @@ app.factory('loadvndor', ['$http', '$rootScope', function ($http, $rootScope) {
         $rootScope.isLoadingScreenActive = true;
         $http.get('/Vendor/GetVendorByID/' + id).then(function (res) {
             $rootScope.selectedVendor = res.data;
+            console.log($rootScope.selectedVendor);
             $rootScope.isLoadingScreenActive = false;
         }, function (error) {
             $rootScope.isLoadingScreenActive = false;
@@ -836,6 +837,7 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
     loadvndor.getvndr();
     loadvndor.getprdct();
     $scope.isVendorSelected = false;
+    $scope.medicineName = 'Name';
     $scope.vendorID;
     $scope.getSelectedVendor = function () {
         loadvndor.getVendorbyID($scope.vendorID);
