@@ -220,7 +220,7 @@ app.controller('MyController', function ($scope, $http, loadvndor, $rootScope) {
 })
 app.controller('ProductController', function ($scope, $http, $location, $rootScope, loadvndor, $window) {
     $scope.vendorDDL = '';
-    setuser();
+  //  setuser();
     $scope.getSelectedVendor = function () {
         if ($scope.vendorDDL != '') {
             $scope.searchbox = $scope.vendorDDL;
@@ -417,7 +417,10 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
         address: ''
     }
     function setuser() {
-        loadvndor.currentUser();
+        
+    }
+    loadvndor.currentUser();
+    if ($rootScope.currentUser) {
         var user = $rootScope.currentUser;
         $scope.curuser.clinicname = user.name;
         $scope.curuser.Title = user.subTitle;
@@ -590,9 +593,8 @@ app.controller('StockController', function ($scope, $http, loadvndor, $rootScope
         mobile: '',
         address: ''
     }
-
-    function setuser() {
-        loadvndor.currentUser();
+    loadvndor.currentUser();
+    if ($rootScope.currentUser) {
         var user = $rootScope.currentUser;
         $scope.curuser.clinicname = user.name;
         $scope.curuser.Title = user.subTitle;
@@ -600,6 +602,10 @@ app.controller('StockController', function ($scope, $http, loadvndor, $rootScope
         $scope.curuser.dlno = user.dlNo;
         $scope.curuser.mobile = user.mobile;
         $scope.curuser.address = user.address1 + ' ' + user.address2;
+    }
+    function setuser() {
+        
+        
     }
     //-----------------------------------XX----------------------------------
 });
@@ -839,8 +845,8 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
         mobile: '',
         address: ''
     }
-    function setuser() {
-        loadvndor.currentUser();
+    loadvndor.currentUser();
+    if ($rootScope.currentUser){
         var user = $rootScope.currentUser;
         $scope.curuser.clinicname = user.name;
         $scope.curuser.Title = user.subTitle;
@@ -848,6 +854,10 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
         $scope.curuser.dlno = user.dlNo;
         $scope.curuser.mobile = user.mobile;
         $scope.curuser.address = user.address1 + ' ' + user.address2;
+    }
+    function setuser() {
+        
+        
     }
     //-----------------------------------XX----------------------------------
 });
@@ -1118,8 +1128,8 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
         mobile: '',
         address: ''
     }
-    function setuser() {
-        loadvndor.currentUser();
+    loadvndor.currentUser();
+    if ($rootScope.currentUser) {
         var user = $rootScope.currentUser;
         $scope.curuser.clinicname = user.name;
         $scope.curuser.Title = user.subTitle;
@@ -1127,6 +1137,10 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
         $scope.curuser.dlno = user.dlNo;
         $scope.curuser.mobile = user.mobile;
         $scope.curuser.address = user.address1 + ' ' + user.address2;
+    }
+    function setuser() {
+       
+       
     }
     //-----------------------------------XX----------------------------------    
 });
@@ -1222,8 +1236,8 @@ app.controller('SalesResportController', function ($scope, $http, loadvndor, $ro
         mobile: '',
         address: ''
     }
-    function setuser() {
-        loadvndor.currentUser();
+    loadvndor.currentUser();
+    if ($rootScope.currentUser){
         var user = $rootScope.currentUser;
         $scope.curuser.clinicname = user.name;
         $scope.curuser.Title = user.subTitle;
@@ -1231,6 +1245,10 @@ app.controller('SalesResportController', function ($scope, $http, loadvndor, $ro
         $scope.curuser.dlno = user.dlNo;
         $scope.curuser.mobile = user.mobile;
         $scope.curuser.address = user.address1 + ' ' + user.address2;
+    }
+    function setuser() {
+       
+        
     }
     //-----------------------------------XX----------------------------------
 });
@@ -1254,8 +1272,8 @@ app.controller('TotalExpMedicineController', function ($scope, $http, loadvndor,
         mobile: '',
         address: ''
     }
-    function setuser() {
-        loadvndor.currentUser();
+    loadvndor.currentUser();
+    if ($rootScope.currentUser){
         var user = $rootScope.currentUser;
         $scope.curuser.clinicname = user.name;
         $scope.curuser.Title = user.subTitle;
@@ -1263,6 +1281,10 @@ app.controller('TotalExpMedicineController', function ($scope, $http, loadvndor,
         $scope.curuser.dlno = user.dlNo;
         $scope.curuser.mobile = user.mobile;
         $scope.curuser.address = user.address1 + ' ' + user.address2;
+    }
+    function setuser() {
+        
+        
     }
     //-----------------------------------XX----------------------------------
 });
@@ -1285,8 +1307,8 @@ app.controller('TopSellingMedicineController', function ($scope, $http, loadvndo
         mobile: '',
         address: ''
     }
-    function setuser() {
-        loadvndor.currentUser();
+    loadvndor.currentUser();
+    if ($rootScope.currentUser) {
         var user = $rootScope.currentUser;
         $scope.curuser.clinicname = user.name;
         $scope.curuser.Title = user.subTitle;
@@ -1294,6 +1316,11 @@ app.controller('TopSellingMedicineController', function ($scope, $http, loadvndo
         $scope.curuser.dlno = user.dlNo;
         $scope.curuser.mobile = user.mobile;
         $scope.curuser.address = user.address1 + ' ' + user.address2;
+    }
+
+    function setuser() {
+        
+        
     }
     //-----------------------------------XX----------------------------------
 });
@@ -1318,8 +1345,8 @@ app.controller('OutOfStockMedicineController', function ($scope, $http, loadvndo
         mobile: '',
         address: ''
     }
-    function setuser() {
-        loadvndor.currentUser();
+    loadvndor.currentUser();
+    if ($rootScope.currentUser) {
         var user = $rootScope.currentUser;
         $scope.curuser.clinicname = user.name;
         $scope.curuser.Title = user.subTitle;
@@ -1327,6 +1354,11 @@ app.controller('OutOfStockMedicineController', function ($scope, $http, loadvndo
         $scope.curuser.dlno = user.dlNo;
         $scope.curuser.mobile = user.mobile;
         $scope.curuser.address = user.address1 + ' ' + user.address2;
+    }
+
+    function setuser() {
+       
+       
     }
     //-----------------------------------XX----------------------------------
 });

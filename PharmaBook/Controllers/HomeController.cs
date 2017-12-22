@@ -382,11 +382,11 @@ namespace PharmaBook.Controllers
             var modelVM = Mapper.Map<UserProfileVM>(model);
             return View(modelVM);
         }
-        public JsonResult CurUser()
+        public async  Task<IActionResult> CurUser()
         {
-            var model = _iProfile.GetByUserName(User.Identity.Name);
+            var model = await _iProfile.GetByUserName(User.Identity.Name);
             var modelVM = Mapper.Map<UserProfileVM>(model);
-            return Json(modelVM);
+            return Ok(modelVM);
         }
         [HttpPost]
         public async Task<IActionResult> Profile(UserProfileVM Obj)
