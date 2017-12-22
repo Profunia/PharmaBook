@@ -1,18 +1,24 @@
-﻿var appA = angular.module("ProductModule", []);
+﻿// var appA = angular.module("ProductModule", []);
 var app = angular.module("MyModuleA", []);
 
 function setMedicines(val) {
     sessionStorage.setItem("medicines", JSON.stringify(val));
 };
-function getMedicines() {   
+function getMedicines() {
     return sessionStorage.getItem("medicines");
-}
+};
 function setVendors(val) {
     sessionStorage.setItem("vendors", JSON.stringify(val));
 };
 function getVendors() {
     return sessionStorage.getItem("vendors");
-}
+};
+function setSessionUser(val) {
+    sessionStorage.setItem("user", JSON.stringify(val));
+};
+function getSessionUser() {
+    return sessionStorage.getItem("user");
+};
 app.factory('loadvndor', ['$http', '$rootScope', function ($http, $rootScope) {
     $rootScope.UserName = '';
     var fac = {};
@@ -36,7 +42,7 @@ app.factory('loadvndor', ['$http', '$rootScope', function ($http, $rootScope) {
             }
             )
         }
-        
+
     }
     fac.getprdct = function () {
         $rootScope.isLoadingScreenActive = true;
@@ -48,7 +54,7 @@ app.factory('loadvndor', ['$http', '$rootScope', function ($http, $rootScope) {
         }
         else {
             $http.get('/Product/GetAllMedicine').then(function (res) {
-                setMedicines(res.data);                
+                setMedicines(res.data);
                 $rootScope.ProductList = res.data;
                 console.log('--medicine getting from API');
                 $rootScope.isLoadingScreenActive = false;
@@ -57,7 +63,7 @@ app.factory('loadvndor', ['$http', '$rootScope', function ($http, $rootScope) {
             }
             )
         }
-      
+
     }
 
     fac.getVendorbyID = function (id) {
@@ -71,8 +77,29 @@ app.factory('loadvndor', ['$http', '$rootScope', function ($http, $rootScope) {
         }
         )
     };
-    return fac;
-}])
+
+    fac.currentUser = function () {
+        $rootScope.isLoadingScreenActive = true;
+        var user = getSessionUser();
+        if (user) {
+            $rootScope.currentUser = JSON.parse(user);
+            console.log("--user info from sesssion--");
+            $rootScope.isLoadingScreenActive = false;
+        }
+        else {
+            $http.get('/Home/CurUser/').then(function (res) {
+                $rootScope.currentUser = res.data;
+                setSessionUser(res.data);
+                console.log("--user info from API--");
+            }, function (error) {
+            })
+            $rootScope.isLoadingScreenActive = false;
+        }
+    }
+
+        return fac;
+    
+}]);
 app.controller('MyController', function ($scope, $http, loadvndor, $rootScope) {
     loadvndor.getvndr();
     $scope.divhide1 = false;
@@ -200,17 +227,17 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
         }
         else {
             $scope.searchbox = '';
-        }      
+        }
     }
 
     $scope.ItemNameMedicine = '';
-    $scope.medicineselect = function () {       
+    $scope.medicineselect = function () {
         if ($scope.ItemNameMedicine != '') {
             $scope.searchbox = $scope.ItemNameMedicine;
         }
         else {
             $scope.searchbox = '';
-        }       
+        }
     }
 
 
@@ -261,7 +288,7 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
                 'stef': $scope.stef,
                 'tabletsCapsule': $scope.tablets,
                 'eachStefPrice': $scope.StefPrice
-            };           
+            };
             $http({
                 method: 'post',
                 url: "/Product/Create",
@@ -269,10 +296,10 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
                 dataType: "json"
                 // headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             }).then(function (response) {
-                sessionStorage.clear();  
+                sessionStorage.clear();
                 $window.location.href = "/Product/Create";
                 $rootScope.isLoadingScreenActive = false;
-            }, function (error) {               
+            }, function (error) {
                 $scope.errMsg = error.data;
                 $rootScope.isLoadingScreenActive = false;
             })
@@ -301,7 +328,7 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
             'vendorID': item.vendorID,
             'cusUserName': item.cusUserName
         };
-       
+
         $http({
             method: 'post',
             url: "/Product/UpdateMedicn",
@@ -390,17 +417,14 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
         address: ''
     }
     function setuser() {
-        $http.get('/Home/CurUser/').then(function (res) {
-            var user = res.data;
-            $scope.curuser.clinicname = user.name;
-            $scope.curuser.Title = user.subTitle;
-            $scope.curuser.email = user.email;
-            $scope.curuser.dlno = user.dlNo;
-            $scope.curuser.mobile = user.mobile;
-            $scope.curuser.address = user.address1 + ' ' + user.address2;
-        }, function (error) {
-        }
-        )
+        loadvndor.currentUser();
+        var user = $rootScope.currentUser;
+        $scope.curuser.clinicname = user.name;
+        $scope.curuser.Title = user.subTitle;
+        $scope.curuser.email = user.email;
+        $scope.curuser.dlno = user.dlNo;
+        $scope.curuser.mobile = user.mobile;
+        $scope.curuser.address = user.address1 + ' ' + user.address2;
     }
     //-----------------------------------XX----------------------------------
 })
@@ -415,7 +439,7 @@ app.controller('SalesController', function ($scope, $http, $rootScope, loadvndor
         $scope.unitprice = '';
         $scope.totalprice = '';
         $scope.grandtotalprice = '';
-        $scope.discountAmt = '';        
+        $scope.discountAmt = '';
         $scope.cartlists = [];
         loadvndor.getprdct()
         $scope.PrdId = '',
@@ -427,7 +451,7 @@ app.controller('SalesController', function ($scope, $http, $rootScope, loadvndor
             PatientAdres: '',
             DrName: '',
             RegNo: '',
-            Discount:''
+            Discount: ''
         }
         $scope.child = {
             Id: '',
@@ -451,7 +475,7 @@ app.controller('SalesController', function ($scope, $http, $rootScope, loadvndor
         $scope.ErrMsg = '';
         if ($scope.child.Qty && $scope.child.Description) {
             var price = $scope.child.Amount;
-            var qty = $scope.child.Qty;           
+            var qty = $scope.child.Qty;
             var total = (qty * price);
             final += total;
             $scope.unitprice = total;
@@ -488,7 +512,7 @@ app.controller('SalesController', function ($scope, $http, $rootScope, loadvndor
         $scope.showMe = !$scope.showMe;
     }
 
-    
+
     $scope.DelCrtIitem = function (index) {
         total = $scope.child.Amount;
         final -= total;
@@ -496,7 +520,7 @@ app.controller('SalesController', function ($scope, $http, $rootScope, loadvndor
         $scope.cartlists.splice(index, 1);
     }
     $scope.medicineselect = function (item) {
-        $http.get('/Product/GetMedicnById/?id=' + item.id).then(function (res) {           
+        $http.get('/Product/GetMedicnById/?id=' + item.id).then(function (res) {
             $scope.PrdId = item.id;
             $scope.medicineName = res.data.name;
             $scope.child = {
@@ -506,7 +530,7 @@ app.controller('SalesController', function ($scope, $http, $rootScope, loadvndor
                 ExpDt: res.data.expDate,
                 Amount: res.data.mrp,
                 Availstk: res.data.openingStock
-            };           
+            };
         }, function (error) {
         })
 
@@ -516,14 +540,14 @@ app.controller('SalesController', function ($scope, $http, $rootScope, loadvndor
         $rootScope.isLoadingScreenActive = true;
         if ($scope.master.PatientName == '') {
             $scope.master.PatientName = 'Guest'
-        }       
+        }
         var obj1 = {
             'PatientName': $scope.master.PatientName,
             'PatientAdres': $scope.master.PatientAdres,
             'DrName': $scope.master.DrName,
             'RegNo': $scope.master.RegNo,
             'Discount': $scope.master.discountAmt
-        };        
+        };
         var obj2 = $scope.cartlists;
         var obj = { childinvc: obj2, masterinvc: obj1 }
         things = JSON.stringify({ 'things': obj1 });
@@ -566,18 +590,16 @@ app.controller('StockController', function ($scope, $http, loadvndor, $rootScope
         mobile: '',
         address: ''
     }
+
     function setuser() {
-        $http.get('/Home/CurUser/').then(function (res) {
-            var user = res.data;
-            $scope.curuser.clinicname = user.name;
-            $scope.curuser.Title = user.subTitle;
-            $scope.curuser.email = user.email;
-            $scope.curuser.dlno = user.dlNo;
-            $scope.curuser.mobile = user.mobile;
-            $scope.curuser.address = user.address1 + ' ' + user.address2;
-        }, function (error) {
-        }
-        )
+        loadvndor.currentUser();
+        var user = $rootScope.currentUser;
+        $scope.curuser.clinicname = user.name;
+        $scope.curuser.Title = user.subTitle;
+        $scope.curuser.email = user.email;
+        $scope.curuser.dlno = user.dlNo;
+        $scope.curuser.mobile = user.mobile;
+        $scope.curuser.address = user.address1 + ' ' + user.address2;
     }
     //-----------------------------------XX----------------------------------
 });
@@ -623,7 +645,7 @@ app.controller('PurchasedController', function ($scope, $http, loadvndor, $rootS
         //  var ProdList = $filter('orderBy')($rootScope.ProductList, 'openingStock');    
 
 
-        if ($event.target.checked) {          
+        if ($event.target.checked) {
             var temp = item;
             var CreateObj = {
                 ProdID: temp.id,
@@ -739,7 +761,7 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
             $scope.Prepurchased.push(model);
         }
         // $scope.Prepurchased = $scope.childPO;
-        $scope.purchasedEntryView = true;      
+        $scope.purchasedEntryView = true;
 
     }
     $scope.DeletePurchasedItem = function (val) {
@@ -818,17 +840,14 @@ app.controller('PurchasedInboxController', function ($scope, $http, loadvndor, $
         address: ''
     }
     function setuser() {
-        $http.get('/Home/CurUser/').then(function (res) {
-            var user = res.data;
-            $scope.curuser.clinicname = user.name;
-            $scope.curuser.Title = user.subTitle;
-            $scope.curuser.email = user.email;
-            $scope.curuser.dlno = user.dlNo;
-            $scope.curuser.mobile = user.mobile;
-            $scope.curuser.address = user.address1 + ' ' + user.address2;
-        }, function (error) {
-        }
-        )
+        loadvndor.currentUser();
+        var user = $rootScope.currentUser;
+        $scope.curuser.clinicname = user.name;
+        $scope.curuser.Title = user.subTitle;
+        $scope.curuser.email = user.email;
+        $scope.curuser.dlno = user.dlNo;
+        $scope.curuser.mobile = user.mobile;
+        $scope.curuser.address = user.address1 + ' ' + user.address2;
     }
     //-----------------------------------XX----------------------------------
 });
@@ -884,7 +903,7 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
     $scope.medicineselect = function (item) {
         $scope.PrdId = item.id;
         var id = $scope.PrdId;
-        $http.get('/Product/GetMedicnById/?id=' + id).then(function (res) {          
+        $http.get('/Product/GetMedicnById/?id=' + id).then(function (res) {
             $scope.medicineName = res.data.name;
             $scope.child = {
                 Name: res.data.name,
@@ -970,7 +989,7 @@ app.controller('PurchasedDirectEntryController', function ($scope, $http, loadvn
 
 app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $rootScope, $filter) {
     setuser();
-   
+
     $scope.InvList = [];
     $scope.isPreview = false;
     $scope.frmDate = '';
@@ -1002,24 +1021,24 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
             $rootScope.isLoadingScreenActive = true;
             var invoiceURL = "/Sales/GetAllInvoice?fromDate=" + $scope.frmDate + "&toDate=" + $scope.toDate;
             $http.get(invoiceURL).then(function (res) {
-                $scope.InvList = res.data;              
+                $scope.InvList = res.data;
                 $rootScope.isLoadingScreenActive = false;
                 $scope.filtered = true;
             }, function (error) {
                 $rootScope.isLoadingScreenActive = false;
                 $scope.filtered = true;
-                })
+            })
             $scope.filerErr = '';
         }
         else {
             $scope.filerErr = "please provide date";
         }
-    }   
+    }
     $scope.fnInbox = function () {
         $scope.isPreview = !$scope.isPreview
     }
     $scope.childDetails = function (val) {
-      
+
         $scope.Mastinv = val;
         $scope.isPreview = true;
         $scope.isSucessDB = false;
@@ -1100,17 +1119,14 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
         address: ''
     }
     function setuser() {
-        $http.get('/Home/CurUser/').then(function (res) {
-            var user = res.data;
-            $scope.curuser.clinicname = user.name;
-            $scope.curuser.Title = user.subTitle;
-            $scope.curuser.email = user.email;
-            $scope.curuser.dlno = user.dlNo;
-            $scope.curuser.mobile = user.mobile;
-            $scope.curuser.address = user.address1 + ' ' + user.address2;
-        }, function (error) {
-        }
-        )
+        loadvndor.currentUser();
+        var user = $rootScope.currentUser;
+        $scope.curuser.clinicname = user.name;
+        $scope.curuser.Title = user.subTitle;
+        $scope.curuser.email = user.email;
+        $scope.curuser.dlno = user.dlNo;
+        $scope.curuser.mobile = user.mobile;
+        $scope.curuser.address = user.address1 + ' ' + user.address2;
     }
     //-----------------------------------XX----------------------------------    
 });
@@ -1178,7 +1194,7 @@ app.controller('SalesResportController', function ($scope, $http, loadvndor, $ro
         $scope.InvList = res.data;
         for (var i = 0; i < $scope.InvList.DailyResult.length; i++) {
             if ($scope.InvList.DailyResult[i].inv_date == $scope.InvList.DailyDiscount[i].inv_date) {
-                $scope.InvList.DailyResult[i].discount = $scope.InvList.DailyDiscount[i].discount;             
+                $scope.InvList.DailyResult[i].discount = $scope.InvList.DailyDiscount[i].discount;
             }
         }
         for (var i = 0; i < $scope.InvList.MonthlyResult.length; i++) {
@@ -1191,7 +1207,7 @@ app.controller('SalesResportController', function ($scope, $http, loadvndor, $ro
                 $scope.InvList.YearlyResult[i].discount = $scope.InvList.YearlyDisCount[i].discount;
             }
         }
-       
+
         $scope.onInboxFiler('');
         $rootScope.isLoadingScreenActive = false;
     }, function (error) {
@@ -1207,17 +1223,14 @@ app.controller('SalesResportController', function ($scope, $http, loadvndor, $ro
         address: ''
     }
     function setuser() {
-        $http.get('/Home/CurUser/').then(function (res) {
-            var user = res.data;
-            $scope.curuser.clinicname = user.name;
-            $scope.curuser.Title = user.subTitle;
-            $scope.curuser.email = user.email;
-            $scope.curuser.dlno = user.dlNo;
-            $scope.curuser.mobile = user.mobile;
-            $scope.curuser.address = user.address1 + ' ' + user.address2;
-        }, function (error) {
-        }
-        )
+        loadvndor.currentUser();
+        var user = $rootScope.currentUser;
+        $scope.curuser.clinicname = user.name;
+        $scope.curuser.Title = user.subTitle;
+        $scope.curuser.email = user.email;
+        $scope.curuser.dlno = user.dlNo;
+        $scope.curuser.mobile = user.mobile;
+        $scope.curuser.address = user.address1 + ' ' + user.address2;
     }
     //-----------------------------------XX----------------------------------
 });
@@ -1226,7 +1239,7 @@ app.controller('TotalExpMedicineController', function ($scope, $http, loadvndor,
     setuser();
     $rootScope.isLoadingScreenActive = true
     $http.get('/Home/getTotalExpMedicine').then(function (res) {
-        $scope.InvList = res.data;      
+        $scope.InvList = res.data;
 
         $rootScope.isLoadingScreenActive = false;
     }, function (error) {
@@ -1242,17 +1255,14 @@ app.controller('TotalExpMedicineController', function ($scope, $http, loadvndor,
         address: ''
     }
     function setuser() {
-        $http.get('/Home/CurUser/').then(function (res) {
-            var user = res.data;
-            $scope.curuser.clinicname = user.name;
-            $scope.curuser.Title = user.subTitle
-            $scope.curuser.email = user.email;
-            $scope.curuser.dlno = user.dlNo;
-            $scope.curuser.mobile = user.mobile;
-            $scope.curuser.address = user.address1 + ' ' + user.address2;
-        }, function (error) {
-        }
-        )
+        loadvndor.currentUser();
+        var user = $rootScope.currentUser;
+        $scope.curuser.clinicname = user.name;
+        $scope.curuser.Title = user.subTitle;
+        $scope.curuser.email = user.email;
+        $scope.curuser.dlno = user.dlNo;
+        $scope.curuser.mobile = user.mobile;
+        $scope.curuser.address = user.address1 + ' ' + user.address2;
     }
     //-----------------------------------XX----------------------------------
 });
@@ -1276,17 +1286,14 @@ app.controller('TopSellingMedicineController', function ($scope, $http, loadvndo
         address: ''
     }
     function setuser() {
-        $http.get('/Home/CurUser/').then(function (res) {
-            var user = res.data;
-            $scope.curuser.clinicname = user.name;
-            $scope.curuser.Title = user.subTitle;
-            $scope.curuser.email = user.email;
-            $scope.curuser.dlno = user.dlNo;
-            $scope.curuser.mobile = user.mobile;
-            $scope.curuser.address = user.address1 + ' ' + user.address2;
-        }, function (error) {
-        }
-        )
+        loadvndor.currentUser();
+        var user = $rootScope.currentUser;
+        $scope.curuser.clinicname = user.name;
+        $scope.curuser.Title = user.subTitle;
+        $scope.curuser.email = user.email;
+        $scope.curuser.dlno = user.dlNo;
+        $scope.curuser.mobile = user.mobile;
+        $scope.curuser.address = user.address1 + ' ' + user.address2;
     }
     //-----------------------------------XX----------------------------------
 });
@@ -1296,7 +1303,7 @@ app.controller('OutOfStockMedicineController', function ($scope, $http, loadvndo
     setuser();
     $rootScope.isLoadingScreenActive = true
     $http.get('/Home/getOutOfStockMedicine').then(function (res) {
-        $scope.InvList = res.data;      
+        $scope.InvList = res.data;
 
         $rootScope.isLoadingScreenActive = false;
     }, function (error) {
@@ -1312,17 +1319,14 @@ app.controller('OutOfStockMedicineController', function ($scope, $http, loadvndo
         address: ''
     }
     function setuser() {
-        $http.get('/Home/CurUser/').then(function (res) {
-            var user = res.data;
-            $scope.curuser.clinicname = user.name;
-            $scope.curuser.Title = user.subTitle;
-            $scope.curuser.email = user.email;
-            $scope.curuser.dlno = user.dlNo;
-            $scope.curuser.mobile = user.mobile;
-            $scope.curuser.address = user.address1 + ' ' + user.address2;
-        }, function (error) {
-        }
-        )
+        loadvndor.currentUser();
+        var user = $rootScope.currentUser;
+        $scope.curuser.clinicname = user.name;
+        $scope.curuser.Title = user.subTitle;
+        $scope.curuser.email = user.email;
+        $scope.curuser.dlno = user.dlNo;
+        $scope.curuser.mobile = user.mobile;
+        $scope.curuser.address = user.address1 + ' ' + user.address2;
     }
     //-----------------------------------XX----------------------------------
 });
