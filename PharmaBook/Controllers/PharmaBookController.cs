@@ -28,14 +28,14 @@ namespace PharmaBook.Controllers
             _ierror = ierror;
 
         }
-        public IActionResult Admin()
+        public async Task<IActionResult> Admin()
         {
             if (!User.Identity.Name.Equals("admin@admin.com"))
             {
                 return RedirectToAction("login", "account");
             }
 
-            var users = _iProfileServices.GetAllforAdmin();
+            var users = await _iProfileServices.GetAllforAdmin();
             return View(users);
         }
 
@@ -49,14 +49,14 @@ namespace PharmaBook.Controllers
             return View();
         }
 
-        public IActionResult EditUser(int id)
+        public async Task<IActionResult> EditUser(int id)
         {
             if (!User.Identity.Name.Equals("admin@admin.com"))
             {
                 return RedirectToAction("login", "account");
             }
 
-            var model = _iProfileServices.GetById(id);
+            var model = await _iProfileServices.GetById(id);
             var VM = Mapper.Map<UserProfileVM>(model);
             return View(VM);
         }

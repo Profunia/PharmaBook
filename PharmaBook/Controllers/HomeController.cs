@@ -376,9 +376,9 @@ namespace PharmaBook.Controllers
             return View();
         }
 
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile()
         {
-            var model = _iProfile.GetByUserName(User.Identity.Name);
+            var model =  await _iProfile.GetByUserName(User.Identity.Name);
             var modelVM = Mapper.Map<UserProfileVM>(model);
             return View(modelVM);
         }
@@ -400,7 +400,7 @@ namespace PharmaBook.Controllers
                 medicn.IsActive = true;
                 _iProfile.Commit();
                 TempData["msg"] = "Successfully updated";
-                var laste = _iProfile.GetByUserName(User.Identity.Name);
+                var laste = await _iProfile.GetByUserName(User.Identity.Name);
             }
             catch (Exception ep)
             {

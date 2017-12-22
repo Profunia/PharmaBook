@@ -58,7 +58,7 @@ namespace PharmaBook.Controllers
                     int id = Convert.ToInt32(invcid);
                     var mtrobj1 = await _imaster.GetAll(User.Identity.Name);
                     var mtrobj = mtrobj1.Where(x => x.Id == id).FirstOrDefault();
-                    var cldinvoice = _ichild.GetById(mtrobj.Id);
+                    var cldinvoice = await _ichild.GetById(mtrobj.Id);
                     var lstitm = Mapper.Map<IEnumerable<InvcChildVmdl>>(cldinvoice);
                     slsvwmdl.invcchld = lstitm;
                     slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mtrobj);
@@ -67,7 +67,7 @@ namespace PharmaBook.Controllers
                 {
                     var mInvList = await _imaster.GetAll(User.Identity.Name);
                     MasterInvoice mstrobj = mInvList.OrderByDescending(x => x.Id).FirstOrDefault();
-                    var chldinvoice = _ichild.GetById(mstrobj.Id);
+                    var chldinvoice = await _ichild.GetById(mstrobj.Id);
                     var lst = Mapper.Map<IEnumerable<InvcChildVmdl>>(chldinvoice);
                     slsvwmdl.invcchld = lst;
                     slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mstrobj);
@@ -130,7 +130,7 @@ namespace PharmaBook.Controllers
             {
                 var msterInv = await _imaster.GetAll(User.Identity.Name);
                 MasterInvoice mstrobj = msterInv.OrderByDescending(x => x.Id).FirstOrDefault();
-                var chldinvoice = _ichild.GetAll();
+                var chldinvoice = await _ichild.GetAll();
                 var lst = Mapper.Map<IEnumerable<InvcChildVmdl>>(chldinvoice);
                 slsvwmdl.invcchld = lst;
                 slsvwmdl.masterinvc = Mapper.Map<InvcMstrVmdl>(mstrobj);
