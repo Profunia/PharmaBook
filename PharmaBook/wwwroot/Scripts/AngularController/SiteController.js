@@ -228,16 +228,20 @@ app.controller('ProductController', function ($scope, $http, $location, $rootSco
         else {
             $scope.searchbox = '';
         }
+        $scope.medicineName = 'name';
     }
-
+    $scope.medicineName = 'name';
     $scope.ItemNameMedicine = '';
-    $scope.medicineselect = function () {
-        if ($scope.ItemNameMedicine != '') {
-            $scope.searchbox = $scope.ItemNameMedicine;
+    $scope.medicineselect = function (item) {
+        if (item != '') {
+            $scope.searchbox = item.name;
+            $scope.medicineName = item.name;
         }
         else {
             $scope.searchbox = '';
+            $scope.medicineName = 'name';
         }
+        $scope.vendorDDL = '';
     }
 
 

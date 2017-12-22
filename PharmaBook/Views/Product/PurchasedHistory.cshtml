@@ -36,11 +36,34 @@
                         </select>
                     </div>
                     <div class="col-xs-4 right">
-                        <select class="form-control" placeholder="Medicine" ng-model="ItemNameMedicine"
+
+                        <div class="form-group">
+                            <div class="dropdown dropdown-scroll">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown">
+                                    Medicine - {{medicineName}} <span style="color:red;">*</span> <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+                                    <li role="presentation">
+                                        <div class="input-group input-group-sm search-control">
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-search"></span>
+                                            </span>
+                                            <input type="text" class="form-control" placeholder="Filter" ng-model="filter" />
+                                        </div>
+                                    </li>
+                                    <li role="presentation" ng-repeat='item in ProductList  | filter:filter' ng-click="medicineselect(item)">
+                                        <a href="">{{item.name}} </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+
+                        @*<select class="form-control" placeholder="Medicine" ng-model="ItemNameMedicine"
                                 ng-change="medicineselect()">
                             <option value="">-- All Medicine--</option>
                             <option ng-repeat="m in ProductList" value="{{m.name}}">{{m.name}}</option>
-                        </select>
+                        </select>*@
 
                     </div>
                     <div class="col-xs-1">
@@ -110,6 +133,9 @@
 
 @section Scripts{
     <script>
+        $('.dropdown-menu').find('input').click(function (e) {
+            e.stopPropagation();
+        });
         $('#menu').load('click', 'li', function () {
             $('#menu li.active').removeClass('active');
             console.log("#menu-Medicine");
