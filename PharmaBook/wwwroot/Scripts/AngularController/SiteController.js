@@ -586,6 +586,7 @@ app.controller('SalesController', function ($scope, $http, $rootScope, loadvndor
 })
 
 app.controller('StockController', function ($scope, $http, loadvndor, $rootScope) {
+    sessionStorage.clear();
     setuser()
     loadvndor.getprdct();
     //------------------Set Vendor For Report Printing----------------------
@@ -1151,6 +1152,7 @@ app.controller('InvoiceInboxController', function ($scope, $http, loadvndor, $ro
 
 app.controller('DashboardController', function ($rootScope) {
     $rootScope.isLoadingScreenActive = false;
+    sessionStorage.clear();
 });
 
 app.controller('SalesResportController', function ($scope, $http, loadvndor, $rootScope, $filter) {

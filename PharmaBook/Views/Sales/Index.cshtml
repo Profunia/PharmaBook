@@ -53,7 +53,7 @@
                                     <input type="text" class="form-control" placeholder="Filter" ng-model="filter"/>
                                 </div>
                             </li>
-                            <li role="presentation" ng-repeat='item in ProductList | filter:filter' ng-click="medicineselect(item)">
+                            <li role="presentation" ng-repeat='item in ProductList | filter:filter track by $index' ng-click="medicineselect(item)">
                                 <a href="">{{item.name}} </a> 
                             </li>
                         </ul>

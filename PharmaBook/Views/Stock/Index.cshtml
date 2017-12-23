@@ -61,7 +61,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="item in ProductList|orderBy:'openingStock' | filter:search">
+                <tr ng-repeat="item in ProductList |orderBy:'openingStock' | filter:search track by $index">
                     <td>{{$index+1}}</td>
                     <td>{{item.name }}</td>
                     <td style="text-align:center">{{item.batchNo}}</td>

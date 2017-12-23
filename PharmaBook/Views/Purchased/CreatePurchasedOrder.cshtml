@@ -61,7 +61,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="item in ProductList|orderBy:'openingStock' | filter:search" ng-class="isChecked(item)==true ? 'highlight' : ''">
+                    <tr ng-repeat="item in ProductList|orderBy:'openingStock' | filter:search  track by $index" ng-class="isChecked(item)==true ? 'highlight' : ''">
                         <td>
                             <input type="checkbox" value="{{item.id}}" ng-checked="isChecked(item)"
                                    ng-click="toggleItemIndex($event, item)" />

@@ -7,11 +7,11 @@
   
     <div class="market-updates">
         <a href="/Purchased">
-            <div class="col-md-4 market-update-gd">
+            <div class="col-md-4 market-update-gd" title="open purchased order">
                 <div class="market-update-block clr-block-1">
                     <div class="col-md-8 market-update-left">
                         <h3>@ViewBag.OpenedPO</h3>
-                        <h4>Open <br /> purchased order</h4>
+                        <h4>Open PO</h4>
 
                     </div>
                     <div class="col-md-4 market-update-right">
@@ -22,11 +22,11 @@
             </div>
         </a>
         <a href="/Home/OutOfStockMedicine">
-            <div class="col-md-4 market-update-gd">
+            <div class="col-md-4 market-update-gd" title="Less then 5 qty medicine in stock">
                 <div class="market-update-block clr-block-2">
                     <div class="col-md-8 market-update-left">
                         <h3>@ViewBag.outOfStock</h3>
-                        <h4>Less then 5 qty medicine in stock</h4>
+                        <h4>Out of stock</h4>
                     </div>
                     <div class="col-md-4 market-update-right">
                         <i class="fa fa-eye"> </i>
@@ -37,7 +37,7 @@
         </a>
         <a href="/Home/TotalExpMedicine">
             <div class="col-md-4 market-update-gd">
-                <div class="market-update-block clr-block-3">
+                <div class="market-update-block clr-block-3" title="Records as per expired medicine and with in 3 months going to expired.">
                     <div class="col-md-8 market-update-left">
                         <h3>@ViewBag.TotalExpMedicine</h3>
                         <h4>Expired Medicine</h4>

@@ -18,11 +18,11 @@ namespace PharmaBook.Services
         {
             ErrorLogger El = new ErrorLogger();
             El.LoggedDate = DateTime.Now;
-            if (exception.InnerException !=null)
+            if (exception.InnerException != null)
             {
                 El.InnnerExceptionMsg = exception.InnerException.Message;
             }
-            
+
             El.ExpectionMsg = exception.Message;
             El.stackDetails = exception.StackTrace;
             El.UserName = UserName;
@@ -35,7 +35,7 @@ namespace PharmaBook.Services
             Random rnd = new Random();
             int Dynaid = rnd.Next(100000, 999999);
             return Convert.ToString(Dynaid);
-        }        
+        }
         public static double getDoubleValue(string str)
         {
             if (!string.IsNullOrEmpty(str))
@@ -137,7 +137,8 @@ namespace PharmaBook.Services
         {
             List<ProductViewModel> pvm = new List<ProductViewModel>();
             ProductViewModel vm = null;
-            Parallel.ForEach(products, x =>
+            //Parallel.ForEach(products, x =>
+            foreach(var x in products)
             {
                 vm = new ProductViewModel();
                 vm.Id = x.Id;
@@ -155,7 +156,7 @@ namespace PharmaBook.Services
                 vm.cusUserName = x.cusUserName;
                 vm.vendorID = x.vendorID;
                 pvm.Add(vm);
-            });
+            };
             return pvm;
         }
 
@@ -163,7 +164,8 @@ namespace PharmaBook.Services
         {
             List<PurchasedHistoryVM> vmList = new List<PurchasedHistoryVM>();
             PurchasedHistoryVM vm = null;
-            Parallel.ForEach(obj, x =>
+            // Parallel.ForEach(obj, x =>
+            foreach (var x in obj)
             {
                 vm = new PurchasedHistoryVM();
                 vm.Id = x.Id;
@@ -183,15 +185,15 @@ namespace PharmaBook.Services
                 vm.cusUserName = x.cusUserName;
                 vm.Name = x.Name;
                 vm.Mfg = x.Mfg;
-                vm.tabletsCapsule =commonServices.ConvertToInt(x.tabletsCapsule);
+                vm.tabletsCapsule = commonServices.ConvertToInt(x.tabletsCapsule);
                 vm.eachStefPrice = Convert.ToDouble(x.eachStefPrice);
                 vm.stef = commonServices.ConvertToInt(x.stef);
                 vm.BatchNo = x.BatchNo;
-                string [] s= x.ExpDate.Split(' ');
+                string[] s = x.ExpDate.Split(' ');
                 vm.ExpDate = s[0];
                 vm.Remark = x.Remark;
                 vmList.Add(vm);
-            });
+            };
             return vmList;
         }
     }

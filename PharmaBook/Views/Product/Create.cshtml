@@ -139,7 +139,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="item in ProductList |filter: searchbox">
+                                <tr ng-repeat="item in ProductList  |filter: searchbox track by $index">
                                     <td>
                                         {{$index+1}}
                                     </td>
