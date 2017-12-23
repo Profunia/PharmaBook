@@ -165,7 +165,7 @@ namespace PharmaBook.Controllers
             }
         }
 
-        [HttpGet]
+        
         public async Task<IActionResult> NoteInbox(string username)
         {
             NotesModel bm = new NotesModel();
@@ -184,8 +184,8 @@ namespace PharmaBook.Controllers
             return Ok(bm);
         }
 
-        [HttpPost]
-        public IActionResult NoteInbox(string username, string notes)
+        
+        public IActionResult EntryNote(string username, string notes)
         {
             try
             {

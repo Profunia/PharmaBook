@@ -37,6 +37,7 @@ namespace PharmaBook
                 options.IdleTimeout = TimeSpan.FromSeconds(10);
                 options.CookieHttpOnly = true;
             });
+            services.AddCors();
             services.AddMvc();
             services.AddDbContext<PharmaBookContext>(options =>
                         options.UseSqlServer(Configuration.GetConnectionString("dbPharmaBook")));
@@ -48,7 +49,7 @@ namespace PharmaBook
             services.AddScoped<IProduct, ProductServices>();
             services.AddScoped<IPurchasedHistory, PurchasedHistoryService>();
             services.AddScoped<IVendorServices, VendorServices>();
-            services.AddScoped<Imaster,MasterInvcSrvice>();
+            services.AddScoped<Imaster, MasterInvcSrvice>();
             services.AddScoped<IChild, ChildInvcSrvice>();
 
             services.AddScoped<IMasterPOServices, MasterPOServices>();
@@ -71,7 +72,7 @@ namespace PharmaBook
                 config.CreateMap<UserProfile, UserProfileVM>().ReverseMap();
                 config.CreateMap<PurchasedHistory, PurchasedHistoryVM>().ReverseMap();
             });
-           
+
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -87,7 +88,11 @@ namespace PharmaBook
             app.UseSession();
             app.UseStaticFiles();
             app.UseIdentity();
-           
+            app.UseCors(builder => builder
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowCredentials());
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
